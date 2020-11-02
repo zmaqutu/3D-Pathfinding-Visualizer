@@ -12,7 +12,7 @@ function App() {
 				height = window.innerHeight;
   return (
     <>
-      <Canvas colorManagement camera={{position: [-20, 30, 0], fov: 50}}>
+      <Canvas colorManagement camera={{position: [0, 35, 0], fov: 50}}>
         <ambientLight intensity = {0.3}/>
         <Floor />
         <Grid />
