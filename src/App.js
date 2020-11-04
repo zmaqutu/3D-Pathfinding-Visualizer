@@ -3,6 +3,7 @@ import './App.scss';
 import Grid from './components/Grid';
 import { Canvas } from "react-three-fiber";
 import Floor from './components/Floor';
+import Tiles from './components/Tiles'
 
 import { Plane, OrbitControls, PerspectiveCamera } from 'drei'
 
@@ -16,6 +17,7 @@ function App() {
         <ambientLight intensity = {0.3}/>
         <Floor />
         <Grid />
+        <Tiles />
         <OrbitControls />
       </Canvas>
     
