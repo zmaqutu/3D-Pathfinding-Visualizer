@@ -6,6 +6,7 @@ import Floor from './components/Floor';
 import Tiles from './components/Tiles'
 
 import { Plane, OrbitControls, PerspectiveCamera } from 'drei'
+import World from './components/World';
 
 
 function App() {
@@ -13,14 +14,7 @@ function App() {
 				height = window.innerHeight;
   return (
     <>
-      <Canvas colorManagement camera={{position: [0, 35, 0], fov: 50}}>
-        <ambientLight intensity = {0.3}/>
-        <Floor />
-        <Grid />
-        <Tiles />
-        <OrbitControls />
-      </Canvas>
-    
+      <World/>
     </>
   );
 }
