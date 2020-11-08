@@ -4,6 +4,8 @@ import Tiles from './Tiles';
 import { Component } from 'react'
 import { Canvas } from "react-three-fiber";
 
+ let arr = new Array(900);
+
 function initializeGrid(){
   let tempGrid = [];
   for(let i = 0; i < 30; i++){
@@ -13,6 +15,10 @@ function initializeGrid(){
           currentRow.push(node);
       }
       tempGrid.push(currentRow);
+  }
+
+  for(let i = 0; i < 30; i++){
+      arr[i] = 0;
   }
  return tempGrid;
 
@@ -43,17 +49,20 @@ function Grid(props) {
     useEffect(() => {
       // code to run on component mount
       setGrid(initializeGrid());
-    }, [])
+    }, []);
 
     
-  
+
+
     return (
         <mesh ref = {mesh} position = {[0,0,0]}>
           <gridHelper args = {[props.gridDimensions, props.gridDimensions, "hotpink", "hotpink"] }/>
           <>
-          { grid.map((nodeID, index) => {
-           return <Tiles nodeID={index}/>
-          })}
+          { arr.map((nodeID, index) => { 
+            console.log("Index is: " + index);
+        return <Tiles  nodeID={index} gridProps={grid}/>
+          }
+    )}
           </>
           <axesHelper />
         </mesh>
@@ -62,9 +71,3 @@ function Grid(props) {
 
 
 export default Grid
-{ /*grid.map((nodeID, index) => { 
-      grid[0].map((colID, idx) => {
-        return <Tiles nodeID={idx} />
-      })}
- 
-    )*/}

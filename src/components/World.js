@@ -44,9 +44,12 @@ function createNode(row, col){
 }*/}
 
 function World(props) {
+   let width = window.innerWidth/2;
+   let height = window.innerHeight/2;
+
     return (
         <>
-        <Canvas colorManagement camera={{position: [0, 35, 0], fov: 50}}>
+        <Canvas colorManagement camera={{position: [0, 35, 0], fov: 50, aspect: width / height, far: 5000}} gl={{antialias: true}} >
         <ambientLight intensity = {0.3}/>
         <Floor />
         <Grid gridDimensions = {30}/>
