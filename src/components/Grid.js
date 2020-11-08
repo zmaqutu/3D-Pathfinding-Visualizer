@@ -45,16 +45,20 @@ function Grid(props) {
       setGrid(initializeGrid());
     }, [])
 
-    
+    const loader = useMemo(() => new THREE.TextureLoader().load(img,
+      function(texture){
+          texture.wrapS = THREE.RepeatWrapping;
+          texture.wrapT = THREE.RepeatWrapping;
+          texture.repeat.x = grid.length;
+          texture.repeat.y = grid[0].length;
+      }), [img]);
   
     return (
         <mesh ref = {mesh} position = {[0,0,0]}>
           <gridHelper args = {[props.gridDimensions, props.gridDimensions, "hotpink", "hotpink"] }/>
-          <>
-          { grid.map((nodeID, index) => {
-           return <Tiles nodeID={index}/>
-          })}
-          </>
+          <meshLambertMaterial attach = "material" >
+            <primitive attach = "map" object = {loader} side = {THREE.FrontSide} vertexColors = {THREE.FaceColors}/>
+          </meshLambertMaterial>
           <axesHelper />
         </mesh>
     )

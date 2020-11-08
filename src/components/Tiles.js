@@ -27,8 +27,7 @@ function Tiles(props) {
 
 
     return (
-        <mesh rotation={[-Math.PI /2, 0, 0]} 
-        position={[coord[0],0,coord[1]]}>
+        <mesh rotation={[-Math.PI /2, 0, 0]} position={[coord[0],0,coord[1]]}>
         <planeBufferGeometry attach = "geometry" args = {[1,1]}  />
         <meshLambertMaterial attach = 'material' transparent>
         <primitive attach="map" object={texture} />
