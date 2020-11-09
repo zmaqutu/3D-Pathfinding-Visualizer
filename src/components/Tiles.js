@@ -10,7 +10,7 @@ function calculateTilePosition(id){
     let x = id % 30;
 
 
-    return [y-14.5, x-14.5];
+    return [y-145, x-145];
 
 }
 
@@ -30,9 +30,8 @@ function Tiles(props) {
 
 
     return (
-        <mesh rotation={[-Math.PI /2, 0, 0]} 
-            position={[coord[0],0,coord[1]]}>
-            <planeBufferGeometry attach = "geometry" args = {[1,1]}  />
+        <mesh rotation={[-Math.PI /2, 0, 0]} position={[0,-0.1,0]}>
+            <planeBufferGeometry attach = "geometry" args = {[300,300]}  />
             <meshLambertMaterial attach = 'material' transparent>
                 <primitive attach="map" object={loader} />
             </meshLambertMaterial>

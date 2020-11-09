@@ -1,10 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { MeshLambertMaterial } from 'three';
+import React, { useState, useRef, useEffect, useMemo } from 'react'
+import * as THREE from 'three'
+import { Geometry, MeshLambertMaterial, TextureLoader } from 'three';
 import Tiles from './Tiles';
 import { Component } from 'react'
 import { Canvas } from "react-three-fiber";
+import img from './ground.png';
 
- let arr = new Array(900);
+ let arr = new Array(1);
 
 function initializeGrid(){
   let tempGrid = [];
@@ -17,7 +19,7 @@ function initializeGrid(){
       tempGrid.push(currentRow);
   }
 
-  for(let i = 0; i < 30; i++){
+  for(let i = 0; i < 1; i++){
       arr[i] = 0;
   }
  return tempGrid;
@@ -51,19 +53,27 @@ function Grid(props) {
       setGrid(initializeGrid());
     }, []);
 
-    
-
-
+    const loader = useMemo(() => new THREE.TextureLoader().load(img,
+      function(texture){
+          texture.wrapS = THREE.RepeatWrapping;
+          texture.wrapT = THREE.RepeatWrapping;
+          texture.repeat.x = 30;
+          texture.repeat.y = 30;
+      }), [img]);
+      
     return (
         <mesh ref = {mesh} position = {[0,0,0]}>
-          <gridHelper args = {[props.gridDimensions, props.gridDimensions, "hotpink", "hotpink"] }/>
-          <>
-          { arr.map((nodeID, index) => { 
-            console.log("Index is: " + index);
-        return <Tiles  nodeID={index} gridProps={grid}/>
-          }
-    )}
-          </>
+          <gridHelper args = {[300, props.gridDimensions, 0x5c78bd, 0x5c78bd] }/>
+          <mesh rotation={[-Math.PI /2, 0, 0]} position={[0,-0.1,0]} receiveShadow = {true}>
+            <planeBufferGeometry attach = "geometry" args = {[300,300]}  />
+            <meshLambertMaterial attach = 'material' transparent>
+                <primitive attach="map" object={loader} />
+            </meshLambertMaterial>
+        </mesh>
+        {/*<mesh rotation={[-Math.PI /2, 0, 0]} position={[0,-0.09,0]}>
+          <planeBufferGeometry attach = "geometry" args = {[300,300]}/>
+          <meshLambertMaterial attach = "material" color = "black" side={THREE.FrontSide} opacity= {0.5}/>
+        </mesh>*/}
           <axesHelper />
         </mesh>
     )
