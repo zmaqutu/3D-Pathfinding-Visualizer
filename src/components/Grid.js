@@ -4,7 +4,7 @@ import { Geometry, MeshLambertMaterial, TextureLoader } from 'three';
 import Tiles from './Tiles';
 import { Component } from 'react'
 import { Canvas } from "react-three-fiber";
-import img from './ground.png';
+import img from './floor_texture.jpg';
 
  let arr = new Array(1);
 
@@ -18,6 +18,7 @@ function initializeGrid(){
       }
       tempGrid.push(currentRow);
   }
+  console.log(tempGrid);
 
   for(let i = 0; i < 1; i++){
       arr[i] = 0;
@@ -28,10 +29,19 @@ function initializeGrid(){
 
 function createNode(row, col){
 
+  let status = "status";
+  let faces = {};
+  let faceIndex = row * 2 * 30 + col * 2 ;
+  console.log("FaceIndex is: " + faceIndex);
+  {/*faces[1] = this.ground.geometry.faces[faceIndex];
+	faceIndex = faceIndex % 2 == 0 ? faceIndex + 1 : faceIndex - 1;
+	faces[2] = this.ground.geometry.faces[faceIndex];*/}
   let node = {
       id: row * col + col,
       row: row,
       col: col,
+      faces: faces,
+      status: status,
       distance: Infinity,
       totalDistance: Infinity,
       heuristicDistance: null,

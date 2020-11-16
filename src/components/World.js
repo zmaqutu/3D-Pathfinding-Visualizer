@@ -56,8 +56,9 @@ function World(props) {
         {/*<fog attach = "fog" args = {[0xFFFFFF , 0, 750]}/>*/}
         <hemisphereLight color = {"hsl(0.6, 1, 0.6)"} groundColor = {0x87775d} intensity = {0.1} position = {[0,5,0]} />
         <directionalLight color = {"hsl(0.1, 1, 0.95)"} groundColor = {0x87775d} intensity = {0.5} position = {[-70,122.5,70]} castShadow = {true}>
+            
         </directionalLight>
-        <Floor />
+        <Floor/>
         <Grid gridDimensions = {30}/>
         <OrbitControls />
       </Canvas>
