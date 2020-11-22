@@ -106,16 +106,27 @@ function Grid(props) {
   }
 
   function mouseUpHandler(event){
-    let mouseMoved = false;
     if((mouseDownX != event.clientX) || (mouseDownY != event.clientY)){
       return;
     }
-    else{
+    else
+    {
       let nodeId = findNodeId(event.faceIndex);
       if(terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status == "start" || terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status == "finish"){
        return;
       }
-      tweenToColor(terrain.grid[nodeId.nodeRow][nodeId.nodeCol], groundGeometry, [props.worldProperties.colors.wall]);
+      else if(terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status == "wall"){
+        terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status = "default";
+        tweenToColor(terrain.grid[nodeId.nodeRow][nodeId.nodeCol], groundGeometry, [props.worldProperties.colors.default]);
+        console.log(terrain.grid[nodeId.nodeRow][nodeId.nodeCol]);
+
+      }
+      else
+      {
+        terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status = "wall";
+        tweenToColor(terrain.grid[nodeId.nodeRow][nodeId.nodeCol], groundGeometry, [props.worldProperties.colors.wall]);
+        console.log(terrain.grid[nodeId.nodeRow][nodeId.nodeCol]);
+      }
     }
   }
   function findNodeId(faceIndex){

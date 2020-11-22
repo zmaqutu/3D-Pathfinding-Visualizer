@@ -22,6 +22,9 @@ function World(props) {
 
     return (
         <>
+        <select name = "algorithms" id = "algorithms">
+            <option value = "Dikstra">Dikstra</option>
+        </select>
         <Canvas colorManagement 
         camera={
             {
@@ -73,6 +76,7 @@ function World(props) {
                     wall: {r: 0.109, g: 0.109, b: 0.45},
                     visited: {r: 0.329, g: 0.27, b: 0.968},
                     path: {r: 1, g: 1, b: 0},
+                    default: {r: 1, g: 1, b: 1},
                 },
                 nodeDimensions:{
                     height: 10,
