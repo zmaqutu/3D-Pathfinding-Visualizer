@@ -22,26 +22,50 @@ function World(props) {
 
     return (
         <>
-        <Canvas colorManagement camera={{position: [0, 350, 0], fov: 50, aspect: width / height, far: 5000}} gl={renderer} raycaster= {new THREE.Raycaster()}>
-        <ambientLight intensity = {1} color = {0xBBC2D0}/>
+        <Canvas colorManagement 
+        camera={
+            {
+                position: [0, 350, 0],
+                 fov: 50,
+                  aspect: width / height, 
+                  far: 5000
+                }
+            }
+        >
+        <ambientLight 
+            intensity = {1} 
+            color = {0xBBC2D0}/>
         {/*<fog attach = "fog" args = {[0xFFFFFF , 0, 750]}/>*/}
-        <hemisphereLight color = {"hsl(0.6, 1, 0.6)"} groundColor = {0x87775d} intensity = {0.1} position = {[0,5,0]} />
-        <directionalLight color = {"hsl(0.1, 1, 0.95)"} groundColor = {0x87775d} intensity = {0.5} position = {[-70,122.5,70]} castShadow = {true}>     
-        </directionalLight>
+        <hemisphereLight 
+            color = {"hsl(0.6, 1, 0.6)"} 
+            groundColor = {0x87775d} 
+            intensity = {0.1} 
+            position = {[0,5,0]} 
+        />
+        <directionalLight 
+            color = {"hsl(0.1, 1, 0.95)"} 
+            groundColor = {0x87775d} 
+            intensity = {0.5} 
+            position = {[-70,122.5,70]} 
+            castShadow = {true}
+        />     
+        
         <Floor/>
-        <Grid gridDimensions = {30} worldProperties = {
+        <Grid 
+            gridDimensions = {30} 
+            worldProperties = {
             {
                 rows: 30,
                 cols: 30,
                 groundGeometry : new THREE.PlaneGeometry(300,300,30,30),
                 groundMaterial : new THREE.MeshLambertMaterial({transparent: true, color: "hotpink"}),
                 start: {
-                    row: 3,
+                    row: 5,
                     col: 5,
                 },
                 finish: {
-                    row: 16,
-                    col: 22,
+                    row: 25,
+                    col: 25,
                 },
                 colors: {
                     start: {r: 0, g: 1, b: 0 },

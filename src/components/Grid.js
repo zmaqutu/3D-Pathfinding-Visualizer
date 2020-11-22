@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react'
 import * as THREE from 'three'
-import { Geometry, MeshLambertMaterial, TextureLoader } from 'three';
+import { Color, Geometry, MeshLambertMaterial, TextureLoader } from 'three';
 import Tiles from './Tiles';
 import { Component } from 'react'
 import { Canvas } from "react-three-fiber";
@@ -14,6 +14,8 @@ function Grid(props) {
   let groundGeometry = props.worldProperties.groundGeometry;
   let groundMaterial;
   let groundMesh;
+  let mouseDownX = 0;
+  let mouseDownY = 0;
   useEffect(() => {
     // code to run on component mount
 
@@ -33,6 +35,12 @@ function Grid(props) {
         groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
 				groundMesh.receiveShadow = true;
     }), [img]);
+    
+    groundMaterial = new THREE.MeshLambertMaterial({
+      map: loader,
+      side: THREE.FrontSide,
+      vertexColors: THREE.FaceColors,
+    });
 
     const mesh = useRef(null);
     {/*Declare and initialize state variables/ */}
@@ -84,7 +92,6 @@ function Grid(props) {
     };
     
     if(status === "start"){
-      console.log(node.faces[1])
       tweenToColor(node, groundGeometry, [props.worldProperties.colors.start]);
       
     }
@@ -98,40 +105,42 @@ function Grid(props) {
     TWEEN.update();
   }
 
-  {/*groundGeometry.rotateY(-Math.PI / 4);
-
-  let loader1 = new THREE.TextureLoader();
-			let floortiles = loader1.load(img,
-				function(texture) {
-					texture.wrapS = THREE.RepeatWrapping;
-					texture.wrapT = THREE.RepeatWrapping;
-					texture.repeat.x = 30;
-					texture.repeat.y = 30;
-				},
-				undefined,
-				function(error) {
-					console.log(error);
-				}
-			);*/}
-  
-  //groundMaterial = THREE.MeshLambertMaterial({map: loader});
-  //const groundMesh = new THREE.Mesh(groundGeometry, groundMaterial)
-
-  
-  groundMaterial = new THREE.MeshLambertMaterial({
-    map: loader,
-    side: THREE.FrontSide,
-    vertexColors: THREE.FaceColors,
-  });
-  console.log(groundMaterial);
-     
+  function mouseUpHandler(event){
+    let mouseMoved = false;
+    if((mouseDownX != event.clientX) || (mouseDownY != event.clientY)){
+      return;
+    }
+    else{
+      let nodeId = findNodeId(event.faceIndex);
+      if(terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status == "start" || terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status == "finish"){
+       return;
+      }
+      tweenToColor(terrain.grid[nodeId.nodeRow][nodeId.nodeCol], groundGeometry, [props.worldProperties.colors.wall]);
+    }
+  }
+  function findNodeId(faceIndex){
+    let linearIndex = Math.floor(faceIndex / 2);
+    return {
+      nodeRow: Math.floor(linearIndex / props.worldProperties.rows),
+      nodeCol: linearIndex % props.worldProperties.cols,
+    }
+  }
+  function mouseDownHandler(event){
+    //if you move return
+    mouseDownX = event.clientX;
+    mouseDownY = event.clientY;
+  }
     return (
         <mesh ref = {mesh} position = {[0,0,0]}>
           <gridHelper args = {[300, props.gridDimensions, 0x5c78bd, 0x5c78bd] }/>
-          <mesh rotation={[-Math.PI /2, 0, 0]} position={[0,-0.1,0]} receiveShadow = {true}>
+          <mesh rotation={[-Math.PI /2, 0, 0]}
+           position={[0,-0.1,0]} 
+           receiveShadow = {true}
+           onPointerDown={e => mouseDownHandler(e)}
+           onPointerUp = {e => mouseUpHandler(e)}
+           >
             <primitive attach = 'geometry' object = {groundGeometry}  />  
-            <primitive attach = 'material' object = {groundMaterial}  />     
-            
+            <primitive attach = 'material' object = {groundMaterial}  />    
           </mesh>
 
         {/*<mesh rotation={[-Math.PI /2, 0, 0]} position={[0,-0.09,0]}>
