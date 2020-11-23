@@ -12,6 +12,8 @@ function World(props) {
    let height = window.innerHeigh;
 
    const [runState, setRunState] = useState(false);
+   const [selectedAlgorithm,  setSelectedAlgorithm] = useState({});
+   //let selectedAlgorithm = document.getElementById("algorithms")
 
    const groundGeometry1 = new THREE.PlaneGeometry(300,300,30,30);
    const groundMaterial1 = new THREE.MeshLambertMaterial({transparent: false, color: "hotpink"});
@@ -20,22 +22,53 @@ function World(props) {
 
    function updateRunState(newState){
        setRunState(false);
-       console.log(runState)
+   }
+   function handleOnChange(event){
+       if(event.target.value == "Dijkstra"){
+           setSelectedAlgorithm({
+               algorithm: "Dijkstra",
+               type: "weighted", 
+               heuristic: "",
+           });
+       }
+       else if(event.target.value == "aStar"){
+           setSelectedAlgorithm({
+               algorithm: "aStar",
+               type: "weighted",
+               heuristic: "poweredManhattanDistance",
+           });
+       }
+       else if(event.target.value == "BFS"){
+           setSelectedAlgorithm({
+               algorithm: "BFS",
+               type: "unweighted",
+               heuristic: "",
+           });
+       }
+       else if(event.target.value == "DFS"){
+           setSelectedAlgorithm({
+               algorithm: "DFS",
+               type: "unweighted",
+               heuristic: ""
+           })
+       }
    }
 
     return (
         <>
-        <select name = "algorithms" id = "algorithms">
+        <select name = "algorithms" id = "algorithms" onChange={e => handleOnChange(e)}>
+            <option>Select Algorithm</option>
             <option value = "Dijkstra">Dijkstra's Algorithm</option>
-            <option value = "BFS">BFS</option>
             <option value = "aStar">A* Search</option>
+            <option value = "BFS">Breadth First Search</option>
+            <option value = "DFS">Depth First Search</option>
         </select>
         <button onClick = {e => setRunState(true)}>Vizualize</button>
         <Canvas colorManagement 
         camera={
             {
                 position: [0, 350, 0],
-                 fov: 50,
+                 fov: 52.5,
                   aspect: width / height, 
                   far: 5000
                 }
@@ -57,12 +90,12 @@ function World(props) {
             intensity = {0.5} 
             position = {[-70,122.5,70]} 
             castShadow = {true}
-        />     
-        
-        
+        />
+             
         <Grid 
             gridDimensions = {30}
-            updateRunState = {updateRunState} 
+            updateRunState = {updateRunState}
+            selectedAlgorithm = {selectedAlgorithm} 
             worldProperties = {
             {
                 rows: 30,

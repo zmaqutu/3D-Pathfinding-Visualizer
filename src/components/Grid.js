@@ -5,8 +5,9 @@ import Tiles from './Tiles';
 import { Component } from 'react'
 import { Canvas } from "react-three-fiber";
 import img from './floor_texture.jpg';
-import { tweenToColor } from './algorithms/helpers'
+import { tweenToColor, getNodesInShortestPathOrder } from './algorithms/helpers'
 import TWEEN, { Tween } from '@tweenjs/tween.js';
+import { weightedSearchAlgorithm } from "./algorithms/weightedSearchAlgorithm.js";
 
 
 function Grid(props) {
@@ -19,11 +20,9 @@ function Grid(props) {
   const [groundGeometry, setGroundGeometry] = useState(new THREE.PlaneGeometry(300,300,30,30));
   //const [runState, setRunState] = useState(props.worldProperties.runState);
   const runState = props.worldProperties.runState;
-  console.log("RunState is now: " + runState);
 
   useEffect(() => {
     if(props.worldProperties.runState == true){
-      console.log("runstate is true, algorithm now running")
       visualizeAlgorithm();
     }
   }, [runState]);
@@ -154,8 +153,70 @@ function Grid(props) {
   }
   function visualizeAlgorithm(){
     console.log("Dijkstra Dijkstra Dijkstra");
-    props.updateRunState(false)
+    let nodesToAnimate = [];
+    let processedSuccessfuly;
+    const startNode = terrain.grid[props.worldProperties.start.row][props.worldProperties.start.col];
+    const finishNode = terrain.grid[props.worldProperties.finish.row][props.worldProperties.finish.col];
+
+    if(props.selectedAlgorithm.type == "weighted"){
+      processedSuccessfuly = weightedSearchAlgorithm(
+        terrain.grid,
+        startNode,
+        finishNode,
+        nodesToAnimate,
+        props.selectedAlgorithm.algorithm,
+        props.selectedAlgorithm.heuristic,
+      );
+      console.log(processedSuccessfuly);
+    }
+    const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+    //add conditions for unweighted and no paths found
+    console.log(nodesToAnimate);
+    animateAlgorithm(nodesToAnimate, nodesInShortestPathOrder, 15);
     
+    
+  }
+  function animateAlgorithm(visitedNodesInOrder, nodesInShortestPathOrder, timerDelay){
+    for (let i = 0; i <= visitedNodesInOrder.length; i++) {
+				if (i === visitedNodesInOrder.length) {
+					setTimeout(() => {
+						animateShortestPath(nodesInShortestPathOrder, 5 * timerDelay);
+					}, timerDelay * i);
+					return;
+				}
+				if ((visitedNodesInOrder[i].row == props.worldProperties.start.row &&
+            visitedNodesInOrder[i].col == props.worldProperties.start.col) ||
+					(visitedNodesInOrder[i].row == props.worldProperties.finish.row &&
+						visitedNodesInOrder[i].col == props.worldProperties.finish.col)
+				) {
+					continue;
+				}
+				setTimeout(() => {
+					const node = visitedNodesInOrder[i];
+					if (!node) return;
+					tweenToColor(
+						node,
+						groundGeometry,
+						[{ r: 1.0, g: 0.321, b: 0.784 }, props.worldProperties.colors.visited],
+						300,
+						{ position: false }
+					);
+				}, timerDelay * i);
+      }
+      props.updateRunState(false);
+  }
+  function animateShortestPath(nodesInShortestPathOrder, timerDelay){
+    for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
+      setTimeout(() => {
+        const node = nodesInShortestPathOrder[i];
+        tweenToColor(node, groundGeometry, [props.worldProperties.colors.path], undefined, {
+          position: false,
+        });
+        if (i == nodesInShortestPathOrder.length - 1) {
+          props.updateRunState(false);
+        }
+      }, timerDelay * i);
+    }
   }
     return (
         <mesh ref = {mesh} position = {[0,0,0]}>
