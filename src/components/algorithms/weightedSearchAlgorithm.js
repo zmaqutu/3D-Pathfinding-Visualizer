@@ -4,7 +4,7 @@ export function weightedSearchAlgorithm(grid, start, target, nodesToAnimate, nam
   // Initialze nodes
 	start.distance = 0;
 	start.direction = "right";
-	if(name == "astar") {
+	if(name == "aStar") {
 		start.totalDistance = 0;
 	}
 	// Should be a Priority Queue
@@ -31,7 +31,7 @@ export function weightedSearchAlgorithm(grid, start, target, nodesToAnimate, nam
 function closestNode(unvisitedNodes, name) {
   let currentClosest, index;
   for (let i = 0; i < unvisitedNodes.length; i++) {
-		if(name == "astar") {
+		if(name == "aStar") {
 			if (!currentClosest || currentClosest.totalDistance > unvisitedNodes[i].totalDistance) {
 				currentClosest = unvisitedNodes[i];
 				index = i;
@@ -87,7 +87,7 @@ function updateNode(currentNode, targetNode, actualStartNode, actualTargetNode, 
     }
   } else if (actualTargetNode && name === "greedy") {
     distanceToCompare = targetNode.weight + distance[0] + manhattanDistance(targetNode, actualTargetNode);
-  } else if(name == "astar") {
+  } else if(name == "aStar") {
 		if (!targetNode.heuristicDistance) targetNode.heuristicDistance = manhattanDistance(targetNode, actualTargetNode);
 		distanceToCompare = currentNode.distance + targetNode.weight + distance[0];
 	} else {
@@ -98,7 +98,8 @@ function updateNode(currentNode, targetNode, actualStartNode, actualTargetNode, 
     targetNode.previousNode = currentNode;
     targetNode.path = distance[1];
 		targetNode.direction = distance[2];
-		if(name == "astar") {
+		if(name == "aStar") {
+      console.log("Why isnt A* working")
 			targetNode.totalDistance = targetNode.distance + targetNode.heuristicDistance;
 		}
   }

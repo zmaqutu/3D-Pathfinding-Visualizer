@@ -124,7 +124,7 @@ function World(props) {
             }
         }/>
         <Floor/>
-        <OrbitControls />
+        <OrbitControls enabled = {false} />
       </Canvas>
       </>
     )

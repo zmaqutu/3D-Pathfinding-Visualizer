@@ -157,7 +157,6 @@ function Grid(props) {
     let processedSuccessfuly;
     const startNode = terrain.grid[props.worldProperties.start.row][props.worldProperties.start.col];
     const finishNode = terrain.grid[props.worldProperties.finish.row][props.worldProperties.finish.col];
-
     if(props.selectedAlgorithm.type == "weighted"){
       processedSuccessfuly = weightedSearchAlgorithm(
         terrain.grid,
@@ -171,7 +170,6 @@ function Grid(props) {
     }
     const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
     //add conditions for unweighted and no paths found
-    console.log(nodesToAnimate);
     animateAlgorithm(nodesToAnimate, nodesInShortestPathOrder, 15);
     
     
@@ -203,7 +201,7 @@ function Grid(props) {
 					);
 				}, timerDelay * i);
       }
-      props.updateRunState(false);
+      
   }
   function animateShortestPath(nodesInShortestPathOrder, timerDelay){
     for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
@@ -213,10 +211,10 @@ function Grid(props) {
           position: false,
         });
         if (i == nodesInShortestPathOrder.length - 1) {
-          props.updateRunState(false);
-        }
+                }
       }, timerDelay * i);
     }
+    props.updateRunState(false);
   }
     return (
         <mesh ref = {mesh} position = {[0,0,0]}>
