@@ -11,15 +11,24 @@ import TWEEN, { Tween } from '@tweenjs/tween.js';
 
 function Grid(props) {
 
-  let groundGeometry = props.worldProperties.groundGeometry;
   let groundMaterial;
   let groundMesh;
   let mouseDownX = 0;
   let mouseDownY = 0;
-  useEffect(() => {
-    // code to run on component mount
+  
+  const [groundGeometry, setGroundGeometry] = useState(new THREE.PlaneGeometry(300,300,30,30));
+  //const [runState, setRunState] = useState(props.worldProperties.runState);
+  const runState = props.worldProperties.runState;
+  console.log("RunState is now: " + runState);
 
-  }, []);
+  useEffect(() => {
+    if(props.worldProperties.runState == true){
+      console.log("runstate is true, algorithm now running")
+      visualizeAlgorithm();
+    }
+  }, [runState]);
+
+  
 
   const loader = useMemo(() => new THREE.TextureLoader().load(img,
     function(texture){
@@ -35,6 +44,8 @@ function Grid(props) {
         groundMesh = new THREE.Mesh(groundGeometry, groundMaterial);
 				groundMesh.receiveShadow = true;
     }), [img]);
+
+    
     
     groundMaterial = new THREE.MeshLambertMaterial({
       map: loader,
@@ -140,6 +151,11 @@ function Grid(props) {
     //if you move return
     mouseDownX = event.clientX;
     mouseDownY = event.clientY;
+  }
+  function visualizeAlgorithm(){
+    console.log("Dijkstra Dijkstra Dijkstra");
+    props.updateRunState(false)
+    
   }
     return (
         <mesh ref = {mesh} position = {[0,0,0]}>

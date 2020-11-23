@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Grid from './Grid';
 import * as THREE from 'three';
 import { Canvas } from "react-three-fiber";
@@ -11,20 +11,26 @@ function World(props) {
    let width = window.innerWidth;
    let height = window.innerHeigh;
 
+   const [runState, setRunState] = useState(false);
+
    const groundGeometry1 = new THREE.PlaneGeometry(300,300,30,30);
    const groundMaterial1 = new THREE.MeshLambertMaterial({transparent: false, color: "hotpink"});
 
    const groundMesh = new THREE.Mesh(groundGeometry1, groundMaterial1);
 
-   let renderer = new THREE.WebGL1Renderer({ antialias: true });
-   renderer.setSize(width, height);
-   renderer.shadowMap.enabled = true;
+   function updateRunState(newState){
+       setRunState(false);
+       console.log(runState)
+   }
 
     return (
         <>
         <select name = "algorithms" id = "algorithms">
-            <option value = "Dikstra">Dikstra</option>
+            <option value = "Dijkstra">Dijkstra's Algorithm</option>
+            <option value = "BFS">BFS</option>
+            <option value = "aStar">A* Search</option>
         </select>
+        <button onClick = {e => setRunState(true)}>Vizualize</button>
         <Canvas colorManagement 
         camera={
             {
@@ -53,15 +59,15 @@ function World(props) {
             castShadow = {true}
         />     
         
-        <Floor/>
+        
         <Grid 
-            gridDimensions = {30} 
+            gridDimensions = {30}
+            updateRunState = {updateRunState} 
             worldProperties = {
             {
                 rows: 30,
                 cols: 30,
-                groundGeometry : new THREE.PlaneGeometry(300,300,30,30),
-                groundMaterial : new THREE.MeshLambertMaterial({transparent: true, color: "hotpink"}),
+                runState: runState,
                 start: {
                     row: 5,
                     col: 5,
@@ -84,6 +90,7 @@ function World(props) {
                 },
             }
         }/>
+        <Floor/>
         <OrbitControls />
       </Canvas>
       </>
