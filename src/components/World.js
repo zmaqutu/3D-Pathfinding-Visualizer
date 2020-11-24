@@ -14,16 +14,17 @@ function World(props) {
    let width = window.innerWidth;
    let height = window.innerHeigh;
 
-   const [runState, setRunState] = useState(false);
-   const [selectedAlgorithm,  setSelectedAlgorithm] = useState({});
-   const [resetCamera, setResetCamera] = useState(false);
+   const [selectedAlgorithm,  setSelectedAlgorithm] = useState({});     // keeps track of the algorithm we choose
+   const [runState, setRunState] = useState(false);                     //when runState is true the visualizer algorithm is running
+   const [resetCamera, setResetCamera] = useState(false);               //when resetCamera is true we reset the camera position
    const [clearWalls, setClearWalls] = useState(false);
    const [clearPath, setClearPath] = useState(false);
    const cameraPosition = useRef([0,350,0]);
 
 
+   //calling on this funciton in the child component (Grid) to update runstate in this parent
    function updateRunState(newState){
-       setRunState(false);
+       setRunState(newState);
    }
    function stopClearPath(){
        setClearPath(false);

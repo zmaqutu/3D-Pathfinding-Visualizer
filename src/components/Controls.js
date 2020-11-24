@@ -7,8 +7,7 @@ import * as THREE from 'three';
 
 
 function Controls(props) {
-    const [lockPan, setLockPan] = useState(false);
-    const x = props.resetStatus;
+    const resetStatus = props.resetStatus;
     const {
         camera,
         gl,
@@ -18,12 +17,9 @@ function Controls(props) {
     useEffect(() => {
         if(props.resetStatus == true){
             resetCamera();
-            setLockPan(true);
         }
-        else{
-            setLockPan(false);
-        }
-    }, [x]);
+       
+    }, [resetStatus]);
 
     //const controls = new PointerLockControls(camera,gl.domElement); 
     
@@ -48,18 +44,8 @@ function Controls(props) {
             .start();
     } 
 
-    function checkLock(){
-        if(lockPan == true)
-        {
-            return false;
-        }
-        else {
-            return true;
-        }
-    }
-
     return (
-        <OrbitControls enabled = {checkLock()}/>
+        <OrbitControls enabled = {!props.resetStatus}/>
     )
 }
 
