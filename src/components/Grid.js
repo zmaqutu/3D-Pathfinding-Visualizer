@@ -3,11 +3,11 @@ import * as THREE from 'three'
 import { Color, Geometry, MeshLambertMaterial, TextureLoader } from 'three';
 import Tiles from './Tiles';
 import { Component } from 'react'
-import { Canvas } from "react-three-fiber";
 import img from './floor_texture.jpg';
 import { tweenToColor, getNodesInShortestPathOrder } from './algorithms/helpers'
 import TWEEN, { Tween } from '@tweenjs/tween.js';
 import { weightedSearchAlgorithm } from "./algorithms/weightedSearchAlgorithm.js";
+
 
 
 function Grid(props) {
@@ -216,6 +216,7 @@ function Grid(props) {
     }
     props.updateRunState(false);
   }
+  
     return (
         <mesh ref = {mesh} position = {[0,0,0]}>
           <gridHelper args = {[300, props.gridDimensions, 0x5c78bd, 0x5c78bd] }/>
@@ -226,9 +227,8 @@ function Grid(props) {
            onPointerUp = {e => mouseUpHandler(e)}
            >
             <primitive attach = 'geometry' object = {groundGeometry}  />  
-            <primitive attach = 'material' object = {groundMaterial}  />    
+            <primitive attach = 'material' object = {groundMaterial}  />   
           </mesh>
-
         {/*<mesh rotation={[-Math.PI /2, 0, 0]} position={[0,-0.09,0]}>
           <planeBufferGeometry attach = "geometry" args = {[300,300]}/>
           <meshLambertMaterial attach = "material" color = "black" side={THREE.FrontSide} opacity= {0.5}/>

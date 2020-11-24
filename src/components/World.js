@@ -1,27 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Grid from './Grid';
 import * as THREE from 'three';
 import { Canvas } from "react-three-fiber";
 import Floor from './Floor';
 import Tiles from './Tiles';
-import { Plane, OrbitControls, PerspectiveCamera } from 'drei';
+import { Plane, PerspectiveCamera } from 'drei';
 import { PlaneBufferGeometry, Scene } from 'three';
+import { useThree } from 'react-three-fiber';
+import Controls from './Controls';
 
+//<OrbitControls enabled = {!worldSetup} />
 function World(props) {
    let width = window.innerWidth;
    let height = window.innerHeigh;
 
    const [runState, setRunState] = useState(false);
    const [selectedAlgorithm,  setSelectedAlgorithm] = useState({});
-   //let selectedAlgorithm = document.getElementById("algorithms")
+   const [resetCamera, setResetCamera] = useState(false);
+   const [clearWalls, setClearWalls] = useState(false);
+   const [clearPath, setClearPath] = useState(false);
+   const cameraPosition = useRef([0,350,0]);
 
-   const groundGeometry1 = new THREE.PlaneGeometry(300,300,30,30);
-   const groundMaterial1 = new THREE.MeshLambertMaterial({transparent: false, color: "hotpink"});
-
-   const groundMesh = new THREE.Mesh(groundGeometry1, groundMaterial1);
 
    function updateRunState(newState){
        setRunState(false);
+   }
+   function stopClearPath(){
+       setClearPath(false);
+   }
+   function stopClearWalls(){
+       setClearWalls(false);
    }
    function handleOnChange(event){
        if(event.target.value == "Dijkstra"){
@@ -53,6 +61,9 @@ function World(props) {
            })
        }
    }
+   function updateResetStatus(){
+       setResetCamera(false);
+   }
 
     return (
         <>
@@ -64,10 +75,13 @@ function World(props) {
             <option value = "DFS">Depth First Search</option>
         </select>
         <button onClick = {e => setRunState(true)}>Vizualize</button>
+        <button onClick = {e => setClearPath(true)}>Clear Path</button>
+        <button onClick = {e => console.log("Path Cleared")}>Clear Walls</button>
+        <button onClick = {e => setResetCamera(!resetCamera)}>Setup World</button>
         <Canvas colorManagement 
         camera={
             {
-                position: [0, 350, 0],
+                position: cameraPosition.current,
                  fov: 52.5,
                   aspect: width / height, 
                   far: 5000
@@ -90,17 +104,20 @@ function World(props) {
             intensity = {0.5} 
             position = {[-70,122.5,70]} 
             castShadow = {true}
-        />
-             
+        />   
         <Grid 
             gridDimensions = {30}
             updateRunState = {updateRunState}
+            stopClearPath = {stopClearPath}
+            stopClearWalls = {stopClearWalls}
             selectedAlgorithm = {selectedAlgorithm} 
             worldProperties = {
             {
                 rows: 30,
                 cols: 30,
                 runState: runState,
+                clearPath: clearPath,
+                clearWalls: clearWalls,
                 start: {
                     row: 5,
                     col: 5,
@@ -124,7 +141,10 @@ function World(props) {
             }
         }/>
         <Floor/>
-        <OrbitControls enabled = {false} />
+        <Controls 
+            resetStatus = {resetCamera}
+            updateResetStatus = {updateResetStatus}
+        />
       </Canvas>
       </>
     )
