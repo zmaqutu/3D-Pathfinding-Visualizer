@@ -16,18 +16,25 @@ function Grid(props) {
   let groundMesh;
   let mouseDownX = 0;
   let mouseDownY = 0;
+  let previousHoverNodeId;
+  let currentHoverNodeId = 0;
+
+  let mouseIsUp = true;
+
+  //const [mouseIsUp, setMouseIsUp] = useState(true);
+  const [hoverNodeId, setHoverNodeId] = useState(0)
   
   const [groundGeometry, setGroundGeometry] = useState(new THREE.PlaneGeometry(300,300,30,30));
   //const [runState, setRunState] = useState(props.worldProperties.runState);
   const runState = props.worldProperties.runState;
+  const [randomNumber, randonum] = useState(0);
+
 
   useEffect(() => {
     if(props.worldProperties.runState == true){
       visualizeAlgorithm();
     }
   }, [runState]);
-
-  
 
   const loader = useMemo(() => new THREE.TextureLoader().load(img,
     function(texture){
@@ -110,9 +117,39 @@ function Grid(props) {
     }
     return node;
   }
+
   function renderLoop(){
     window.requestAnimationFrame(renderLoop);
+    //if(props.resetStatus){
+      hoverLoop();
+   // }
     TWEEN.update();
+  }
+
+  function hoverLoop(){
+    if(mouseIsUp || currentHoverNodeId == previousHoverNodeId){
+      return;
+    }
+    else{
+      previousHoverNodeId = currentHoverNodeId;
+      let nodeRow = Math.floor(currentHoverNodeId / props.worldProperties.rows);
+      let nodeCol = currentHoverNodeId % props.worldProperties.cols
+      if(terrain.grid[nodeRow][nodeCol].status == "start" || terrain.grid[nodeRow][nodeCol].status == "finish"){
+        return;
+      }
+      else if(terrain.grid[nodeRow][nodeCol].status == "wall"){
+        terrain.grid[nodeRow][nodeCol].status = "default";
+        tweenToColor(terrain.grid[nodeRow][nodeCol], groundGeometry, [props.worldProperties.colors.default]);
+      }
+      else
+      {
+        terrain.grid[nodeRow][nodeCol].status = "wall";
+        tweenToColor(terrain.grid[nodeRow][nodeCol], groundGeometry, [props.worldProperties.colors.wall]);
+      }
+    
+    }
+    //get coordinates of node i just clicked on
+    
   }
 
   function mouseUpHandler(event){
@@ -122,14 +159,14 @@ function Grid(props) {
     else
     {
       let nodeId = findNodeId(event.faceIndex);
+      console.log(nodeId)
       if(terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status == "start" || terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status == "finish"){
-       return;
+      return;
       }
       else if(terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status == "wall"){
         terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status = "default";
         tweenToColor(terrain.grid[nodeId.nodeRow][nodeId.nodeCol], groundGeometry, [props.worldProperties.colors.default]);
         console.log(terrain.grid[nodeId.nodeRow][nodeId.nodeCol]);
-
       }
       else
       {
@@ -138,7 +175,10 @@ function Grid(props) {
         console.log(terrain.grid[nodeId.nodeRow][nodeId.nodeCol]);
       }
     }
+
   }
+    
+  
   function findNodeId(faceIndex){
     let linearIndex = Math.floor(faceIndex / 2);
     return {
@@ -147,8 +187,11 @@ function Grid(props) {
     }
   }
   function mouseDownHandler(event){
-    //if you move return
-    mouseDownX = event.clientX;
+      mouseDownX = event.clientX;     //set X and Y mouse coordinates when mouseDown
+      mouseDownY = event.clientY;
+  }
+  function clickHandler(event){
+    mouseDownX = event.clientX;     //set X and Y mouse coordinates when mouseDown
     mouseDownY = event.clientY;
   }
   function visualizeAlgorithm(){
@@ -217,23 +260,36 @@ function Grid(props) {
     props.updateRunState(false);
   }
   
-    return (
-        <mesh ref = {mesh} position = {[0,0,0]}>
-          <gridHelper args = {[300, props.gridDimensions, 0x5c78bd, 0x5c78bd] }/>
-          <mesh rotation={[-Math.PI /2, 0, 0]}
-           position={[0,-0.1,0]} 
-           receiveShadow = {true}
-           onPointerDown={e => mouseDownHandler(e)}
-           onPointerUp = {e => mouseUpHandler(e)}
-           >
-            <primitive attach = 'geometry' object = {groundGeometry}  />  
-            <primitive attach = 'material' object = {groundMaterial}  />   
-          </mesh>
-        {/*<mesh rotation={[-Math.PI /2, 0, 0]} position={[0,-0.09,0]}>
-          <planeBufferGeometry attach = "geometry" args = {[300,300]}/>
-          <meshLambertMaterial attach = "material" color = "black" side={THREE.FrontSide} opacity= {0.5}/>
-    </mesh>*/}
-          <axesHelper />
+  return (
+    <mesh ref = {mesh} position = {[0,0,0]}>
+      <gridHelper args = {[300, props.gridDimensions, 0x5c78bd, 0x5c78bd] }/>
+      <mesh rotation={[-Math.PI /2, 0, 0]}
+      position={[0,-0.1,0]} 
+      receiveShadow = {true}
+      onPointerDown={ (e) => {
+        mouseIsUp = false;
+        mouseDownHandler(e)
+      }}
+      onPointerUp = {e => {
+        if(props.resetStatus == true || mouseIsUp == true){
+          mouseIsUp = true;
+        }
+        mouseUpHandler(e)
+      }}
+      onPointerMove = {e => {
+        if(mouseIsUp == true || props.resetStatus == false){
+          return;
+        }
+        else if(mouseIsUp == false){
+          currentHoverNodeId = Math.floor(e.faceIndex/2);
+          return;
+        }
+      }}
+      >
+      <primitive attach = 'geometry' object = {groundGeometry}  />  
+      <primitive attach = 'material' object = {groundMaterial}  />   
+      </mesh>
+      <axesHelper />
     </mesh>
     )
 }

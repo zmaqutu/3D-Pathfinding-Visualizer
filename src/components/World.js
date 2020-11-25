@@ -111,6 +111,7 @@ function World(props) {
             updateRunState = {updateRunState}
             stopClearPath = {stopClearPath}
             stopClearWalls = {stopClearWalls}
+            resetStatus = {resetCamera}
             selectedAlgorithm = {selectedAlgorithm} 
             worldProperties = {
             {
