@@ -77,7 +77,7 @@ function World(props) {
         </select>
         <button onClick = {e => setRunState(true)}>Vizualize</button>
         <button onClick = {e => setClearPath(true)}>Clear Path</button>
-        <button onClick = {e => console.log("Path Cleared")}>Clear Walls</button>
+        <button onClick = {e => setClearWalls(true)}>Clear Walls</button>
         <button onClick = {e => setResetCamera(!resetCamera)}>Setup World</button>
         <Canvas colorManagement 
         camera={

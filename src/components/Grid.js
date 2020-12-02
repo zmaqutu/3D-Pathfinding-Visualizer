@@ -17,7 +17,7 @@ function Grid(props) {
   let mouseDownX = 0;
   let mouseDownY = 0;
   let previousHoverNodeId;
-  let currentHoverNodeId = 0;
+  let currentHoverNodeId;
 
   let mouseIsUp = true;
 
@@ -27,14 +27,24 @@ function Grid(props) {
   const [groundGeometry, setGroundGeometry] = useState(new THREE.PlaneGeometry(300,300,30,30));
   //const [runState, setRunState] = useState(props.worldProperties.runState);
   const runState = props.worldProperties.runState;
-  const [randomNumber, randonum] = useState(0);
+  const clearWall = props.worldProperties.clearWalls; //rename this variable
+  const clearThePath = props.worldProperties.clearPath; // rename this variable too
+
 
 
   useEffect(() => {
     if(props.worldProperties.runState == true){
+      clearPath();
       visualizeAlgorithm();
     }
-  }, [runState]);
+    else if(props.worldProperties.clearWalls == true){
+      clearWalls();
+    }
+    else if(props.worldProperties.clearPath == true){
+      clearPath();
+    }
+  }, [runState, clearWall, clearThePath]);
+
 
   const loader = useMemo(() => new THREE.TextureLoader().load(img,
     function(texture){
@@ -159,7 +169,6 @@ function Grid(props) {
     else
     {
       let nodeId = findNodeId(event.faceIndex);
-      console.log(nodeId)
       if(terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status == "start" || terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status == "finish"){
       return;
       }
@@ -258,6 +267,29 @@ function Grid(props) {
       }, timerDelay * i);
     }
     props.updateRunState(false);
+  }
+
+  function clearWalls(){
+    for(let i = 0; i < props.worldProperties.rows; i++){
+      for(let j = 0; j < props.worldProperties.cols; j++){
+        if(terrain.grid[i][j].status == "wall"){
+          terrain.grid[i][j].status = "default";
+          tweenToColor(terrain.grid[i][j], groundGeometry, [props.worldProperties.colors.default])
+        }
+      }
+    }
+    props.stopClearWalls();
+  }
+  function clearPath(){
+    for(let i = 0; i < props.worldProperties.rows; i++){
+      for(let j = 0; j < props.worldProperties.cols; j++){
+        if(terrain.grid[i][j].status == "visited"){
+          terrain.grid[i][j].status = "default";
+          tweenToColor(terrain.grid[i][j], groundGeometry, [props.worldProperties.colors.default]);
+        }
+      }
+    }
+    props.stopClearPath();
   }
   
   return (

@@ -25,10 +25,11 @@ function Controls(props) {
     
     function resetCamera() {
         new TWEEN.Tween(camera.position)
-            .to({ x: 0, y: 350, z: 0 }, 200)
+            .to({ x: 0, y: 400, z: 0 }, 2000)
             .easing(TWEEN.Easing.Exponential.Out)
             .onUpdate(() => {
                 camera.lookAt(scene.position);
+
             })
             .onComplete(() => {
                 let lookDirection = new THREE.Vector3();
