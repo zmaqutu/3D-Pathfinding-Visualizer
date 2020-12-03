@@ -33,28 +33,28 @@ function World(props) {
        setClearWalls(false);
    }
    function handleOnChange(event){
-       if(event.target.value == "Dijkstra"){
+       if(event.target.value === "Dijkstra"){
            setSelectedAlgorithm({
                algorithm: "Dijkstra",
                type: "weighted", 
                heuristic: "",
            });
        }
-       else if(event.target.value == "aStar"){
+       else if(event.target.value === "aStar"){
            setSelectedAlgorithm({
                algorithm: "aStar",
                type: "weighted",
                heuristic: "poweredManhattanDistance",
            });
        }
-       else if(event.target.value == "BFS"){
+       else if(event.target.value === "BFS"){
            setSelectedAlgorithm({
                algorithm: "BFS",
                type: "unweighted",
                heuristic: "",
            });
        }
-       else if(event.target.value == "DFS"){
+       else if(event.target.value === "DFS"){
            setSelectedAlgorithm({
                algorithm: "DFS",
                type: "unweighted",

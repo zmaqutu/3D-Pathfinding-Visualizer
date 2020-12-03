@@ -4,7 +4,7 @@ export function weightedSearchAlgorithm(grid, start, target, nodesToAnimate, nam
   // Initialze nodes
 	start.distance = 0;
 	start.direction = "right";
-	if(name == "aStar") {
+	if(name === "aStar") {
 		start.totalDistance = 0;
 	}
 	// Should be a Priority Queue
@@ -16,11 +16,10 @@ export function weightedSearchAlgorithm(grid, start, target, nodesToAnimate, nam
     }
     if (currentNode.distance === Infinity) return false;
     nodesToAnimate.push(currentNode);
-    if(currentNode.status != "start")
-    {
+    //if(currentNode.status !== "start" && currentNode.status !== "finish"){
       currentNode.status = "visited";
-    }
-		// Ending condition
+    //}
+    // Ending condition
 		if (currentNode.id === target.id) return "success!";
 		// Updating neighbors
     if (name === "CLA" || name === "greedy" || name == "aStar") {
@@ -102,7 +101,6 @@ function updateNode(currentNode, targetNode, actualStartNode, actualTargetNode, 
     targetNode.path = distance[1];
 		targetNode.direction = distance[2];
 		if(name == "aStar") {
-      console.log("Why isnt A* working")
 			targetNode.totalDistance = targetNode.distance + targetNode.heuristicDistance;
 		}
   }

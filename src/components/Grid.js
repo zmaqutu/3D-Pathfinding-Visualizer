@@ -26,24 +26,34 @@ function Grid(props) {
   
   const [groundGeometry, setGroundGeometry] = useState(new THREE.PlaneGeometry(300,300,30,30));
   //const [runState, setRunState] = useState(props.worldProperties.runState);
+  const selectedAlgorithm = props.selectedAlgorithm;
   const runState = props.worldProperties.runState;
   const clearWall = props.worldProperties.clearWalls; //rename this variable
   const clearThePath = props.worldProperties.clearPath; // rename this variable too
 
 
 
+
   useEffect(() => {
-    if(props.worldProperties.runState == true){
-      clearPath();
+    if(props.worldProperties.runState === true){
       visualizeAlgorithm();
     }
-    else if(props.worldProperties.clearWalls == true){
+    else if(props.worldProperties.clearWalls === true){
       clearWalls();
     }
-    else if(props.worldProperties.clearPath == true){
+    else if(props.worldProperties.clearPath === true){
       clearPath();
     }
   }, [runState, clearWall, clearThePath]);
+  /*useEffect(() => {
+    for(let i = 0; i < props.worldProperties.rows; i++){
+      for(let j = 0; j < props.worldProperties.cols; j++){
+        if(terrain.grid[i][j].status === "visited" ){
+          terrain.grid[i][j].status = "default";
+        }
+      }
+    }
+  }, [selectedAlgorithm]);*/
 
 
   const loader = useMemo(() => new THREE.TextureLoader().load(img,
@@ -105,7 +115,7 @@ function Grid(props) {
       status = "finish";
     }
     let node = {
-        id: row * col + col,
+        id: row * props.worldProperties.cols + col,
         row: row,
         col: col,
         faces: faces,
@@ -117,7 +127,6 @@ function Grid(props) {
         weight: 0,
         previousNode: null,
     };
-    
     if(status === "start"){
       tweenToColor(node, groundGeometry, [props.worldProperties.colors.start]);
       
@@ -137,17 +146,18 @@ function Grid(props) {
   }
 
   function hoverLoop(){
-    if(mouseIsUp || currentHoverNodeId == previousHoverNodeId){
+    if(mouseIsUp || currentHoverNodeId === previousHoverNodeId){
       return;
     }
     else{
       previousHoverNodeId = currentHoverNodeId;
       let nodeRow = Math.floor(currentHoverNodeId / props.worldProperties.rows);
       let nodeCol = currentHoverNodeId % props.worldProperties.cols
-      if(terrain.grid[nodeRow][nodeCol].status == "start" || terrain.grid[nodeRow][nodeCol].status == "finish"){
+      if((nodeRow === props.worldProperties.start.row && nodeCol === props.worldProperties.start.col) 
+        || (nodeRow === props.worldProperties.finish.row && nodeCol === props.worldProperties.finish.col)){
         return;
       }
-      else if(terrain.grid[nodeRow][nodeCol].status == "wall"){
+      else if(terrain.grid[nodeRow][nodeCol].status === "wall"){
         terrain.grid[nodeRow][nodeCol].status = "default";
         tweenToColor(terrain.grid[nodeRow][nodeCol], groundGeometry, [props.worldProperties.colors.default]);
       }
@@ -169,10 +179,11 @@ function Grid(props) {
     else
     {
       let nodeId = findNodeId(event.faceIndex);
-      if(terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status == "start" || terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status == "finish"){
+      if((nodeId.nodeRow === props.worldProperties.start.row && nodeId.nodeCol === props.worldProperties.start.col) 
+        || (nodeId.nodeRow === props.worldProperties.finish.row && nodeId.nodeCol === props.worldProperties.finish.col)){
       return;
       }
-      else if(terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status == "wall"){
+      else if(terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status === "wall"){
         terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status = "default";
         tweenToColor(terrain.grid[nodeId.nodeRow][nodeId.nodeCol], groundGeometry, [props.worldProperties.colors.default]);
         console.log(terrain.grid[nodeId.nodeRow][nodeId.nodeCol]);
@@ -205,18 +216,20 @@ function Grid(props) {
   }
   function visualizeAlgorithm(){
     console.log("Dijkstra Dijkstra Dijkstra");
+    clearPath();
+    console.log(terrain.grid)
     let nodesToAnimate = [];
     let processedSuccessfuly;
     const startNode = terrain.grid[props.worldProperties.start.row][props.worldProperties.start.col];
     const finishNode = terrain.grid[props.worldProperties.finish.row][props.worldProperties.finish.col];
-    if(props.selectedAlgorithm.type == "weighted"){
+    if(selectedAlgorithm.type === "weighted"){
       processedSuccessfuly = weightedSearchAlgorithm(
         terrain.grid,
         startNode,
         finishNode,
         nodesToAnimate,
-        props.selectedAlgorithm.algorithm,
-        props.selectedAlgorithm.heuristic,
+        selectedAlgorithm.algorithm,
+        selectedAlgorithm.heuristic,
       );
       console.log(processedSuccessfuly);
     }
@@ -234,10 +247,10 @@ function Grid(props) {
 					}, timerDelay * i);
 					return;
 				}
-				if ((visitedNodesInOrder[i].row == props.worldProperties.start.row &&
-            visitedNodesInOrder[i].col == props.worldProperties.start.col) ||
-					(visitedNodesInOrder[i].row == props.worldProperties.finish.row &&
-						visitedNodesInOrder[i].col == props.worldProperties.finish.col)
+				if ((visitedNodesInOrder[i].row === props.worldProperties.start.row &&
+            visitedNodesInOrder[i].col === props.worldProperties.start.col) ||
+					(visitedNodesInOrder[i].row === props.worldProperties.finish.row &&
+						visitedNodesInOrder[i].col === props.worldProperties.finish.col)
 				) {
 					continue;
 				}
@@ -262,17 +275,18 @@ function Grid(props) {
         tweenToColor(node, groundGeometry, [props.worldProperties.colors.path], undefined, {
           position: false,
         });
-        if (i == nodesInShortestPathOrder.length - 1) {
+        if (i === nodesInShortestPathOrder.length - 1) {
                 }
       }, timerDelay * i);
     }
     props.updateRunState(false);
+    console.log(terrain.grid[5][5]);
   }
 
   function clearWalls(){
     for(let i = 0; i < props.worldProperties.rows; i++){
       for(let j = 0; j < props.worldProperties.cols; j++){
-        if(terrain.grid[i][j].status == "wall"){
+        if(terrain.grid[i][j].status === "wall"){
           terrain.grid[i][j].status = "default";
           tweenToColor(terrain.grid[i][j], groundGeometry, [props.worldProperties.colors.default])
         }
@@ -281,12 +295,25 @@ function Grid(props) {
     props.stopClearWalls();
   }
   function clearPath(){
+    TWEEN.removeAll();
     for(let i = 0; i < props.worldProperties.rows; i++){
       for(let j = 0; j < props.worldProperties.cols; j++){
-        if(terrain.grid[i][j].status == "visited"){
+        if(i === props.worldProperties.start.row && j === props.worldProperties.start.col){
+          terrain.grid[i][j].status = "start"; 
+        }
+        if(i === props.worldProperties.finish.row && j === props.worldProperties.finish.col){
+          terrain.grid[i][j].status = "finish"; 
+        }
+        
+        if(terrain.grid[i][j].status === "visited"){
           terrain.grid[i][j].status = "default";
           tweenToColor(terrain.grid[i][j], groundGeometry, [props.worldProperties.colors.default]);
         }
+        terrain.grid[i][j].distance = Infinity;
+        terrain.grid[i][j].totalDistance = Infinity;
+        terrain.grid[i][j].heuristicDistance = null;
+        terrain.grid[i][j].direction = null;
+        terrain.grid[i][j].previousNode = null;
       }
     }
     props.stopClearPath();
@@ -303,16 +330,16 @@ function Grid(props) {
         mouseDownHandler(e)
       }}
       onPointerUp = {e => {
-        if(props.resetStatus == true || mouseIsUp == true){
+        if(props.resetStatus === true || mouseIsUp === true){
           mouseIsUp = true;
         }
         mouseUpHandler(e)
       }}
       onPointerMove = {e => {
-        if(mouseIsUp == true || props.resetStatus == false){
+        if(mouseIsUp === true || props.resetStatus === false){
           return;
         }
-        else if(mouseIsUp == false){
+        else if(mouseIsUp === false){
           currentHoverNodeId = Math.floor(e.faceIndex/2);
           return;
         }
