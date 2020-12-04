@@ -33,6 +33,7 @@ function Grid(props) {
   const runState = props.worldProperties.runState;
   const clearTheWalls = props.worldProperties.clearWalls; //rename this variable
   const clearThePath = props.worldProperties.clearPath; // rename this variable too
+  const algorithmSpeed = props.algorithmSpeed;
 
 
 
@@ -67,6 +68,8 @@ function Grid(props) {
 
          animateMaze(nodesToAnimate, "wall", 30)
     }
+    //const algorithmSpeed = props.algorithmSpeed;
+    //console.log(algorithmSpeed);
   }, [runState, clearTheWalls, clearThePath, selectedMazeAlgorithm]);
 
 
@@ -257,7 +260,8 @@ function Grid(props) {
     }
     const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
     //add conditions for unweighted and no paths found
-    animateAlgorithm(nodesToAnimate, nodesInShortestPathOrder, 15);
+    //console.log(algorithmSpeed + " is the speed were using")
+    animateAlgorithm(nodesToAnimate, nodesInShortestPathOrder, algorithmSpeed);
     
     
   }

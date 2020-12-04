@@ -21,6 +21,7 @@ function World(props) {
    const [clearPath, setClearPath] = useState(false);
    const cameraPosition = useRef([0,350,0]);
    const [selectedMazeAlgorithm, setSelectedMazeAlgorithm] = useState("");
+   const [algorithmSpeed, setAlgorithmSpeed] = useState("15");
 
 
    //calling on this funciton in the child component (Grid) to update runstate in this parent
@@ -91,6 +92,11 @@ function World(props) {
         <button onClick = {e => setClearPath(true)}>Clear Path</button>
         <button onClick = {e => setClearWalls(true)}>Clear Walls</button>
         <button onClick = {e => setResetCamera(!resetCamera)}>Setup World</button>
+        <select name = "algorithmSpeed" id = "algorithmSpeed" onChange = { e=> setAlgorithmSpeed(e.target.value)}>
+            <option value = "15">Fast</option>
+            <option value = "25">Medium</option>
+            <option value = "80">Slow</option>
+        </select>
         <Canvas colorManagement 
         camera={
             {
@@ -126,7 +132,8 @@ function World(props) {
             stopMazeSelection = {stopMazeSelection}
             resetStatus = {resetCamera}
             selectedAlgorithm = {selectedAlgorithm}
-            selectedMazeAlgorithm = {selectedMazeAlgorithm} 
+            selectedMazeAlgorithm = {selectedMazeAlgorithm}
+            algorithmSpeed = {algorithmSpeed} 
             worldProperties = {
             {
                 rows: 30,
