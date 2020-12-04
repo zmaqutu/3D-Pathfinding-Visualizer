@@ -8,6 +8,7 @@ import { tweenToColor, getNodesInShortestPathOrder } from './algorithms/helpers'
 import TWEEN, { Tween } from '@tweenjs/tween.js';
 import { weightedSearchAlgorithm } from "./algorithms/weightedSearchAlgorithm.js";
 import { unweightedSearchAlgorithm } from "./algorithms/unweightedSearchAlgorithm.js";
+import { randomMaze, recursiveDivisionMaze } from './algorithms/mazeAlgorithms';
 
 
 
@@ -28,8 +29,9 @@ function Grid(props) {
   const [groundGeometry, setGroundGeometry] = useState(new THREE.PlaneGeometry(300,300,30,30));
   //const [runState, setRunState] = useState(props.worldProperties.runState);
   const selectedAlgorithm = props.selectedAlgorithm;
+  const selectedMazeAlgorithm = props.selectedMazeAlgorithm;
   const runState = props.worldProperties.runState;
-  const clearWall = props.worldProperties.clearWalls; //rename this variable
+  const clearTheWalls = props.worldProperties.clearWalls; //rename this variable
   const clearThePath = props.worldProperties.clearPath; // rename this variable too
 
 
@@ -45,7 +47,27 @@ function Grid(props) {
     else if(props.worldProperties.clearPath === true){
       clearPath();
     }
-  }, [runState, clearWall, clearThePath]);
+    else if(props.selectedMazeAlgorithm === "randomMaze"){
+      let nodesToAnimate = [];
+      randomMaze(terrain.grid, nodesToAnimate, "wall");
+      animateMaze(nodesToAnimate, "wall", 30);
+    }
+    else if(props.selectedMazeAlgorithm === "recursiveDivision"){
+      let nodesToAnimate = [];
+      recursiveDivisionMaze(
+        terrain.grid, 
+        2, 
+        terrain.grid.length - 3,
+         2, 
+         terrain.grid.length - 3, 
+         "horizontal",
+         false,
+         nodesToAnimate,
+         "wall");
+
+         animateMaze(nodesToAnimate, "wall", 30)
+    }
+  }, [runState, clearTheWalls, clearThePath, selectedMazeAlgorithm]);
 
 
   const loader = useMemo(() => new THREE.TextureLoader().load(img,
@@ -317,6 +339,20 @@ function Grid(props) {
       }
     }
     props.stopClearPath();
+  }
+  function animateMaze(nodesToAnimate, type, timerDelay){
+    clearWalls();
+    for(let i = 0; i < nodesToAnimate.length; i++){
+      let nodeRow = nodesToAnimate[i].row;
+      let nodeCol = nodesToAnimate[i].col
+      setTimeout(() => {
+        //const node = nodesToAnimate[i];
+       // node.status = type;
+       terrain.grid[nodeRow][nodeCol].status = "wall";
+      tweenToColor(terrain.grid[nodeRow][nodeCol], groundGeometry, [props.worldProperties.colors.wall]);
+      }, timerDelay * i);
+      props.stopMazeSelection();
+    }
   }
   
   return (

@@ -20,6 +20,7 @@ function World(props) {
    const [clearWalls, setClearWalls] = useState(false);
    const [clearPath, setClearPath] = useState(false);
    const cameraPosition = useRef([0,350,0]);
+   const [selectedMazeAlgorithm, setSelectedMazeAlgorithm] = useState("");
 
 
    //calling on this funciton in the child component (Grid) to update runstate in this parent
@@ -65,6 +66,12 @@ function World(props) {
    function updateResetStatus(){
        setResetCamera(false);
    }
+   function handleMazeChange(event){
+       setSelectedMazeAlgorithm(event.target.value);
+   }
+   function stopMazeSelection(){
+       setSelectedMazeAlgorithm("");
+   }
 
     return (
         <>
@@ -74,6 +81,11 @@ function World(props) {
             <option value = "aStar">A* Search</option>
             <option value = "BFS">Breadth First Search</option>
             <option value = "DFS">Depth First Search</option>
+        </select>
+        <select name = "mazes" id = "mazes" onChange = {e => handleMazeChange(e)}>
+            <option>Select Maze</option>
+            <option value = "randomMaze">Random Maze</option>
+            <option value = "recursiveDivision">Recursive Division</option>
         </select>
         <button onClick = {e => setRunState(true)}>Vizualize</button>
         <button onClick = {e => setClearPath(true)}>Clear Path</button>
@@ -111,8 +123,10 @@ function World(props) {
             updateRunState = {updateRunState}
             stopClearPath = {stopClearPath}
             stopClearWalls = {stopClearWalls}
+            stopMazeSelection = {stopMazeSelection}
             resetStatus = {resetCamera}
-            selectedAlgorithm = {selectedAlgorithm} 
+            selectedAlgorithm = {selectedAlgorithm}
+            selectedMazeAlgorithm = {selectedMazeAlgorithm} 
             worldProperties = {
             {
                 rows: 30,
