@@ -7,6 +7,7 @@ import img from './floor_texture.jpg';
 import { tweenToColor, getNodesInShortestPathOrder } from './algorithms/helpers'
 import TWEEN, { Tween } from '@tweenjs/tween.js';
 import { weightedSearchAlgorithm } from "./algorithms/weightedSearchAlgorithm.js";
+import { unweightedSearchAlgorithm } from "./algorithms/unweightedSearchAlgorithm.js";
 
 
 
@@ -45,15 +46,6 @@ function Grid(props) {
       clearPath();
     }
   }, [runState, clearWall, clearThePath]);
-  /*useEffect(() => {
-    for(let i = 0; i < props.worldProperties.rows; i++){
-      for(let j = 0; j < props.worldProperties.cols; j++){
-        if(terrain.grid[i][j].status === "visited" ){
-          terrain.grid[i][j].status = "default";
-        }
-      }
-    }
-  }, [selectedAlgorithm]);*/
 
 
   const loader = useMemo(() => new THREE.TextureLoader().load(img,
@@ -217,7 +209,6 @@ function Grid(props) {
   function visualizeAlgorithm(){
     console.log("Dijkstra Dijkstra Dijkstra");
     clearPath();
-    console.log(terrain.grid)
     let nodesToAnimate = [];
     let processedSuccessfuly;
     const startNode = terrain.grid[props.worldProperties.start.row][props.worldProperties.start.col];
@@ -232,6 +223,15 @@ function Grid(props) {
         selectedAlgorithm.heuristic,
       );
       console.log(processedSuccessfuly);
+    }
+    else{
+      processedSuccessfuly = unweightedSearchAlgorithm(
+        terrain.grid,
+        startNode,
+        finishNode,
+        nodesToAnimate,
+        selectedAlgorithm.algorithm,
+      );
     }
     const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
     //add conditions for unweighted and no paths found
