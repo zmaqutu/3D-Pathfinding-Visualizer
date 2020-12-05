@@ -8,18 +8,13 @@ export function getAllNodes(grid) {
 	return nodes;
 }
 
-function animate(time) {
-    window.requestAnimationFrame(animate);
-TWEEN.update(time);	
-}
-
 // Backtracks from the finishNode to find the shortest path.
 // Only works when called *after* the dijkstra method above.
 export function getNodesInShortestPathOrder(finishNode) {
 	const nodesInShortestPathOrder = [];
 	let currentNode = finishNode;
 	//Excluding finish node
-	if(currentNode.previousNode != null) {
+	if(currentNode.previousNode !== null) {
 		currentNode = currentNode.previousNode;
 	}
 	while (currentNode !== null) {

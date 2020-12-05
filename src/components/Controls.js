@@ -1,17 +1,13 @@
 import { OrbitControls } from 'drei';
-import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls.js";
-import React, {useEffect, useState, useRef } from 'react';
-import { useThree, useFrame } from 'react-three-fiber';
-import TWEEN, { Tween } from '@tweenjs/tween.js';
-import * as THREE from 'three';
+import React, {useEffect, useRef } from 'react';
+import { useThree } from 'react-three-fiber';
+import TWEEN from '@tweenjs/tween.js';
 
 
 function Controls(props) {
     const resetStatus = props.resetStatus;
     const {
         camera,
-        gl,
-        scene,
     } = useThree();
 
     const controls = useRef();
@@ -19,7 +15,7 @@ function Controls(props) {
 
 
     useEffect(() => {
-        if(props.resetStatus == true){
+        if(props.resetStatus === true){
             resetCamera();
         }
        
@@ -29,7 +25,7 @@ function Controls(props) {
 
             TWEEN.removeAll();
 			new TWEEN.Tween(camera.position)
-				.to({ x: 0, y: 400, z: 0 }, 250)
+				.to({ x: 0, y: 400, z: 0 }, 2000)
 				.easing(TWEEN.Easing.Exponential.Out)
 				.onComplete(() => {
                     controls.current.update();

@@ -13,7 +13,7 @@ export function unweightedSearchAlgorithm(grid, start, target, nodesToAnimate, n
       currentNeighbors.forEach(neighbor => {
         if (!exploredNodes[neighbor.id]) {
           if (name === "BFS") exploredNodes[neighbor.id] = true;
-                  if(neighbor.id != start.id) {
+                  if(neighbor.id !== start.id) {
                       neighbor.previousNode = currentNode;
                   }
           structure.push(neighbor);
@@ -59,5 +59,5 @@ export function unweightedSearchAlgorithm(grid, start, target, nodesToAnimate, n
               neighbors.unshift(neighbor);
           }
       }
-      return neighbors.filter(neighbor => neighbor.stutus != "visited");
+      return neighbors.filter(neighbor => neighbor.stutus !== "visited");
   }

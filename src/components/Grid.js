@@ -1,11 +1,8 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react'
 import * as THREE from 'three'
-import { Color, Geometry, MeshLambertMaterial, TextureLoader } from 'three';
-import Tiles from './Tiles';
-import { Component } from 'react'
 import img from './floor_texture.jpg';
 import { tweenToColor, getNodesInShortestPathOrder } from './algorithms/helpers'
-import TWEEN, { Tween } from '@tweenjs/tween.js';
+import TWEEN from '@tweenjs/tween.js';
 import { weightedSearchAlgorithm } from "./algorithms/weightedSearchAlgorithm.js";
 import { unweightedSearchAlgorithm } from "./algorithms/unweightedSearchAlgorithm.js";
 import { randomMaze, recursiveDivisionMaze } from './algorithms/mazeAlgorithms';
@@ -24,7 +21,6 @@ function Grid(props) {
   let mouseIsUp = true;
 
   //const [mouseIsUp, setMouseIsUp] = useState(true);
-  const [hoverNodeId, setHoverNodeId] = useState(0)
   
   const [groundGeometry, setGroundGeometry] = useState(new THREE.PlaneGeometry(300,300,30,30));
   //const [runState, setRunState] = useState(props.worldProperties.runState);
@@ -49,11 +45,13 @@ function Grid(props) {
       clearPath();
     }
     else if(props.selectedMazeAlgorithm === "randomMaze"){
+      clearPath();
       let nodesToAnimate = [];
       randomMaze(terrain.grid, nodesToAnimate, "wall");
       animateMaze(nodesToAnimate, "wall", 30);
     }
     else if(props.selectedMazeAlgorithm === "recursiveDivision"){
+      clearPath();
       let nodesToAnimate = [];
       recursiveDivisionMaze(
         terrain.grid, 
@@ -97,7 +95,6 @@ function Grid(props) {
     });
 
     const mesh = useRef(null);
-    {/*Declare and initialize state variables/ */}
     const [terrain, setTerrain] = useState({
       grid: initializeGrid(),
     });
@@ -190,7 +187,7 @@ function Grid(props) {
   }
 
   function mouseUpHandler(event){
-    if((mouseDownX != event.clientX) || (mouseDownY != event.clientY)){
+    if((mouseDownX !== event.clientX) || (mouseDownY !== event.clientY)){
       return;
     }
     else
@@ -227,10 +224,7 @@ function Grid(props) {
       mouseDownX = event.clientX;     //set X and Y mouse coordinates when mouseDown
       mouseDownY = event.clientY;
   }
-  function clickHandler(event){
-    mouseDownX = event.clientX;     //set X and Y mouse coordinates when mouseDown
-    mouseDownY = event.clientY;
-  }
+  
   function visualizeAlgorithm(){
     console.log("Dijkstra Dijkstra Dijkstra");
     clearPath();

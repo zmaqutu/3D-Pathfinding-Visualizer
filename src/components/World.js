@@ -1,14 +1,12 @@
 import React, { useState, useRef } from 'react';
 import Grid from './Grid';
-import * as THREE from 'three';
 import { Canvas } from "react-three-fiber";
 import Floor from './Floor';
-import Tiles from './Tiles';
-import { Plane, PerspectiveCamera } from 'drei';
-import { PlaneBufferGeometry, Scene } from 'three';
-import { useThree } from 'react-three-fiber';
-import Controls from './Controls';
-
+import Controls from './Controls'; 
+import { Button, Select, MenuItem } from '@material-ui/core'
+import BorderClearIcon from '@material-ui/icons/BorderClear';
+import TerrainIcon from '@material-ui/icons/Terrain';
+import UndoIcon from '@material-ui/icons/Undo';
 //<OrbitControls enabled = {!worldSetup} />
 function World(props) {
    let width = window.innerWidth;
@@ -76,27 +74,43 @@ function World(props) {
 
     return (
         <>
-        <select name = "algorithms" id = "algorithms" onChange={e => handleOnChange(e)}>
-            <option>Select Algorithm</option>
-            <option value = "Dijkstra">Dijkstra's Algorithm</option>
-            <option value = "aStar">A* Search</option>
-            <option value = "BFS">Breadth First Search</option>
-            <option value = "DFS">Depth First Search</option>
-        </select>
-        <select name = "mazes" id = "mazes" onChange = {e => handleMazeChange(e)}>
-            <option>Select Maze</option>
-            <option value = "randomMaze">Random Maze</option>
-            <option value = "recursiveDivision">Recursive Division</option>
-        </select>
-        <button onClick = {e => setRunState(true)}>Vizualize</button>
-        <button onClick = {e => setClearPath(true)}>Clear Path</button>
-        <button onClick = {e => setClearWalls(true)}>Clear Walls</button>
-        <button onClick = {e => setResetCamera(!resetCamera)}>Setup World</button>
-        <select name = "algorithmSpeed" id = "algorithmSpeed" onChange = { e=> setAlgorithmSpeed(e.target.value)}>
-            <option value = "15">Fast</option>
-            <option value = "25">Medium</option>
-            <option value = "80">Slow</option>
-        </select>
+        <Select name = "algorithms" id = "algorithms" displayEmpty onChange={e => handleOnChange(e)}>
+            <MenuItem>Select Algorithm</MenuItem>
+            <MenuItem value = "Dijkstra">Dijkstra's Algorithm</MenuItem>
+            <MenuItem value = "aStar">A* Search</MenuItem>
+            <MenuItem value = "BFS">Breadth First Search</MenuItem>
+            <MenuItem value = "DFS">Depth First Search</MenuItem>
+        </Select>
+        <Select name = "mazes" id = "mazes" displayEmpty onChange = {e => handleMazeChange(e)}>
+            <MenuItem>Select Maze</MenuItem>
+            <MenuItem value = "randomMaze">Random Maze</MenuItem>
+            <MenuItem value = "recursiveDivision">Recursive Division</MenuItem>
+        </Select>
+        <Button onClick = {e => setRunState(true)}  
+          variant="outlined"
+          disabled = {runState}
+          startIcon={ <BorderClearIcon />}
+          >Vizualize</Button>
+        <Button onClick = {e => setClearPath(true)}
+          variant="outlined"
+          disabled = {runState}
+          startIcon = {<UndoIcon/>}
+        >Clear Path</Button>
+        <Button onClick = {e => setClearWalls(true)}
+          variant="outlined"
+          disabled = {runState}
+          startIcon = {<UndoIcon/>}
+        >Clear Walls</Button>
+        <Button onClick = {e => setResetCamera(!resetCamera)}
+          variant="outlined"
+          startIcon = {<TerrainIcon />}
+        >Setup World</Button>
+        <Select name = "algorithmSpeed" id = "algorithmSpeed" displayEmpty onChange = { e=> setAlgorithmSpeed(e.target.value)}>
+            <MenuItem>Select Speed</MenuItem>
+            <MenuItem value = "15">Fast</MenuItem>
+            <MenuItem value = "25">Medium</MenuItem>
+            <MenuItem value = "80">Slow</MenuItem>
+        </Select>
         <Canvas colorManagement 
         camera={
             {

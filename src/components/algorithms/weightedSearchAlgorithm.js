@@ -22,7 +22,7 @@ export function weightedSearchAlgorithm(grid, start, target, nodesToAnimate, nam
     // Ending condition
 		if (currentNode.id === target.id) return "success!";
 		// Updating neighbors
-    if (name === "CLA" || name === "greedy" || name == "aStar") {
+    if (name === "CLA" || name === "greedy" || name === "aStar") {
       updateNeighbors(grid, currentNode, start, target, name, heuristic);
     } else if (name === "Dijkstra") {
       updateNeighbors(grid, currentNode);
@@ -33,7 +33,7 @@ export function weightedSearchAlgorithm(grid, start, target, nodesToAnimate, nam
 function closestNode(unvisitedNodes, name) {
   let currentClosest, index;
   for (let i = 0; i < unvisitedNodes.length; i++) {
-		if(name == "aStar") {
+		if(name === "aStar") {
 			if (!currentClosest || currentClosest.totalDistance > unvisitedNodes[i].totalDistance) {
 				currentClosest = unvisitedNodes[i];
 				index = i;
@@ -65,14 +65,6 @@ function updateNeighbors(grid, node, start, target, name, heuristic) {
   }
 }
 
-function averageNumberOfNodesBetween(currentNode) {
-  let num = 0;
-  while (currentNode.previousNode) {
-    num++;
-    currentNode = currentNode.previousNode;
-  }
-  return num;
-}
 
 
 function updateNode(currentNode, targetNode, actualStartNode, actualTargetNode, name, heuristic) {
@@ -89,7 +81,7 @@ function updateNode(currentNode, targetNode, actualStartNode, actualTargetNode, 
     }
   } else if (actualTargetNode && name === "greedy") {
     distanceToCompare = targetNode.weight + distance[0] + manhattanDistance(targetNode, actualTargetNode);
-  } else if(name == "aStar") {
+  } else if(name === "aStar") {
 		if (!targetNode.heuristicDistance) targetNode.heuristicDistance = manhattanDistance(targetNode, actualTargetNode);
 		distanceToCompare = currentNode.distance + targetNode.weight + distance[0];
 	} else {
@@ -100,7 +92,7 @@ function updateNode(currentNode, targetNode, actualStartNode, actualTargetNode, 
     targetNode.previousNode = currentNode;
     targetNode.path = distance[1];
 		targetNode.direction = distance[2];
-		if(name == "aStar") {
+		if(name === "aStar") {
 			targetNode.totalDistance = targetNode.distance + targetNode.heuristicDistance;
 		}
   }
@@ -113,7 +105,7 @@ function getNeighbors(node, grid) {
 	if (row < grid.length - 1) neighbors.push(grid[row + 1][col]);
 	if (col > 0) neighbors.push(grid[row][col - 1]);
 	if (col < grid[0].length - 1) neighbors.push(grid[row][col + 1]);
-	return neighbors.filter(neighbor => neighbor.stutus != "visited");
+	return neighbors.filter(neighbor => neighbor.stutus !== "visited");
 }
 
 
