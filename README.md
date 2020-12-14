@@ -1,3 +1,16 @@
+<h1 align="center">3D Pathfinding Algorithm Visualizer </h1>
+
+<div align="center" >
+  <img src="https://img.shields.io/badge/made%20by-Zongo%20Maqutu-blue" />
+  <img src="https://img.shields.io/badge/React%20Js-v17.0.1-61dafb" />
+  <img src="https://img.shields.io/badge/Javascript-94%25-fffe6a" />
+  <img src="https://img.shields.io/badge/HTML-94%25-e34c26" />
+  <img src="https://img.shields.io/badge/pull%20requests-welcome-green" />
+</div>
+
+
+
+  
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
