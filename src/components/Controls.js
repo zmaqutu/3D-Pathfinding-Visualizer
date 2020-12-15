@@ -25,7 +25,7 @@ function Controls(props) {
 
             TWEEN.removeAll();
 			new TWEEN.Tween(camera.position)
-				.to({ x: 0, y: 400, z: 0 }, 2000)
+				.to({ x: 0, y: 380, z: 0 }, 2000)
 				.easing(TWEEN.Easing.Exponential.Out)
 				.onComplete(() => {
                     controls.current.update();

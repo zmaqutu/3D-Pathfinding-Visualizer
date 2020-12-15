@@ -354,7 +354,7 @@ function Grid(props) {
   }
   
   return (
-    <mesh ref = {mesh} position = {[0,0,0]}>
+    <mesh ref = {mesh} position = {[0,0,-10]}>
       <gridHelper args = {[300, props.gridDimensions, 0x5c78bd, 0x5c78bd] }/>
       <mesh rotation={[-Math.PI /2, 0, 0]}
       position={[0,-0.1,0]} 

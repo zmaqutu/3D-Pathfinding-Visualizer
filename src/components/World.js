@@ -7,10 +7,13 @@ import { Button, Select, MenuItem } from '@material-ui/core'
 import BorderClearIcon from '@material-ui/icons/BorderClear';
 import TerrainIcon from '@material-ui/icons/Terrain';
 import UndoIcon from '@material-ui/icons/Undo';
+import { spacing } from '@material-ui/system';
+import { makeStyles } from '@material-ui/core/styles';
 //<OrbitControls enabled = {!worldSetup} />
 function World(props) {
    let width = window.innerWidth;
    let height = window.innerHeigh;
+
 
    const [selectedAlgorithm,  setSelectedAlgorithm] = useState({});     // keeps track of the algorithm we choose
    const [runState, setRunState] = useState(false);                     //when runState is true the visualizer algorithm is running
@@ -20,6 +23,21 @@ function World(props) {
    const cameraPosition = useRef([0,350,0]);
    const [selectedMazeAlgorithm, setSelectedMazeAlgorithm] = useState("");
    const [algorithmSpeed, setAlgorithmSpeed] = useState("15");
+   const [selected_algo_is_undefined, setAlgo] = useState(true)
+   
+   const useStyles = makeStyles((theme) => ({
+    root: {
+      '& > *': {
+        margin: theme.spacing(1),
+        background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+    border: 0,
+    borderRadius: 3,
+    color: 'white',
+      },
+    },
+  }));
+
+  const classes = useStyles();
 
 
    //calling on this funciton in the child component (Grid) to update runstate in this parent
@@ -33,6 +51,12 @@ function World(props) {
        setClearWalls(false);
    }
    function handleOnChange(event){
+       if(event.target.value !== undefined){
+           setAlgo(false);
+        }
+       if(event.target.value === undefined){
+        setAlgo(true);
+        }
        if(event.target.value === "Dijkstra"){
            setSelectedAlgorithm({
                algorithm: "Dijkstra",
@@ -74,6 +98,7 @@ function World(props) {
 
     return (
         <>
+        <div align = "center" className={classes.root}>
         <Select name = "algorithms" id = "algorithms" displayEmpty onChange={e => handleOnChange(e)}>
             <MenuItem>Select Algorithm</MenuItem>
             <MenuItem value = "Dijkstra">Dijkstra's Algorithm</MenuItem>
@@ -86,9 +111,9 @@ function World(props) {
             <MenuItem value = "randomMaze">Random Maze</MenuItem>
             <MenuItem value = "recursiveDivision">Recursive Division</MenuItem>
         </Select>
-        <Button onClick = {e => setRunState(true)}  
+        <Button id = "button1zo"onClick = {e => setRunState(true)}  
           variant="outlined"
-          disabled = {runState}
+          disabled = {runState || selected_algo_is_undefined}
           startIcon={ <BorderClearIcon />}
           >Vizualize</Button>
         <Button onClick = {e => setClearPath(true)}
@@ -111,6 +136,7 @@ function World(props) {
             <MenuItem value = "25">Medium</MenuItem>
             <MenuItem value = "80">Slow</MenuItem>
         </Select>
+        </div>
         <Canvas colorManagement 
         camera={
             {
