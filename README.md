@@ -30,7 +30,7 @@ The algorithm starts at the root node and explores as far as possible along each
 ### Maze generation
 Two methods to generate a maze:
 * Recursive Division <img src="./readmeAssets/RecursiveDijkstra.gif" width="100%">
-* Random <img src="./readmeAssets/RandomMaze.gif" width="100%">
+* Random Maze<img src="./readmeAssets/RandomMaze.gif" width="100%">
 
 ### Libraries used
 * Three.js
