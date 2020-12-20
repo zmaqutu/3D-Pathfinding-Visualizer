@@ -8,6 +8,7 @@
   <img src="https://img.shields.io/badge/pull%20requests-welcome-green" />
 </div>
 
+*A Visualizer for some common pathfinding algorithms in 3D.*
 ## Live Demo
 A live interactive demo can be found [here](https://zmaqutu.github.io/3D-Pathfinding-Visualizer/).
 <img src="./readmeAssets/WorldSetup.gif" width="100%">
@@ -29,7 +30,7 @@ The algorithm starts at the root node and explores as far as possible along each
 ### Maze generation
 Two methods to generate a maze:
 * Recursive Division <img src="./readmeAssets/RecursiveDijkstra.gif" width="100%">
-* Random <img src="./readmeAssets/RecursiveDijkstra.gif" width="100%">
+* Random <img src="./readmeAssets/RandomMaze.gif" width="100%">
 
 ### Libraries used
 * Three.js
