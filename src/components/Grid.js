@@ -163,27 +163,39 @@ function Grid(props) {
     if(mouseIsUp || currentHoverNodeId === previousHoverNodeId){
       return;
     }
+    //else if(currentHoverNodeId){}
     else{
       previousHoverNodeId = currentHoverNodeId;
+      let prevNodeRow = Math.floor(previousHoverNodeId / props.worldProperties.rows);
+      let prevNodeCol = previousHoverNodeId % props.worldProperties.cols;
       let nodeRow = Math.floor(currentHoverNodeId / props.worldProperties.rows);
-      let nodeCol = currentHoverNodeId % props.worldProperties.cols
-      if((nodeRow === props.worldProperties.start.row && nodeCol === props.worldProperties.start.col) 
-        || (nodeRow === props.worldProperties.finish.row && nodeCol === props.worldProperties.finish.col)){
+      let nodeCol = currentHoverNodeId % props.worldProperties.cols;
+      
+      if(terrain.grid[nodeRow][nodeCol].status === "start" //if we drag over start of finish node
+        || terrain.grid[nodeRow][nodeCol].status === "finish"){
+          dragLoop(prevNodeRow,prevNodeCol,nodeRow,nodeCol);
         return;
       }
-      else if(terrain.grid[nodeRow][nodeCol].status === "wall"){
-        terrain.grid[nodeRow][nodeCol].status = "default";
-        tweenToColor(terrain.grid[nodeRow][nodeCol], groundGeometry, [props.worldProperties.colors.default]);
+      else{
+        if(terrain.grid[nodeRow][nodeCol].status === "wall"){
+          terrain.grid[nodeRow][nodeCol].status = "default";
+          tweenToColor(terrain.grid[nodeRow][nodeCol], groundGeometry, [props.worldProperties.colors.default]);
+        }
+        else
+        {
+          terrain.grid[nodeRow][nodeCol].status = "wall";
+          tweenToColor(terrain.grid[nodeRow][nodeCol], groundGeometry, [props.worldProperties.colors.wall]);
+        }
       }
-      else
-      {
-        terrain.grid[nodeRow][nodeCol].status = "wall";
-        tweenToColor(terrain.grid[nodeRow][nodeCol], groundGeometry, [props.worldProperties.colors.wall]);
-      }
-    
     }
-    //get coordinates of node i just clicked on
-    
+  }
+  function dragLoop(prevNodeRow,prevNodeCol,nodeRow,nodeCol, dragging = true){
+    console.log("PrevNodeRow = " + prevNodeRow)
+    //while(dragging){
+    terrain.grid[prevNodeRow][prevNodeCol].status = "default";
+    terrain.grid[nodeRow][nodeCol].status = "start";
+    tweenToColor(terrain.grid[prevNodeRow][prevNodeCol], groundGeometry, [props.worldProperties.colors.default]);
+    tweenToColor(terrain.grid[nodeRow][nodeCol], groundGeometry, [props.worldProperties.colors.start]);//}
   }
 
   function mouseUpHandler(event){
@@ -221,8 +233,8 @@ function Grid(props) {
     }
   }
   function mouseDownHandler(event){
-      mouseDownX = event.clientX;     //set X and Y mouse coordinates when mouseDown
-      mouseDownY = event.clientY;
+    mouseDownX = event.clientX;     //set X and Y mouse coordinates when mouseDown
+    mouseDownY = event.clientY;
   }
   
   function visualizeAlgorithm(){
@@ -370,7 +382,7 @@ function Grid(props) {
         mouseUpHandler(e)
       }}
       onPointerMove = {e => {
-        if(mouseIsUp === true || props.resetStatus === false){
+        if(mouseIsUp === true || props.resetStatus === false){          //if mouse isn't clicked do nothing on mouseMove
           return;
         }
         else if(mouseIsUp === false){
