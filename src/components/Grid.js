@@ -190,14 +190,15 @@ function Grid(props) {
     }
   }
   function dragLoop(prevNodeRow,prevNodeCol,nodeRow,nodeCol, dragging = true){
-    //console.log("PrevNodeRow = " + prevNodeRow)
-    //console.log("PrevNodeRow = " + prevNodeRow)
+    console.log("PrevNodeRow = " + prevNodeRow)
+    console.log("nodeRow = " + nodeRow)
     while(dragging){
       //terrain.grid[prevNodeRow][prevNodeCol].status = "default";
-      terrain.grid[nodeRow][nodeCol].status = "start";
       props.updateStartPosition(6,6);
-      tweenToColor(terrain.grid[nodeRow][nodeCol], groundGeometry, [props.worldProperties.colors.start]);
-      tweenToColor(terrain.grid[prevNodeRow][prevNodeCol], groundGeometry, [props.worldProperties.colors.default]);
+      terrain.grid[6][6].status = "start";
+      terrain.grid[5][5].status = "default";
+      tweenToColor(terrain.grid[5][5], groundGeometry, [props.worldProperties.colors.default]);
+      //tweenToColor(terrain.grid[nodeRow][nodeCol], groundGeometry, [props.worldProperties.colors.start]);
       //console.log("Dragging Start");
       //console.log( terrain.grid[nodeRow][nodeCol]);
       return;

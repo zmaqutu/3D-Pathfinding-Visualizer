@@ -24,6 +24,7 @@ function World(props) {
    const [selectedMazeAlgorithm, setSelectedMazeAlgorithm] = useState("");
    const [algorithmSpeed, setAlgorithmSpeed] = useState("15");
    const [selected_algo_is_undefined, setAlgo] = useState(true);
+   const [startPosition, setStartPosition] = useState([5,5]);
    const [startRow, setStartRow] = useState(5);
    const [startCol, setStartCol] = useState(5);
    const [finishRow, setFinishRow] = useState(25);
@@ -100,8 +101,9 @@ function World(props) {
        setSelectedMazeAlgorithm("");
    }
    function updateStartPosition(startRow, startCol){
-       setStartRow(startRow);
-       setStartCol(startCol);
+       //setStartRow(startRow);
+       //setStartCol(startCol);
+       setStartPosition([startRow,startCol])
    }
 
     return (
@@ -191,8 +193,8 @@ function World(props) {
                 clearPath: clearPath,
                 clearWalls: clearWalls,
                 start: {
-                    row: startRow,
-                    col: startCol,
+                    row: startPosition[0],
+                    col: startPosition[1],
                 },
                 finish: {
                     row: finishRow,
