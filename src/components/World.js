@@ -23,7 +23,11 @@ function World(props) {
    const cameraPosition = useRef([0,350,0]);
    const [selectedMazeAlgorithm, setSelectedMazeAlgorithm] = useState("");
    const [algorithmSpeed, setAlgorithmSpeed] = useState("15");
-   const [selected_algo_is_undefined, setAlgo] = useState(true)
+   const [selected_algo_is_undefined, setAlgo] = useState(true);
+   const [startRow, setStartRow] = useState(5);
+   const [startCol, setStartCol] = useState(5);
+   const [finishRow, setFinishRow] = useState(25);
+   const [finishCol, setFinishCol] = useState(25);
    
    const useStyles = makeStyles((theme) => ({
     root: {
@@ -94,6 +98,10 @@ function World(props) {
    }
    function stopMazeSelection(){
        setSelectedMazeAlgorithm("");
+   }
+   function updateStartPosition(startRow, startCol){
+       setStartRow(startRow);
+       setStartCol(startCol);
    }
 
     return (
@@ -170,6 +178,7 @@ function World(props) {
             stopClearPath = {stopClearPath}
             stopClearWalls = {stopClearWalls}
             stopMazeSelection = {stopMazeSelection}
+            updateStartPosition = {updateStartPosition}
             resetStatus = {resetCamera}
             selectedAlgorithm = {selectedAlgorithm}
             selectedMazeAlgorithm = {selectedMazeAlgorithm}
@@ -182,12 +191,12 @@ function World(props) {
                 clearPath: clearPath,
                 clearWalls: clearWalls,
                 start: {
-                    row: 5,
-                    col: 5,
+                    row: startRow,
+                    col: startCol,
                 },
                 finish: {
-                    row: 25,
-                    col: 25,
+                    row: finishRow,
+                    col: finishCol,
                 },
                 colors: {
                     start: {r: 0, g: 1, b: 0 },

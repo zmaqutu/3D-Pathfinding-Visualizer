@@ -190,12 +190,18 @@ function Grid(props) {
     }
   }
   function dragLoop(prevNodeRow,prevNodeCol,nodeRow,nodeCol, dragging = true){
-    console.log("PrevNodeRow = " + prevNodeRow)
-    //while(dragging){
-    terrain.grid[prevNodeRow][prevNodeCol].status = "default";
-    terrain.grid[nodeRow][nodeCol].status = "start";
-    tweenToColor(terrain.grid[prevNodeRow][prevNodeCol], groundGeometry, [props.worldProperties.colors.default]);
-    tweenToColor(terrain.grid[nodeRow][nodeCol], groundGeometry, [props.worldProperties.colors.start]);//}
+    //console.log("PrevNodeRow = " + prevNodeRow)
+    //console.log("PrevNodeRow = " + prevNodeRow)
+    while(dragging){
+      //terrain.grid[prevNodeRow][prevNodeCol].status = "default";
+      terrain.grid[nodeRow][nodeCol].status = "start";
+      props.updateStartPosition(6,6);
+      tweenToColor(terrain.grid[nodeRow][nodeCol], groundGeometry, [props.worldProperties.colors.start]);
+      tweenToColor(terrain.grid[prevNodeRow][prevNodeCol], groundGeometry, [props.worldProperties.colors.default]);
+      //console.log("Dragging Start");
+      //console.log( terrain.grid[nodeRow][nodeCol]);
+      return;
+    }
   }
 
   function mouseUpHandler(event){
