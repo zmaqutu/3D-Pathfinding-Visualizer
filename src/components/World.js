@@ -139,17 +139,7 @@ function World(props) {
             <MenuItem value = "80">Slow</MenuItem>
         </Select>
         </div>
-        <Tutorial 
-            colors = {
-                {
-                    start: {r: 0, g: 1, b: 0 },
-                    finish: {r: 1, g: 0, b: 0},
-                    wall: {r: 0.109, g: 0.109, b: 0.45},
-                    visited: {r: 0.329, g: 0.27, b: 0.968},
-                    path: {r: 1, g: 1, b: 0},
-                }
-            }
-        />
+        <Tutorial />
         <Canvas colorManagement 
         camera={
             {
