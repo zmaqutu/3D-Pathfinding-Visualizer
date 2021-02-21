@@ -9,6 +9,8 @@ import TerrainIcon from '@material-ui/icons/Terrain';
 import UndoIcon from '@material-ui/icons/Undo';
 import { spacing } from '@material-ui/system';
 import { makeStyles } from '@material-ui/core/styles';
+import Tutorial from './Tutorial'
+
 //<OrbitControls enabled = {!worldSetup} />
 function World(props) {
    let width = window.innerWidth;
@@ -137,6 +139,17 @@ function World(props) {
             <MenuItem value = "80">Slow</MenuItem>
         </Select>
         </div>
+        <Tutorial 
+            colors = {
+                {
+                    start: {r: 0, g: 1, b: 0 },
+                    finish: {r: 1, g: 0, b: 0},
+                    wall: {r: 0.109, g: 0.109, b: 0.45},
+                    visited: {r: 0.329, g: 0.27, b: 0.968},
+                    path: {r: 1, g: 1, b: 0},
+                }
+            }
+        />
         <Canvas colorManagement 
         camera={
             {
