@@ -17,6 +17,7 @@ function Grid(props) {
   let mouseDownY = 0;
   let previousHoverNodeId;
   let currentHoverNodeId;
+  let globalEvent;
 
   let mouseIsUp = true;
 
@@ -30,6 +31,7 @@ function Grid(props) {
   const clearTheWalls = props.worldProperties.clearWalls; //rename this variable
   const clearThePath = props.worldProperties.clearPath; // rename this variable too
   const algorithmSpeed = props.algorithmSpeed;
+  //const worldSetup = props.resetStatus;
 
 
 
@@ -66,6 +68,10 @@ function Grid(props) {
 
          animateMaze(nodesToAnimate, "wall", 30)
     }
+    /*if(worldSetup){
+      console.log(worldSetup)
+      clearWalls();
+    }*/
     //const algorithmSpeed = props.algorithmSpeed;
     //console.log(algorithmSpeed);
   }, [runState, clearTheWalls, clearThePath, selectedMazeAlgorithm]);
@@ -181,8 +187,7 @@ function Grid(props) {
           terrain.grid[nodeRow][nodeCol].status = "default";
           tweenToColor(terrain.grid[nodeRow][nodeCol], groundGeometry, [props.worldProperties.colors.default]);
         }
-        else
-        {
+        else if(nodeRow !== props.worldProperties.start.row || nodeCol !== props.worldProperties.start.col){
           terrain.grid[nodeRow][nodeCol].status = "wall";
           tweenToColor(terrain.grid[nodeRow][nodeCol], groundGeometry, [props.worldProperties.colors.wall]);
         }
@@ -190,10 +195,10 @@ function Grid(props) {
     }
   }
   function dragLoop(prevNodeRow,prevNodeCol,nodeRow,nodeCol, dragging = true){
-    console.log("PrevNodeRow = " + prevNodeRow)
-    console.log("nodeRow = " + nodeRow)
     while(dragging){
       //terrain.grid[prevNodeRow][prevNodeCol].status = "default";
+      //console.log(findNodeId(globalEvent.faceIndex))             //gives the position of the current start node before moved
+      //console.log({nodeRow,nodeCol})
       props.updateStartPosition(6,6);
       terrain.grid[6][6].status = "start";
       terrain.grid[5][5].status = "default";
@@ -371,7 +376,6 @@ function Grid(props) {
       props.stopMazeSelection();
     }
   }
-  
   return (
     <mesh ref = {mesh} position = {[0,0,-10]}>
       <gridHelper args = {[300, props.gridDimensions, 0x5c78bd, 0x5c78bd] }/>
@@ -394,6 +398,7 @@ function Grid(props) {
         }
         else if(mouseIsUp === false){
           currentHoverNodeId = Math.floor(e.faceIndex/2);
+          globalEvent = e;
           return;
         }
       }}
