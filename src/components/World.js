@@ -11,7 +11,7 @@ import { spacing } from '@material-ui/system';
 import { makeStyles } from '@material-ui/core/styles';
 import Tutorial from './Tutorial';
 import { AwesomeButton, AwesomeButtonProgress, AwesomeButtonSocial } from 'react-awesome-button';
-import AwesomeButtonStyles from "react-awesome-button/src/styles/styles.scss";
+import "react-awesome-button/dist/styles.css";
 
 //<OrbitControls enabled = {!worldSetup} />
 function World(props) {
@@ -128,7 +128,7 @@ function World(props) {
             </div>
             <div className = "header_items">
                 <AwesomeButtonProgress 
-                    type = "primary"
+                    type = "secondary"
                     size = "medium"
                     disabled = {runState || selected_algo_is_undefined}
                     loadingLabel = "Visualizing..."
@@ -146,7 +146,7 @@ function World(props) {
             </div>
             <div className = "header_items">
                 <AwesomeButtonProgress 
-                    type = "primary"
+                    type = "secondary"
                     size = "medium"
                     disabled = {runState}
                     loadingLabel = "Clearing Path..."
@@ -164,7 +164,7 @@ function World(props) {
             </div>
             <div className = "header_items">
                 <AwesomeButtonProgress 
-                    type = "primary"
+                    type = "secondary"
                     size = "medium"
                     disabled = {runState}
                     loadingLabel = "Clearing Walls..."
@@ -182,7 +182,7 @@ function World(props) {
             </div>
         <div className = "header_items">
         <AwesomeButton 
-            type = "primary"
+            type = "secondary"
             size = "medium"
             ripple = {true}
             action={(element, next) => {
