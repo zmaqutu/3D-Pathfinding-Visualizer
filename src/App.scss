@@ -20,6 +20,16 @@ body {
   padding-left: 100px;
 }
 
+.Buttons{
+  position:absolute;
+  top: 5px;;
+  left:0;
+  width:100%;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  z-index:1;
+}
 .info_container{
   position:absolute;
   right:15px;

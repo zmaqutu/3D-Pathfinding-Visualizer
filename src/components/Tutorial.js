@@ -6,30 +6,30 @@ function Tutorial(props) {
     //}
 
     return (
-        <div class = "info_container">
+        <div className = "info_container">
             <h1>This is the information container</h1>
             <table>
                 <tr>
                     <td>
-                    <div class="start_square" ></div>
+                    <div className="start_square" ></div>
                     </td>
                     <td>Start Node</td>
                 </tr>
                 <tr>
                     <td>
-                    <div class="finish_square" ></div>
+                    <div className="finish_square" ></div>
                     </td>
                     <td>Finish Node</td>
                 </tr>
                 <tr>
                     <td>
-                    <div class="visited_square" ></div>
+                    <div className="visited_square" ></div>
                     </td>
                     <td>Visited Node</td>
                 </tr>
                 <tr>
                     <td>
-                    <div class="path_square" ></div>
+                    <div className="path_square" ></div>
                     </td>
                     <td>Path Node</td>
                 </tr>

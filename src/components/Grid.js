@@ -6,6 +6,8 @@ import TWEEN from '@tweenjs/tween.js';
 import { weightedSearchAlgorithm } from "./algorithms/weightedSearchAlgorithm.js";
 import { unweightedSearchAlgorithm } from "./algorithms/unweightedSearchAlgorithm.js";
 import { randomMaze, recursiveDivisionMaze } from './algorithms/mazeAlgorithms';
+import { useThree } from 'react-three-fiber';
+
 
 
 
@@ -31,6 +33,13 @@ function Grid(props) {
   const clearThePath = props.worldProperties.clearPath; // rename this variable too
   const algorithmSpeed = props.algorithmSpeed;
 
+  //groundGeometry.rotateX(-Math.PI / 2)
+
+  const {
+    camera,
+  } = useThree();
+
+  
 
 
 
@@ -354,15 +363,15 @@ function Grid(props) {
   }
   
   return (
-    <mesh ref = {mesh} position = {[0,0,-10]}>
+    <mesh ref = {mesh} position = {[0,0,0]}>
       <gridHelper args = {[300, props.gridDimensions, 0x5c78bd, 0x5c78bd] }/>
-      <mesh rotation={[-Math.PI /2, 0, 0]}
-      position={[0,-0.1,0]} 
-      receiveShadow = {true}
-      onPointerDown={ (e) => {
-        mouseIsUp = false;
-        mouseDownHandler(e)
-      }}
+      <mesh rotation={[-Math.PI /2, 0, 0]} 
+        position={[0,-0.1,0]} 
+        receiveShadow = {true}
+        onPointerDown={ (e) => {
+          mouseIsUp = false;
+          mouseDownHandler(e)
+        }}
       onPointerUp = {e => {
         if(props.resetStatus === true || mouseIsUp === true){
           mouseIsUp = true;

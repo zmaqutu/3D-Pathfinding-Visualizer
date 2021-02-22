@@ -9,7 +9,9 @@ import TerrainIcon from '@material-ui/icons/Terrain';
 import UndoIcon from '@material-ui/icons/Undo';
 import { spacing } from '@material-ui/system';
 import { makeStyles } from '@material-ui/core/styles';
-import Tutorial from './Tutorial'
+import Tutorial from './Tutorial';
+import { AwesomeButton, AwesomeButtonProgress, AwesomeButtonSocial } from 'react-awesome-button';
+import AwesomeButtonStyles from "react-awesome-button/src/styles/styles.scss";
 
 //<OrbitControls enabled = {!worldSetup} />
 function World(props) {
@@ -17,12 +19,13 @@ function World(props) {
    let height = window.innerHeigh;
 
 
+
    const [selectedAlgorithm,  setSelectedAlgorithm] = useState({});     // keeps track of the algorithm we choose
    const [runState, setRunState] = useState(false);                     //when runState is true the visualizer algorithm is running
    const [resetCamera, setResetCamera] = useState(false);               //when resetCamera is true we reset the camera position
    const [clearWalls, setClearWalls] = useState(false);
    const [clearPath, setClearPath] = useState(false);
-   const cameraPosition = useRef([0,350,0]);
+   const cameraPosition = useRef([0,375,0]);
    const [selectedMazeAlgorithm, setSelectedMazeAlgorithm] = useState("");
    const [algorithmSpeed, setAlgorithmSpeed] = useState("15");
    const [selected_algo_is_undefined, setAlgo] = useState(true)
@@ -100,7 +103,7 @@ function World(props) {
 
     return (
         <>
-        <div align = "center" className={classes.root}>
+        <div className = "Buttons" align = "center" >
         <Select name = "algorithms" id = "algorithms" displayEmpty onChange={e => handleOnChange(e)}>
             <MenuItem>Select Algorithm</MenuItem>
             <MenuItem value = "Dijkstra">Dijkstra's Algorithm</MenuItem>
@@ -113,25 +116,64 @@ function World(props) {
             <MenuItem value = "randomMaze">Random Maze</MenuItem>
             <MenuItem value = "recursiveDivision">Recursive Division</MenuItem>
         </Select>
-        <Button id = "button1zo"onClick = {e => setRunState(true)}  
-          variant="outlined"
-          disabled = {runState || selected_algo_is_undefined}
-          startIcon={ <BorderClearIcon />}
-          >Vizualize</Button>
-        <Button onClick = {e => setClearPath(true)}
-          variant="outlined"
-          disabled = {runState}
-          startIcon = {<UndoIcon/>}
-        >Clear Path</Button>
-        <Button onClick = {e => setClearWalls(true)}
-          variant="outlined"
-          disabled = {runState}
-          startIcon = {<UndoIcon/>}
-        >Clear Walls</Button>
-        <Button onClick = {e => setResetCamera(!resetCamera)}
-          variant="outlined"
-          startIcon = {<TerrainIcon />}
-        >Setup World</Button>
+        <AwesomeButtonProgress 
+            type = "primary"
+            size = "medium"
+            disabled = {runState || selected_algo_is_undefined}
+            loadingLabel = "Visualizing..."
+            resultLabel = "Success"
+            ripple = {true}
+            action={(element, next) => {
+                setTimeout(() => {
+                    next(true, '');
+                    setRunState(true)
+                }, 1500);
+            }}
+            >
+            Visualize
+        </AwesomeButtonProgress>
+        <AwesomeButtonProgress 
+            type = "primary"
+            size = "medium"
+            disabled = {runState}
+            loadingLabel = "Clearing Path..."
+            resultLabel = "Path Cleared :-)"
+            ripple = {true}
+            action={(element, next) => {
+                setTimeout(() => {
+                    next(true, '');
+                    setClearPath(true)
+                }, 150);
+            }}
+            >
+            Clear Path
+        </AwesomeButtonProgress>
+        <AwesomeButtonProgress 
+            type = "primary"
+            size = "medium"
+            disabled = {runState}
+            loadingLabel = "Clearing Walls..."
+            resultLabel = "Walls Cleared :-)"
+            ripple = {true}
+            action={(element, next) => {
+                setTimeout(() => {
+                    next(true, '');
+                    setClearWalls(true)
+                }, 550);
+            }}
+            >
+            Clear Walls
+        </AwesomeButtonProgress>
+        <AwesomeButton 
+            type = "primary"
+            size = "medium"
+            ripple = {true}
+            action={(element, next) => {
+                setResetCamera(!resetCamera)
+            }}
+            >
+            Setup World
+        </AwesomeButton>
         <Select name = "algorithmSpeed" id = "algorithmSpeed" displayEmpty onChange = { e=> setAlgorithmSpeed(e.target.value)}>
             <MenuItem>Select Speed</MenuItem>
             <MenuItem value = "15">Fast</MenuItem>
@@ -144,9 +186,10 @@ function World(props) {
         camera={
             {
                 position: cameraPosition.current,
-                 fov: 52.5,
-                  aspect: width / height, 
-                  far: 5000
+                fov: 53,
+                aspect: width / height,
+                near: 1, 
+                far: 5000
                 }
             }
         >

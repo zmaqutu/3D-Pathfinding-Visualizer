@@ -12,6 +12,7 @@
     "@tweenjs/tween.js": "^18.6.4",
     "drei": "^1.5.7",
     "react": "^17.0.1",
+    "react-awesome-button": "^6.5.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.0",
     "react-select": "^3.1.0",
