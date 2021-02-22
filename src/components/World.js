@@ -33,11 +33,17 @@ function World(props) {
    const useStyles = makeStyles((theme) => ({
     root: {
       '& > *': {
-        margin: theme.spacing(1),
-        background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
-    border: 0,
-    borderRadius: 3,
-    color: 'white',
+        //margin: theme.spacing(1),
+        background: '#1E88E5',
+        border: 0,
+        borderRadius: 3,
+        color: 'white',
+        width: '150px',
+        height: '44px',
+        'margin-left': '10px',
+        'font-family': 'inherit',
+        'font-weight': 600,
+        'font-style': 'normal',
       },
     },
   }));
@@ -103,67 +109,78 @@ function World(props) {
 
     return (
         <>
-        <div className = "Buttons" align = "center" >
-        <Select name = "algorithms" id = "algorithms" displayEmpty onChange={e => handleOnChange(e)}>
-            <MenuItem>Select Algorithm</MenuItem>
-            <MenuItem value = "Dijkstra">Dijkstra's Algorithm</MenuItem>
-            <MenuItem value = "aStar">A* Search</MenuItem>
-            <MenuItem value = "BFS">Breadth First Search</MenuItem>
-            <MenuItem value = "DFS">Depth First Search</MenuItem>
-        </Select>
-        <Select name = "mazes" id = "mazes" displayEmpty onChange = {e => handleMazeChange(e)}>
-            <MenuItem>Select Maze</MenuItem>
-            <MenuItem value = "randomMaze">Random Maze</MenuItem>
-            <MenuItem value = "recursiveDivision">Recursive Division</MenuItem>
-        </Select>
-        <AwesomeButtonProgress 
-            type = "primary"
-            size = "medium"
-            disabled = {runState || selected_algo_is_undefined}
-            loadingLabel = "Visualizing..."
-            resultLabel = "Success"
-            ripple = {true}
-            action={(element, next) => {
-                setTimeout(() => {
-                    next(true, '');
-                    setRunState(true)
-                }, 1500);
-            }}
-            >
-            Visualize
-        </AwesomeButtonProgress>
-        <AwesomeButtonProgress 
-            type = "primary"
-            size = "medium"
-            disabled = {runState}
-            loadingLabel = "Clearing Path..."
-            resultLabel = "Path Cleared :-)"
-            ripple = {true}
-            action={(element, next) => {
-                setTimeout(() => {
-                    next(true, '');
-                    setClearPath(true)
-                }, 150);
-            }}
-            >
-            Clear Path
-        </AwesomeButtonProgress>
-        <AwesomeButtonProgress 
-            type = "primary"
-            size = "medium"
-            disabled = {runState}
-            loadingLabel = "Clearing Walls..."
-            resultLabel = "Walls Cleared :-)"
-            ripple = {true}
-            action={(element, next) => {
-                setTimeout(() => {
-                    next(true, '');
-                    setClearWalls(true)
-                }, 550);
-            }}
-            >
-            Clear Walls
-        </AwesomeButtonProgress>
+        <div className = "header" align = "center" >
+            <div className={classes.root}>
+                <Select name = "algorithms" id = "algorithms" displayEmpty onChange={e => handleOnChange(e)}>
+                    <MenuItem>Select Algorithm</MenuItem>
+                    <MenuItem value = "Dijkstra">Dijkstra's Algorithm</MenuItem>
+                    <MenuItem value = "aStar">A* Search</MenuItem>
+                    <MenuItem value = "BFS">Breadth First Search</MenuItem>
+                    <MenuItem value = "DFS">Depth First Search</MenuItem>
+                </Select>
+            </div>
+            <div className={classes.root}>
+                <Select name = "mazes" id = "mazes" displayEmpty onChange = {e => handleMazeChange(e)}>
+                    <MenuItem>Select Maze</MenuItem>
+                    <MenuItem value = "randomMaze">Random Maze</MenuItem>
+                    <MenuItem value = "recursiveDivision">Recursive Division</MenuItem>
+                </Select>
+            </div>
+            <div className = "header_items">
+                <AwesomeButtonProgress 
+                    type = "primary"
+                    size = "medium"
+                    disabled = {runState || selected_algo_is_undefined}
+                    loadingLabel = "Visualizing..."
+                    resultLabel = "Success"
+                    ripple = {true}
+                    action={(element, next) => {
+                        setTimeout(() => {
+                            next(true, '');
+                            setRunState(true)
+                        }, 1000);
+                    }}
+                    >
+                    Visualize
+                </AwesomeButtonProgress>
+            </div>
+            <div className = "header_items">
+                <AwesomeButtonProgress 
+                    type = "primary"
+                    size = "medium"
+                    disabled = {runState}
+                    loadingLabel = "Clearing Path..."
+                    resultLabel = "Path Cleared :-)"
+                    ripple = {true}
+                    action={(element, next) => {
+                        setTimeout(() => {
+                            next(true, '');
+                            setClearPath(true)
+                        }, 150);
+                    }}
+                    >
+                    Clear Path
+                </AwesomeButtonProgress>
+            </div>
+            <div className = "header_items">
+                <AwesomeButtonProgress 
+                    type = "primary"
+                    size = "medium"
+                    disabled = {runState}
+                    loadingLabel = "Clearing Walls..."
+                    resultLabel = "Walls Cleared :-)"
+                    ripple = {true}
+                    action={(element, next) => {
+                        setTimeout(() => {
+                            next(true, '');
+                            setClearWalls(true)
+                        }, 550);
+                    }}
+                    >
+                    Clear Walls
+                </AwesomeButtonProgress>
+            </div>
+        <div className = "header_items">
         <AwesomeButton 
             type = "primary"
             size = "medium"
@@ -174,12 +191,15 @@ function World(props) {
             >
             Setup World
         </AwesomeButton>
+        </div>
+        <div className={classes.root}>
         <Select name = "algorithmSpeed" id = "algorithmSpeed" displayEmpty onChange = { e=> setAlgorithmSpeed(e.target.value)}>
             <MenuItem>Select Speed</MenuItem>
             <MenuItem value = "15">Fast</MenuItem>
             <MenuItem value = "25">Medium</MenuItem>
             <MenuItem value = "80">Slow</MenuItem>
         </Select>
+        </div>
         </div>
         <Tutorial />
         <Canvas colorManagement 
