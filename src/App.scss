@@ -109,11 +109,26 @@ body {
   flex-wrap:wrap;
   align-items:center;
   z-index:1;
+  //padding-bottom: 50px;
 }
 .info_socials{
   margin-top: 40px;
 }
+#tutorial_button{
+  //padding-bottom: 50px;
+}
 
 #linkedin {
   padding-left: 15px;
+  //padding-bottom: 50px;
+}
+#gh_button {
+  padding-left: 15px;
+  //padding-bottom: 50px;
+}
+#info_icon{
+  position:absolute;
+  right:5px;
+  bottom:10px;
+  height:40px
 }

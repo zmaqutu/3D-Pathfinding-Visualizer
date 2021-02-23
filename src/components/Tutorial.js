@@ -1,6 +1,7 @@
 import React from 'react'
-import {  AwesomeButtonSocial } from 'react-awesome-button';
+import {  AwesomeButton, AwesomeButtonSocial } from 'react-awesome-button';
 import "react-awesome-button/dist/styles.css";
+import { ReactComponent as InfoLogo } from '../assets/info.svg';
 
 function Tutorial(props) {
     //function color_to_RGB_string(color){
@@ -41,13 +42,20 @@ function Tutorial(props) {
             </table>
             </div>
             <div className = "info_buttons">
-                <div className = "info_socials">
+                <div className = "info_socials" id = "tutorial_button">
+                    <AwesomeButton
+                        type="secondary"
+                        size = "small"
+                    >
+                        Tutorial
+                    </AwesomeButton>
+                </div>
+                <div className = "info_socials" id = "gh_button">
                     <AwesomeButtonSocial
                         type="github"
                         url="https://github.com/zmaqutu/3D-Pathfinding-Visualizer"
                         size = "small"
                     >
-                        GitHub
                     </AwesomeButtonSocial>
                 </div>
                 <div className = "info_socials" id = "linkedin">
@@ -59,6 +67,16 @@ function Tutorial(props) {
                         LinkedIn
                     </AwesomeButtonSocial>
                 </div>
+                <div className = "info_socials" id = "buy_me_a_coffee">
+                    <AwesomeButton
+                        type="secondary"
+                        url="https://www.linkedin.com/in/zmaqutu/"
+                        size = "large"
+                    >
+                        About this project
+                    </AwesomeButton>
+                </div>
+                <InfoLogo id = "info_icon"/>
             </div>
         </div>
     )
