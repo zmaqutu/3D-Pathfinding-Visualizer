@@ -1,4 +1,6 @@
 import React from 'react'
+import {  AwesomeButtonSocial } from 'react-awesome-button';
+import "react-awesome-button/dist/styles.css";
 
 function Tutorial(props) {
     //function color_to_RGB_string(color){
@@ -7,8 +9,10 @@ function Tutorial(props) {
 
     return (
         <div className = "info_container">
-            <h1>This is the information container</h1>
+            <h1 id = "info_title">Pathfinder Visualizer Information</h1>
+            <div className = "legend_table">
             <table>
+              <tbody>
                 <tr>
                     <td>
                     <div className="start_square" ></div>
@@ -33,7 +37,29 @@ function Tutorial(props) {
                     </td>
                     <td>Path Node</td>
                 </tr>
+              </tbody>
             </table>
+            </div>
+            <div className = "info_buttons">
+                <div className = "info_socials">
+                    <AwesomeButtonSocial
+                        type="github"
+                        url="https://github.com/zmaqutu/3D-Pathfinding-Visualizer"
+                        size = "small"
+                    >
+                        GitHub
+                    </AwesomeButtonSocial>
+                </div>
+                <div className = "info_socials" id = "linkedin">
+                    <AwesomeButtonSocial
+                        type="linkedin"
+                        url="https://www.linkedin.com/in/zmaqutu/"
+                        size = "small"
+                    >
+                        LinkedIn
+                    </AwesomeButtonSocial>
+                </div>
+            </div>
         </div>
     )
 }

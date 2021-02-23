@@ -45,7 +45,7 @@ body {
   font-size:.9em;
   padding:25px;
   border-radius:5px;
-  background:linear-gradient(0,#005d74,#000 240%);
+  background:linear-gradient(0,#1E88E5,#000 240%);
   color:#fff;box-shadow:2px 10px 30px rgba(0,0,0,.4);
   opacity:.4;
   z-index:10000;
@@ -92,4 +92,28 @@ body {
 .path_square{
   background-color: rgb(255, 255, 0);
   width:30px;height:30px;margin:0 auto;
+}
+.legend_table{
+  padding-left: 0px;
+}
+
+#info_title{
+  font-size: 18px;
+  padding-bottom:30px
+}
+
+.info_buttons{
+  left:0;
+  width:100%;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  z-index:1;
+}
+.info_socials{
+  margin-top: 40px;
+}
+
+#linkedin {
+  padding-left: 15px;
 }

@@ -10,7 +10,7 @@ import UndoIcon from '@material-ui/icons/Undo';
 import { spacing } from '@material-ui/system';
 import { makeStyles } from '@material-ui/core/styles';
 import Tutorial from './Tutorial';
-import { AwesomeButton, AwesomeButtonProgress, AwesomeButtonSocial } from 'react-awesome-button';
+import { AwesomeButton, AwesomeButtonProgress } from 'react-awesome-button';
 import "react-awesome-button/dist/styles.css";
 
 //<OrbitControls enabled = {!worldSetup} />
