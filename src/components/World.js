@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import Grid from './Grid';
-import { Canvas } from "react-three-fiber";
+import { Canvas } from 'react-three-fiber';
 import Floor from './Floor';
 import Controls from './Controls'; 
 import { Button, Select, MenuItem } from '@material-ui/core'

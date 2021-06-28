@@ -31,6 +31,7 @@ export function getNodesInShortestPathOrder(finishNode) {
 
 export async function tweenToColor(node, geometry, colors, duration = 300, options) {
 	for(let i=0; i<colors.length; i++) {
+		//console.log(node);
 		new TWEEN.Tween(node.faces[1].color)
 			.to(colors[i], duration)
 			.onUpdate(() => {

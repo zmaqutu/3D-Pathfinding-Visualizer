@@ -104,12 +104,15 @@ function Grid(props) {
     });
 
     const mesh = useRef(null);
+    
+    
     const [terrain, setTerrain] = useState({
       grid: initializeGrid(),
+      states: initStates(),
     });
   
   function initializeGrid(){
-    let tempGrid = [];
+    let tempGrid = []
     for(let i = 0; i < 30; i++){
         let currentRow = [];
         for(let j = 0; j < 30; j++){
@@ -118,6 +121,7 @@ function Grid(props) {
         }
         tempGrid.push(currentRow);
     }
+    //setState(tempStateGrid)
     renderLoop();
    return tempGrid;
   }   
@@ -126,8 +130,13 @@ function Grid(props) {
 
     let status = "default";
     let faces = {};
+
     let faceIndex = row * 2 * props.worldProperties.cols + col * 2 ;
+    //console.log(groundGeometry.getAttribute(""))
+  
     faces[1] = groundGeometry.faces[faceIndex];
+
+
     faceIndex = faceIndex % 2 === 0 ? faceIndex + 1 : faceIndex - 1;
     faces[2] = groundGeometry.faces[faceIndex];
 
@@ -148,6 +157,7 @@ function Grid(props) {
         heuristicDistance: null,
         direction: null,
         weight: 0,
+        qValue: 0,
         previousNode: null,
     };
     if(status === "start"){
@@ -158,6 +168,16 @@ function Grid(props) {
       tweenToColor(node, groundGeometry, [props.worldProperties.colors.finish]);
     }
     return node;
+  }
+  function initStates(){
+    let tempStateGrid = [];
+    for(let row = 0; row < props.worldProperties.rows; row++){
+      for(let col = 0; col < props.worldProperties.cols;col++){
+        tempStateGrid.push([row,col]);
+      }
+    }
+    console.log(tempStateGrid)
+    return tempStateGrid;
   }
 
   function renderLoop(){
@@ -209,13 +229,13 @@ function Grid(props) {
       else if(terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status === "wall"){
         terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status = "default";
         tweenToColor(terrain.grid[nodeId.nodeRow][nodeId.nodeCol], groundGeometry, [props.worldProperties.colors.default]);
-        console.log(terrain.grid[nodeId.nodeRow][nodeId.nodeCol]);
+        //console.log(terrain.grid[nodeId.nodeRow][nodeId.nodeCol]);
       }
       else
       {
         terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status = "wall";
         tweenToColor(terrain.grid[nodeId.nodeRow][nodeId.nodeCol], groundGeometry, [props.worldProperties.colors.wall]);
-        console.log(terrain.grid[nodeId.nodeRow][nodeId.nodeCol]);
+        //console.log(terrain.grid[nodeId.nodeRow][nodeId.nodeCol]);
       }
     }
 
@@ -309,7 +329,11 @@ function Grid(props) {
       }, timerDelay * i);
     }
     props.updateRunState(false);
-    console.log(terrain.grid[5][5]);
+    //console.log(terrain.grid[5][5]);
+  }
+
+  function qLearning(){
+
   }
 
   function clearWalls(){
