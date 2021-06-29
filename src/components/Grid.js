@@ -117,6 +117,7 @@ function Grid(props) {
       visits: initializeVisits(),
       gamma: 0.8,
       alpha: 0.1,
+      finish: [props.worldProperties.finish.row,props.worldProperties.finish.col]
     });
 
   function initializeGrid(){
@@ -355,15 +356,18 @@ function Grid(props) {
 
   function qLearning(){
     let i = 0
-    while(i < 1){
+    while(i < 500000){
       let currentState = terrain.states[Math.floor(Math.random() * terrain.states.length)]
-      while(terrain.grid[currentState[0]][currentState[1]].status !== "finish" || terrain.grid[currentState[0]][currentState[1]].status === "wall"){
-      //while(i < 10000){
+      while(!(currentState[0] === terrain.finish[0] && currentState[1] === terrain.finish[1])
+        && terrain.grid[currentState[0]][currentState[1]].status !== "wall"){
+      
       let action = chooseAction(currentState)
         //console.log(action)
         let action_dy = terrain.actions[action][0]
 				let action_dx = terrain.actions[action][1]
 				let nextState = [action_dy + currentState[0], action_dx + currentState[1]]
+        //console.log(nextState)
+
 
         let currentQValue = terrain.q_table[currentState[0]][currentState[1]]
 				//let maximum_action = chooseAction(currentState)
