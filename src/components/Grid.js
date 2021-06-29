@@ -347,14 +347,20 @@ function Grid(props) {
       let currentState = terrain.states[Math.floor(Math.random() * terrain.states.length)]
       while(terrain.grid[currentState[0]][currentState[1]].status !== "finish" || terrain.grid[currentState[0]][currentState[1]].status === "wall"){
         let action = chooseAction(currentState);
-        console.log(action);
+        //console.log(action);
 
       }
       i++;
     }
   }
   function chooseAction(currentState){
-    let takingRandomAction = true;//true or false;
+    var rwc = require("random-weighted-choice");
+    let actionOptions = [
+      {weight: 7, id: "true"},
+      {weight: 2, id: "false"}
+    ];
+    let chosenOption = rwc(actionOptions)
+    let takingRandomAction = (chosenOption === "true");//true or false;
     let actions = ["left","down","right","up"];
     
     if(takingRandomAction){
