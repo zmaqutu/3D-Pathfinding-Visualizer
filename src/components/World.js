@@ -117,6 +117,8 @@ function World(props) {
                     <MenuItem value = "aStar">A* Search</MenuItem>
                     <MenuItem value = "BFS">Breadth First Search</MenuItem>
                     <MenuItem value = "DFS">Depth First Search</MenuItem>
+                    <MenuItem value = "Q-Learning">Q-Learning</MenuItem>
+
                 </Select>
             </div>
             <div className={classes.root}>

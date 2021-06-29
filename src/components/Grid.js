@@ -7,6 +7,7 @@ import { weightedSearchAlgorithm } from "./algorithms/weightedSearchAlgorithm.js
 import { unweightedSearchAlgorithm } from "./algorithms/unweightedSearchAlgorithm.js";
 import { randomMaze, recursiveDivisionMaze } from './algorithms/mazeAlgorithms';
 import { useThree } from 'react-three-fiber';
+import * as tf from '@tensorflow/tfjs';
 
 
 
@@ -51,6 +52,7 @@ function Grid(props) {
       clearWalls();
     }
     else if(props.worldProperties.clearPath === true){
+      qLearning();
       clearPath();
     }
     else if(props.selectedMazeAlgorithm === "randomMaze"){
@@ -109,8 +111,10 @@ function Grid(props) {
     const [terrain, setTerrain] = useState({
       grid: initializeGrid(),
       states: initStates(),
+      q_table: Array(props.worldProperties.rows).fill().map(() => Array(props.worldProperties.cols).fill(0)),
+      //records: qLearning(),
+      actions : { left:[0,-1], down: [1,0], right:[0,1], up:[-1,0]}
     });
-  
   function initializeGrid(){
     let tempGrid = []
     for(let i = 0; i < 30; i++){
@@ -158,6 +162,7 @@ function Grid(props) {
         direction: null,
         weight: 0,
         qValue: 0,
+        reward: 0,
         previousNode: null,
     };
     if(status === "start"){
@@ -165,6 +170,7 @@ function Grid(props) {
       
     }
     else if(status === "finish"){
+      node.reward = 100;
       tweenToColor(node, groundGeometry, [props.worldProperties.colors.finish]);
     }
     return node;
@@ -176,7 +182,7 @@ function Grid(props) {
         tempStateGrid.push([row,col]);
       }
     }
-    console.log(tempStateGrid)
+    //console.log(tempStateGrid)
     return tempStateGrid;
   }
 
@@ -227,16 +233,19 @@ function Grid(props) {
       return;
       }
       else if(terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status === "wall"){
+        terrain.grid[nodeId.nodeRow][nodeId.nodeCol].reward = 0;
         terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status = "default";
         tweenToColor(terrain.grid[nodeId.nodeRow][nodeId.nodeCol], groundGeometry, [props.worldProperties.colors.default]);
         //console.log(terrain.grid[nodeId.nodeRow][nodeId.nodeCol]);
       }
       else
       {
+        terrain.grid[nodeId.nodeRow][nodeId.nodeCol].reward = -100;
         terrain.grid[nodeId.nodeRow][nodeId.nodeCol].status = "wall";
         tweenToColor(terrain.grid[nodeId.nodeRow][nodeId.nodeCol], groundGeometry, [props.worldProperties.colors.wall]);
         //console.log(terrain.grid[nodeId.nodeRow][nodeId.nodeCol]);
       }
+      //console.log(terrain.grid)
     }
 
   }
@@ -333,7 +342,69 @@ function Grid(props) {
   }
 
   function qLearning(){
+    let i = 0
+    while(i < 1){
+      let currentState = terrain.states[Math.floor(Math.random() * terrain.states.length)]
+      while(terrain.grid[currentState[0]][currentState[1]].status !== "finish" || terrain.grid[currentState[0]][currentState[1]].status === "wall"){
+        let action = chooseAction(currentState);
+        console.log(action);
 
+      }
+      i++;
+    }
+  }
+  function chooseAction(currentState){
+    let takingRandomAction = true;//true or false;
+    let actions = ["left","down","right","up"];
+    
+    if(takingRandomAction){
+      //let random_index = random.randint(0,len(actions) - 1)
+      let randomIndex = Math.floor(Math.random() * actions.length)
+			let selectedAction = actions[randomIndex]
+			let actionChange = terrain.actions[selectedAction]
+      if(isValidState([actionChange[0] + currentState[0],actionChange[1] + currentState[1]])){
+        //console.log(selectedAction)
+        return selectedAction;
+      }
+    }
+    else{
+      let policyCandidates = {}
+      for(let action in terrain.actions){
+        let nextState = [terrain.actions[action][0]+currentState[0],terrain.actions[action][1]+currentState[1]]
+        if (isValidState(nextState)){
+				//console.log(terrain.q_table);
+					policyCandidates[nextState] = terrain.q_table[nextState[1]][nextState[0]]
+        }
+      }
+
+      //let maxState = max(policy_candidates, key=policy_candidates.get)
+      let maxQValue = Object.keys(policyCandidates).reduce((a, v) => Math.max(a, policyCandidates[v]), -Infinity);
+      let maxState = Object.keys(policyCandidates).filter(v => policyCandidates[v] === maxQValue);
+			//let maxQValue = policy_candidates[maxState]
+			let listOfMax = [];
+      for(let maxCandidate in policyCandidates){
+        if(policyCandidates[maxCandidate] === maxQValue){
+          listOfMax.push(maxCandidate);
+        }
+      }
+      let randomIndex = Math.floor(Math.random() * listOfMax.length);
+			maxState = listOfMax[randomIndex];
+      //Now we can use the max_state(state with the maximum q value to find the actioned perfomed to get there)
+			let action_dy = maxState[0] - currentState[0];
+			let action_dx = maxState[1] - currentState[1];
+
+      for(let action in terrain.actions){
+        if(terrain.actions[action] == [action_dy,action_dx]){
+          return action;
+        }
+      }
+    }
+
+  }
+  function isValidState(nextState){
+    if (nextState[0] < 0 || nextState[0] >= props.worldProperties.row || 
+        nextState[1] < 0 || nextState[1] >= props.worldProperties.col){ return false;}
+		return true
   }
 
   function clearWalls(){
@@ -341,6 +412,7 @@ function Grid(props) {
       for(let j = 0; j < props.worldProperties.cols; j++){
         if(terrain.grid[i][j].status === "wall"){
           terrain.grid[i][j].status = "default";
+          terrain.grid[i][j].reward = 0;
           tweenToColor(terrain.grid[i][j], groundGeometry, [props.worldProperties.colors.default])
         }
       }
@@ -380,12 +452,13 @@ function Grid(props) {
         //const node = nodesToAnimate[i];
        // node.status = type;
        terrain.grid[nodeRow][nodeCol].status = "wall";
+       terrain.grid[nodeRow][nodeCol].reward = -100;
       tweenToColor(terrain.grid[nodeRow][nodeCol], groundGeometry, [props.worldProperties.colors.wall]);
       }, timerDelay * i);
       props.stopMazeSelection();
     }
   }
-  
+ 
   return (
     <mesh ref = {mesh} position = {[0,0,0]}>
       <gridHelper args = {[300, props.gridDimensions, 0x5c78bd, 0x5c78bd] }/>
