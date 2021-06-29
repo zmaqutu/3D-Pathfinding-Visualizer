@@ -113,8 +113,12 @@ function Grid(props) {
       states: initStates(),
       q_table: Array(props.worldProperties.rows).fill().map(() => Array(props.worldProperties.cols).fill(0)),
       //records: qLearning(),
-      actions : { left:[0,-1], down: [1,0], right:[0,1], up:[-1,0]}
+      actions : { "left":[0,-1], "down":[1,0],"right":[0,1], "up":[-1,0]},
+      visits: initializeVisits(),
+      gamma: 0.8,
+      alpha: 0.1,
     });
+
   function initializeGrid(){
     let tempGrid = []
     for(let i = 0; i < 30; i++){
@@ -184,6 +188,14 @@ function Grid(props) {
     }
     //console.log(tempStateGrid)
     return tempStateGrid;
+  }
+  function initializeVisits(){
+    let visits = {}
+    let tempStates = initStates()
+    for(let state in tempStates){
+      visits[state] = 0;
+    }
+    return visits;
   }
 
   function renderLoop(){
@@ -346,43 +358,73 @@ function Grid(props) {
     while(i < 1){
       let currentState = terrain.states[Math.floor(Math.random() * terrain.states.length)]
       while(terrain.grid[currentState[0]][currentState[1]].status !== "finish" || terrain.grid[currentState[0]][currentState[1]].status === "wall"){
-        let action = chooseAction(currentState);
-        //console.log(action);
+      //while(i < 10000){
+      let action = chooseAction(currentState)
+        //console.log(action)
+        let action_dy = terrain.actions[action][0]
+				let action_dx = terrain.actions[action][1]
+				let nextState = [action_dy + currentState[0], action_dx + currentState[1]]
 
+        let currentQValue = terrain.q_table[currentState[0]][currentState[1]]
+				//let maximum_action = chooseAction(currentState)
+				
+        //console.log("max action = " + maximum_action)
+        //action_dy = terrain.actions[maximum_action][0]
+				//action_dx = terrain.actions[maximum_action][1]
+
+				let maxState = [action_dy + currentState[0], action_dx + currentState[1]]
+				let maxQValue = terrain.q_table[maxState[0]][maxState[1]]
+
+        let temporal_difference = terrain.grid[nextState[0]][nextState[1]] .reward + (terrain.gamma * ( maxQValue - currentQValue)) 
+				let learning_rate = terrain.alpha / (1 + terrain.visits[currentState])
+
+        let q_value = currentQValue + (0.15* temporal_difference)
+				terrain.q_table[currentState[0]][currentState[1]] = parseFloat(q_value.toFixed(2))
+
+        terrain.visits[currentState]+=1;
+        currentState = nextState;
+        i++;
       }
-      i++;
+      console.log(terrain.q_table)
+      
     }
   }
-  function chooseAction(currentState){
+  function chooseAction(currentState,e_greedy = 0.7){
     var rwc = require("random-weighted-choice");
     let actionOptions = [
-      {weight: 7, id: "true"},
-      {weight: 2, id: "false"}
+      {weight: e_greedy * 10, id: "true"},
+      {weight: 10*(1 - e_greedy), id: "false"}
     ];
     let chosenOption = rwc(actionOptions)
     let takingRandomAction = (chosenOption === "true");//true or false;
     let actions = ["left","down","right","up"];
     
     if(takingRandomAction){
+      //console.log("Taking random action");
       //let random_index = random.randint(0,len(actions) - 1)
-      let randomIndex = Math.floor(Math.random() * actions.length)
-			let selectedAction = actions[randomIndex]
-			let actionChange = terrain.actions[selectedAction]
-      if(isValidState([actionChange[0] + currentState[0],actionChange[1] + currentState[1]])){
-        //console.log(selectedAction)
-        return selectedAction;
+      while(true){
+        let randomIndex = Math.floor(Math.random() * actions.length)
+			  let selectedAction = actions[randomIndex]
+			  let actionChange = terrain.actions[selectedAction]
+        if(isValidState([actionChange[0] + currentState[0],actionChange[1] + currentState[1]])){
+          //console.log("When action is random action is: " + selectedAction)
+          return selectedAction;
+        }
       }
     }
     else{
-      let policyCandidates = {}
+      //console.log("Taking greedy action");
+      //let policyCandidates = new WeakMap();
+      let policyCandidates = {};
       for(let action in terrain.actions){
         let nextState = [terrain.actions[action][0]+currentState[0],terrain.actions[action][1]+currentState[1]]
+        //console.log(nextState)
         if (isValidState(nextState)){
-				//console.log(terrain.q_table);
-					policyCandidates[nextState] = terrain.q_table[nextState[1]][nextState[0]]
+				  //console.log(terrain.q_table);
+					policyCandidates[nextState] = terrain.q_table[nextState[0]][nextState[1]]
+          //policyCandidates.set(nextState,terrain.q_table[nextState[1]][nextState[0]]);
         }
       }
-
       //let maxState = max(policy_candidates, key=policy_candidates.get)
       let maxQValue = Object.keys(policyCandidates).reduce((a, v) => Math.max(a, policyCandidates[v]), -Infinity);
       let maxState = Object.keys(policyCandidates).filter(v => policyCandidates[v] === maxQValue);
@@ -390,7 +432,8 @@ function Grid(props) {
 			let listOfMax = [];
       for(let maxCandidate in policyCandidates){
         if(policyCandidates[maxCandidate] === maxQValue){
-          listOfMax.push(maxCandidate);
+          let tempVals = maxCandidate.split(",").map(Number)
+          listOfMax.push(tempVals);
         }
       }
       let randomIndex = Math.floor(Math.random() * listOfMax.length);
@@ -400,7 +443,7 @@ function Grid(props) {
 			let action_dx = maxState[1] - currentState[1];
 
       for(let action in terrain.actions){
-        if(terrain.actions[action] == [action_dy,action_dx]){
+        if(terrain.actions[action][0] === action_dy && terrain.actions[action][1] === action_dx){
           return action;
         }
       }
@@ -408,8 +451,8 @@ function Grid(props) {
 
   }
   function isValidState(nextState){
-    if (nextState[0] < 0 || nextState[0] >= props.worldProperties.row || 
-        nextState[1] < 0 || nextState[1] >= props.worldProperties.col){ return false;}
+    if (nextState[0] < 0 || nextState[0] >= props.worldProperties.rows || 
+        nextState[1] < 0 || nextState[1] >= props.worldProperties.cols){ return false;}
 		return true
   }
 
