@@ -1,4 +1,4 @@
-import { OrbitControls } from 'drei';
+import { OrbitControls } from '@react-three/drei';
 import React, {useEffect, useRef } from 'react';
 import { useThree } from 'react-three-fiber';
 import TWEEN from '@tweenjs/tween.js';

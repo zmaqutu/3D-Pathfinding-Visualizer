@@ -1,0 +1,11 @@
+Model Information:
+* title:	Doctor's office
+* source:	https://sketchfab.com/3d-models/doctors-office-7a675fe227214297b613b128f9474494
+* author:	alban (https://sketchfab.com/alban)
+
+Model License:
+* license type:	SKETCHFAB Editorial (https://sketchfab.com/licenses)
+* requirements:	Use only in connection with events that are newsworthy or of public interest
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Doctor's office" (https://sketchfab.com/3d-models/doctors-office-7a675fe227214297b613b128f9474494) by alban (https://sketchfab.com/alban) licensed under SKETCHFAB Editorial (https://sketchfab.com/licenses)

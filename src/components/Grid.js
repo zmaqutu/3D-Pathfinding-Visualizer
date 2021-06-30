@@ -26,6 +26,7 @@ function Grid(props) {
   //const [mouseIsUp, setMouseIsUp] = useState(true);
   
   const [groundGeometry, setGroundGeometry] = useState(new THREE.PlaneGeometry(300,300,30,30));
+  
   //const [runState, setRunState] = useState(props.worldProperties.runState);
   const selectedAlgorithm = props.selectedAlgorithm;
   const selectedMazeAlgorithm = props.selectedMazeAlgorithm;
@@ -52,8 +53,9 @@ function Grid(props) {
       clearWalls();
     }
     else if(props.worldProperties.clearPath === true){
+      //clearPath();
       qLearning();
-      clearPath();
+
     }
     else if(props.selectedMazeAlgorithm === "randomMaze"){
       clearPath();
@@ -112,7 +114,7 @@ function Grid(props) {
       grid: initializeGrid(),
       states: initStates(),
       q_table: Array(props.worldProperties.rows).fill().map(() => Array(props.worldProperties.cols).fill(0)),
-      //records: qLearning(),
+      records: [],
       actions : { "left":[0,-1], "down":[1,0],"right":[0,1], "up":[-1,0]},
       visits: initializeVisits(),
       gamma: 0.8,
@@ -141,7 +143,7 @@ function Grid(props) {
     let faces = {};
 
     let faceIndex = row * 2 * props.worldProperties.cols + col * 2 ;
-    //console.log(groundGeometry.getAttribute(""))
+    console.log(groundGeometry)
   
     faces[1] = groundGeometry.faces[faceIndex];
 
@@ -356,42 +358,48 @@ function Grid(props) {
 
   function qLearning(){
     let i = 0
-    while(i < 500000){
+    while(i < 100000){
       let currentState = terrain.states[Math.floor(Math.random() * terrain.states.length)]
       while(!(currentState[0] === terrain.finish[0] && currentState[1] === terrain.finish[1])
         && terrain.grid[currentState[0]][currentState[1]].status !== "wall"){
-      
-      let action = chooseAction(currentState)
-        //console.log(action)
-        let action_dy = terrain.actions[action][0]
-				let action_dx = terrain.actions[action][1]
-				let nextState = [action_dy + currentState[0], action_dx + currentState[1]]
-        //console.log(nextState)
+          
+          //setTimeout(() => {
+           //tweenToColor(terrain.grid[14][14],groundGeometry,[{ r: 1, g: 0.64, b: 0.0}]);
+          //}, props.algorithmSpeed);
+          
+          let action = chooseAction(currentState)
+          //console.log(action)
+          let action_dy = terrain.actions[action][0]
+				  let action_dx = terrain.actions[action][1]
+				  let nextState = [action_dy + currentState[0], action_dx + currentState[1]]
+          //console.log(nextState)
 
 
-        let currentQValue = terrain.q_table[currentState[0]][currentState[1]]
-				//let maximum_action = chooseAction(currentState)
+          let currentQValue = terrain.q_table[currentState[0]][currentState[1]]
+				  //let maximum_action = chooseAction(currentState)
 				
-        //console.log("max action = " + maximum_action)
-        //action_dy = terrain.actions[maximum_action][0]
-				//action_dx = terrain.actions[maximum_action][1]
+          //console.log("max action = " + maximum_action)
+          //action_dy = terrain.actions[maximum_action][0]
+				  //action_dx = terrain.actions[maximum_action][1]
 
-				let maxState = [action_dy + currentState[0], action_dx + currentState[1]]
-				let maxQValue = terrain.q_table[maxState[0]][maxState[1]]
+				  let maxState = [action_dy + currentState[0], action_dx + currentState[1]]
+				  let maxQValue = terrain.q_table[maxState[0]][maxState[1]]
 
-        let temporal_difference = terrain.grid[nextState[0]][nextState[1]] .reward + (terrain.gamma * ( maxQValue - currentQValue)) 
-				let learning_rate = terrain.alpha / (1 + terrain.visits[currentState])
+          let temporal_difference = terrain.grid[nextState[0]][nextState[1]] .reward + (terrain.gamma * ( maxQValue - currentQValue)) 
+				  let learning_rate = terrain.alpha / (1 + terrain.visits[currentState])
 
-        let q_value = currentQValue + (0.15* temporal_difference)
-				terrain.q_table[currentState[0]][currentState[1]] = parseFloat(q_value.toFixed(2))
+          let q_value = currentQValue + (0.15* temporal_difference)
+				  terrain.q_table[currentState[0]][currentState[1]] = parseFloat(q_value.toFixed(2))
 
-        terrain.visits[currentState]+=1;
-        currentState = nextState;
-        i++;
-      }
-      console.log(terrain.q_table)
-      
+          terrain.visits[currentState]+=1;
+          currentState = nextState;
+          i++;
+
+        }
+        terrain.records.push(getRecord())
+      //console.log(terrain.records)
     }
+    console.log(terrain.records)
   }
   function chooseAction(currentState,e_greedy = 0.7){
     var rwc = require("random-weighted-choice");
@@ -458,6 +466,15 @@ function Grid(props) {
     if (nextState[0] < 0 || nextState[0] >= props.worldProperties.rows || 
         nextState[1] < 0 || nextState[1] >= props.worldProperties.cols){ return false;}
 		return true
+  }
+  function getRecord(){
+    var record =  Array(props.worldProperties.rows).fill().map(() => Array(props.worldProperties.cols).fill(0))
+    for(let i = 0; i < terrain.states.length; i++){
+      let state = terrain.states[i]
+			record[state[0]][state[1]] = terrain.q_table[state[0]][state[1]]
+    }
+    //console.log(record)
+    return record
   }
 
   function clearWalls(){
