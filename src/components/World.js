@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import Grid from './Grid';
+import Mars from './Mars';
 import { Canvas } from 'react-three-fiber';
 import Floor from './Floor';
 import Controls from './Controls'; 
@@ -277,6 +278,7 @@ function World(props) {
             resetStatus = {resetCamera}
             updateResetStatus = {updateResetStatus}
         />
+       
       </Canvas>
       </>
     )

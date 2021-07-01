@@ -8,6 +8,7 @@ import { unweightedSearchAlgorithm } from "./algorithms/unweightedSearchAlgorith
 import { randomMaze, recursiveDivisionMaze } from './algorithms/mazeAlgorithms';
 import { useThree } from 'react-three-fiber';
 import * as tf from '@tensorflow/tfjs';
+import { math } from '@tensorflow/tfjs';
 
 
 
@@ -47,7 +48,12 @@ function Grid(props) {
 
   useEffect(() => {
     if(props.worldProperties.runState === true){
-      visualizeAlgorithm();
+      //visualizeAlgorithm();
+      /*for(let i = 0; i < terrain.records.length;i++){
+      console.log(i)
+        animateQlearning();
+      }*/
+      animateQlearning();
     }
     else if(props.worldProperties.clearWalls === true){
       clearWalls();
@@ -132,6 +138,29 @@ function Grid(props) {
         }
         tempGrid.push(currentRow);
     }
+    /*var vertices = new Float32Array(5400).fill(0);
+
+    groundGeometry.setAttribute('color', new THREE.Float32BufferAttribute( vertices,3) );
+    vertices[0] = 0
+    vertices[1]= 1
+    vertices[2]= 0
+
+    
+
+    console.log(groundGeometry.getAttribute('color'))
+    const tween1 = new TWEEN.Tween(groundGeometry.getAttribute('color'))
+                    .to(new THREE.Float32BufferAttribute( vertices,2) ,9000)
+
+    tween1.start()
+
+    tween1.onUpdate(function (object: THREE.BufferAttribute | THREE.InterleavedBufferAttribute, elapsed: number){
+      groundGeometry.setAttribute('color',object)
+    })
+    
+   
+    //console.log(vertices)
+    groundGeometry.setAttribute('color', new THREE.Float32BufferAttribute( vertices,2) );*/
+
     //setState(tempStateGrid)
     renderLoop();
    return tempGrid;
@@ -143,7 +172,7 @@ function Grid(props) {
     let faces = {};
 
     let faceIndex = row * 2 * props.worldProperties.cols + col * 2 ;
-    console.log(groundGeometry)
+    //console.log(groundGeometry)
   
     faces[1] = groundGeometry.faces[faceIndex];
 
@@ -356,9 +385,37 @@ function Grid(props) {
     //console.log(terrain.grid[5][5]);
   }
 
+  function animateQlearning(){
+    let minimum = -10;
+    let maximum = 100;
+    for(let i = 0; i < terrain.records.length;i++){
+      let record = terrain.records[i]
+      for(let row = 0; row < 30; row++){
+        for(let col = 0; col < 30; col++){ 
+          if(record[row][col] === 0 ){continue;}
+          let ratio = 2 * (record[row][col]-minimum) / (maximum - minimum)
+          let blue = Number(Math.max(0, 255*(1 - ratio)))
+          let red = Number(Math.max(0, 255*(ratio - 1)))
+          let green = 255 - blue - red
+
+          red /= 255;
+          green /= 255;
+          blue /= 255;
+          
+          
+          setTimeout(() => {
+            const node = terrain.grid[row][col];
+            if (!node) return;
+            tweenToColor(node, groundGeometry, [{r: red, g: green, b: blue}], 300,{position: false});
+            if (row === 30 - 1) {}
+          }, 0);
+        }
+      }
+    }
+  }
   function qLearning(){
     let i = 0
-    while(i < 100000){
+    while(i < 500000){
       let currentState = terrain.states[Math.floor(Math.random() * terrain.states.length)]
       while(!(currentState[0] === terrain.finish[0] && currentState[1] === terrain.finish[1])
         && terrain.grid[currentState[0]][currentState[1]].status !== "wall"){
