@@ -122,9 +122,10 @@ function Grid(props) {
       q_table: Array(props.worldProperties.rows).fill().map(() => Array(props.worldProperties.cols).fill(0)),
       records: [],
       actions : { "left":[0,-1], "down":[1,0],"right":[0,1], "up":[-1,0]},
-      visits: initializeVisits(),
+      //visits: Array(props.worldProperties.rows).fill().map(() => Array(props.worldProperties.cols).fill(0)),
       gamma: 0.8,
       alpha: 0.1,
+      start : [props.worldProperties.start.row,props.worldProperties.start.col],
       finish: [props.worldProperties.finish.row,props.worldProperties.finish.col]
     });
 
@@ -199,6 +200,7 @@ function Grid(props) {
         weight: 0,
         qValue: 0,
         reward: 0,
+        visits: 0,
         previousNode: null,
     };
     if(status === "start"){
@@ -221,14 +223,17 @@ function Grid(props) {
     //console.log(tempStateGrid)
     return tempStateGrid;
   }
-  function initializeVisits(){
+  /*function initializeVisits(){
     let visits = {}
     let tempStates = initStates()
-    for(let state in tempStates){
-      visits[state] = 0;
+    for(let row = 0; row < tempStates.length; row++){
+      for(let col = 0; col < tempStates[0].length; col++){
+        let state = tempStates[row][col]
+        visits[state] = 0;
+      }
     }
     return visits;
-  }
+  }*/
 
   function renderLoop(){
     window.requestAnimationFrame(renderLoop);
@@ -402,21 +407,26 @@ function Grid(props) {
           green /= 255;
           blue /= 255;
           
-          
           setTimeout(() => {
             const node = terrain.grid[row][col];
-            if (!node) return;
-            tweenToColor(node, groundGeometry, [{r: red, g: green, b: blue}], 300,{position: false});
+            if (node.status === 'start' || node.status == 'finish') return;
+            tweenToColor(node, groundGeometry, [{r: red, g: green, b: blue}], 30,{position: false});
             if (row === 30 - 1) {}
-          }, 0);
+          }, 1000);
         }
       }
     }
   }
   function qLearning(){
-    let i = 0
-    while(i < 500000){
-      let currentState = terrain.states[Math.floor(Math.random() * terrain.states.length)]
+    let i = 0;
+    var epochs = 500000
+    while(i < epochs){
+      if(i > 0.55*epochs){
+        var currentState = terrain.start;
+      }
+      else{
+        var currentState = terrain.states[Math.floor(Math.random() * terrain.states.length)]
+      }
       while(!(currentState[0] === terrain.finish[0] && currentState[1] === terrain.finish[1])
         && terrain.grid[currentState[0]][currentState[1]].status !== "wall"){
           
@@ -443,12 +453,13 @@ function Grid(props) {
 				  let maxQValue = terrain.q_table[maxState[0]][maxState[1]]
 
           let temporal_difference = terrain.grid[nextState[0]][nextState[1]] .reward + (terrain.gamma * ( maxQValue - currentQValue)) 
-				  let learning_rate = terrain.alpha / (1 + terrain.visits[currentState])
+				  let learning_rate = terrain.alpha / (1 + terrain.grid[currentState[0]][currentState[1]].visits)
 
+          //console.log(learning_rate)
           let q_value = currentQValue + (0.15* temporal_difference)
 				  terrain.q_table[currentState[0]][currentState[1]] = parseFloat(q_value.toFixed(2))
 
-          terrain.visits[currentState]+=1;
+          terrain.grid[currentState[0]][currentState[1]].visits+=1;
           currentState = nextState;
           i++;
 
@@ -457,6 +468,7 @@ function Grid(props) {
       //console.log(terrain.records)
     }
     console.log(terrain.records)
+    console.log(terrain.grid)
   }
   function chooseAction(currentState,e_greedy = 0.7){
     var rwc = require("random-weighted-choice");

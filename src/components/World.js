@@ -11,6 +11,7 @@ import UndoIcon from '@material-ui/icons/Undo';
 import { spacing } from '@material-ui/system';
 import { makeStyles } from '@material-ui/core/styles';
 import Tutorial from './Tutorial';
+import Settings from './Settings';
 import { AwesomeButton, AwesomeButtonProgress } from 'react-awesome-button';
 import "react-awesome-button/dist/styles.css";
 
@@ -206,6 +207,7 @@ function World(props) {
         </div>
         </div>
         <Tutorial />
+        <Settings/>
         <Canvas colorManagement 
         camera={
             {
