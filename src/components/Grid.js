@@ -456,7 +456,7 @@ function Grid(props) {
 				  let learning_rate = terrain.alpha / (1 + terrain.grid[currentState[0]][currentState[1]].visits)
 
           //console.log(learning_rate)
-          let q_value = currentQValue + (0.15* temporal_difference)
+          let q_value = currentQValue + (0.4* temporal_difference)
 				  terrain.q_table[currentState[0]][currentState[1]] = parseFloat(q_value.toFixed(2))
 
           terrain.grid[currentState[0]][currentState[1]].visits+=1;
