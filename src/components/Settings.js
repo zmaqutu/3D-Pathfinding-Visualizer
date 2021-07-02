@@ -111,7 +111,7 @@ function Settings(props) {
                                 <Slider
                                         defaultValue={5}
                                         aria-labelledby="discrete-slider"
-                                        valueLabelDisplay="auto"
+                                        valueLabelDisplay="on"
                                         step={1}
                                         marks
                                         min={1}
@@ -184,7 +184,7 @@ function Settings(props) {
                                     <Slider
                                         defaultValue={0.4}
                                         aria-labelledby="discrete-slider"
-                                        valueLabelDisplay="auto"
+                                        valueLabelDisplay="on"
                                         step={0.05}
                                         marks
                                         min={0}
