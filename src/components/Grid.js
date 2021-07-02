@@ -32,6 +32,7 @@ function Grid(props) {
   const selectedAlgorithm = props.selectedAlgorithm;
   const selectedMazeAlgorithm = props.selectedMazeAlgorithm;
   const runState = props.worldProperties.runState;
+  const trainTheAgent = props.worldProperties.trainAgent;
   const clearTheWalls = props.worldProperties.clearWalls; //rename this variable
   const clearThePath = props.worldProperties.clearPath; // rename this variable too
   const algorithmSpeed = props.algorithmSpeed;
@@ -48,20 +49,22 @@ function Grid(props) {
 
   useEffect(() => {
     if(props.worldProperties.runState === true){
-      //visualizeAlgorithm();
-      /*for(let i = 0; i < terrain.records.length;i++){
-      console.log(i)
-        animateQlearning();
-      }*/
-      animateQlearning();
+      if(props.selectedAlgorithm.type === "machine-learning"){
+        animateQlearning()
+      }
+      else{
+      visualizeAlgorithm();
+      }
     }
     else if(props.worldProperties.clearWalls === true){
       clearWalls();
     }
     else if(props.worldProperties.clearPath === true){
-      //clearPath();
+      clearPath();
+      //qLearning();
+    }
+    else if(props.worldProperties.trainAgent === true){
       qLearning();
-
     }
     else if(props.selectedMazeAlgorithm === "randomMaze"){
       clearPath();
@@ -87,7 +90,7 @@ function Grid(props) {
     }
     //const algorithmSpeed = props.algorithmSpeed;
     //console.log(algorithmSpeed);
-  }, [runState, clearTheWalls, clearThePath, selectedMazeAlgorithm]);
+  }, [runState, clearTheWalls, clearThePath, selectedMazeAlgorithm, trainTheAgent ]);
 
 
   const loader = useMemo(() => new THREE.TextureLoader().load(img,
@@ -257,11 +260,15 @@ function Grid(props) {
       }
       else if(terrain.grid[nodeRow][nodeCol].status === "wall"){
         terrain.grid[nodeRow][nodeCol].status = "default";
+       terrain.grid[nodeRow][nodeCol].reward = 0;
+        terrain.grid[nodeRow][nodeCol].visits = 0;
         tweenToColor(terrain.grid[nodeRow][nodeCol], groundGeometry, [props.worldProperties.colors.default]);
       }
       else
       {
         terrain.grid[nodeRow][nodeCol].status = "wall";
+        terrain.grid[nodeRow][nodeCol].visits = -1;
+       terrain.grid[nodeRow][nodeCol].reward = -100;
         tweenToColor(terrain.grid[nodeRow][nodeCol], groundGeometry, [props.worldProperties.colors.wall]);
       }
     
@@ -391,6 +398,7 @@ function Grid(props) {
   }
 
   function animateQlearning(){
+    clearPath();
     let minimum = -10;
     let maximum = 100;
     for(let i = 0; i < terrain.records.length;i++){
@@ -416,8 +424,11 @@ function Grid(props) {
         }
       }
     }
+    props.updateRunState(false);
   }
   function qLearning(){
+    //reset records
+    terrain.records = [];
     let i = 0;
     var epochs = 500000
     while(i < epochs){
@@ -467,8 +478,9 @@ function Grid(props) {
         terrain.records.push(getRecord())
       //console.log(terrain.records)
     }
+    props.stopTraining();
     console.log(terrain.records)
-    console.log(terrain.grid)
+    //console.log(terrain.grid)
   }
   function chooseAction(currentState,e_greedy = 0.7){
     var rwc = require("random-weighted-choice");
@@ -563,13 +575,14 @@ function Grid(props) {
     for(let i = 0; i < props.worldProperties.rows; i++){
       for(let j = 0; j < props.worldProperties.cols; j++){
         if(i === props.worldProperties.start.row && j === props.worldProperties.start.col){
-          terrain.grid[i][j].status = "start"; 
+          terrain.grid[i][j].status = "start";
+          terrain.grid[i][j].visits = -1; 
         }
         if(i === props.worldProperties.finish.row && j === props.worldProperties.finish.col){
           terrain.grid[i][j].status = "finish"; 
         }
         
-        if(terrain.grid[i][j].status === "visited"){
+        if(terrain.grid[i][j].status === "visited" || terrain.grid[i][j].visits > 0){
           terrain.grid[i][j].status = "default";
           tweenToColor(terrain.grid[i][j], groundGeometry, [props.worldProperties.colors.default]);
         }
@@ -592,6 +605,7 @@ function Grid(props) {
        // node.status = type;
        terrain.grid[nodeRow][nodeCol].status = "wall";
        terrain.grid[nodeRow][nodeCol].reward = -100;
+       terrain.grid[nodeRow][nodeCol].visits = -1;
       tweenToColor(terrain.grid[nodeRow][nodeCol], groundGeometry, [props.worldProperties.colors.wall]);
       }, timerDelay * i);
       props.stopMazeSelection();

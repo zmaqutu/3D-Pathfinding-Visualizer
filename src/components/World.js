@@ -27,7 +27,9 @@ function World(props) {
    const [runState, setRunState] = useState(false);                     //when runState is true the visualizer algorithm is running
    const [resetCamera, setResetCamera] = useState(false);               //when resetCamera is true we reset the camera position
    const [clearWalls, setClearWalls] = useState(false);
+   const [agentTrained, setAgentTrained] = useState(false);
    const [clearPath, setClearPath] = useState(false);
+   const [trainAgent, setTrainAgent] = useState(false);
    const cameraPosition = useRef([0,375,0]);
    const [selectedMazeAlgorithm, setSelectedMazeAlgorithm] = useState("");
    const [algorithmSpeed, setAlgorithmSpeed] = useState("15");
@@ -64,6 +66,12 @@ function World(props) {
    function stopClearWalls(){
        setClearWalls(false);
    }
+   function startTraining(){
+       setTrainAgent(true);
+   }
+   function stopTraining(){
+       setTrainAgent(false);
+   }
    function handleOnChange(event){
        if(event.target.value !== undefined){
            setAlgo(false);
@@ -75,6 +83,13 @@ function World(props) {
            setSelectedAlgorithm({
                algorithm: "Dijkstra",
                type: "weighted", 
+               heuristic: "",
+           });
+       }
+       else if (event.target.value === "qLearning"){
+           setSelectedAlgorithm({
+               algorithm: "Q-Learning",
+               type: "machine-learning",
                heuristic: "",
            });
        }
@@ -117,8 +132,6 @@ function World(props) {
                 <Select name = "algorithms" id = "algorithms" displayEmpty onChange={e => handleOnChange(e)}>
                     <MenuItem>Select Algorithm</MenuItem>
                     <MenuItem value = "qLearning">Q-Learning</MenuItem>
-                    <MenuItem value = "valueIteration">Value Iteration</MenuItem>
-                    <MenuItem value = "DRL">Deep Reinforcement Learning</MenuItem>
                     <MenuItem value = "Dijkstra">Dijkstra's Algorithm</MenuItem>
                     <MenuItem value = "aStar">A* Search</MenuItem>
                     <MenuItem value = "BFS">Breadth First Search</MenuItem>
@@ -210,7 +223,9 @@ function World(props) {
         </div>
         </div>
         <Tutorial />
-        <Settings/>
+        <Settings  
+            startTraining = {startTraining}
+        />
         <Canvas colorManagement 
         camera={
             {
@@ -245,6 +260,7 @@ function World(props) {
             stopClearPath = {stopClearPath}
             stopClearWalls = {stopClearWalls}
             stopMazeSelection = {stopMazeSelection}
+            stopTraining = {stopTraining}
             resetStatus = {resetCamera}
             selectedAlgorithm = {selectedAlgorithm}
             selectedMazeAlgorithm = {selectedMazeAlgorithm}
@@ -256,6 +272,7 @@ function World(props) {
                 runState: runState,
                 clearPath: clearPath,
                 clearWalls: clearWalls,
+                trainAgent: trainAgent,
                 start: {
                     row: 5,
                     col: 5,

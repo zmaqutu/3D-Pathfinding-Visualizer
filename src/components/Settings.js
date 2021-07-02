@@ -1,4 +1,4 @@
-import React from 'react'
+import React,  { useState, useRef } from 'react'
 import {  AwesomeButton, AwesomeButtonProgress } from 'react-awesome-button';
 import "react-awesome-button/dist/styles.css";
 import { Button, Select, MenuItem, Slider, TextField } from '@material-ui/core'
@@ -14,6 +14,12 @@ function Settings(props) {
     //function color_to_RGB_string(color){
 	//	return `rgb(${color.r*255}, ${color.g*255}, ${color.b*255})`;
     //}
+    //const trainTheAgent = props.trainAgent;
+
+    /*useEffect(() => {
+        if(props.trainAgent == true)
+      }, [trainTheAgent ]);*/
+
     const useStyles = makeStyles((theme) => ({
         root: {
           '& > *': {
@@ -89,7 +95,7 @@ function Settings(props) {
 
       }
     });
-      console.log(muiTheme)
+      //console.log(muiTheme)
 
       const textBoxTheme = createMuiTheme({
         palette: {
@@ -109,13 +115,13 @@ function Settings(props) {
                         <div className={classes.slider}>
                             <ThemeProvider theme={muiTheme}>
                                 <Slider
-                                        defaultValue={5}
+                                        defaultValue={500}
                                         aria-labelledby="discrete-slider"
                                         valueLabelDisplay="on"
-                                        step={1}
+                                        step={50}
                                         marks
-                                        min={1}
-                                        max={5}
+                                        min={50}
+                                        max={700}
                                     />
                             </ThemeProvider>
                         </div>
@@ -226,11 +232,11 @@ function Settings(props) {
                                     action={(element, next) => {
                                         setTimeout(() => {
                                             next(true, '');
-                                            //setClearPath(true)
+                                            props.startTraining()
                                         }, 150);
                                     }}
                                 >
-                                    ApplySettings
+                                    Apply &amp; Train
                                 </AwesomeButtonProgress>
                             </div>
                         </td>
