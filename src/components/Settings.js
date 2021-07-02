@@ -1,9 +1,14 @@
 import React from 'react'
-import {  AwesomeButton, AwesomeButtonSocial } from 'react-awesome-button';
+import {  AwesomeButton, AwesomeButtonProgress } from 'react-awesome-button';
 import "react-awesome-button/dist/styles.css";
-import { Button, Select, MenuItem } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles';
+import { Button, Select, MenuItem, Slider, TextField } from '@material-ui/core'
+import { makeStyles, withStyles,} from '@material-ui/core/styles';
 import { ReactComponent as SettingsLogo } from '../assets/settings.svg';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+import { green } from '@material-ui/core/colors';
+
+
 
 function Settings(props) {
     //function color_to_RGB_string(color){
@@ -12,7 +17,7 @@ function Settings(props) {
     const useStyles = makeStyles((theme) => ({
         root: {
           '& > *': {
-            //margin: theme.spacing(1),
+            margin: theme.spacing(1),
             background: '#1E88E5',
             border: 0,
             borderRadius: 3,
@@ -26,8 +31,71 @@ function Settings(props) {
             
           },
         },
+        slider: {
+            marginTop: '15px',
+            marginBottom: '10px',
+            width: '225px',
+            
+        },
+        startRow:{
+            width:'75px',
+            marginTop:'-15px',
+            marginLeft: '85px',
+            marginBottom:'5px',
+
+
+
+        },
+        startCol:{
+            width:'75px',
+            marginTop:'-15px',
+            marginLeft: '-62.5px',
+            marginBottom:'5px',
+            
+
+        },
+        finishRow:{
+            width:'75px',
+            marginBottom:'20px',
+            marginLeft: '85px',
+
+
+        },
+        finishCol:{
+            width:'75px',
+            marginBottom:'20px',
+            marginLeft: '-62.5px',
+            
+        },
       }));
     const classes = useStyles();
+
+    const muiTheme = createMuiTheme({
+        overrides:{
+          MuiSlider: {
+            thumb:{
+            color: "black",
+            },
+            track: {
+              color: 'green'
+            },
+            rail: {
+              color: 'black',
+              
+            }
+          }
+      },
+      breakpoints:{
+
+      }
+    });
+      console.log(muiTheme)
+
+      const textBoxTheme = createMuiTheme({
+        palette: {
+          primary: green,
+        },
+      });
 
     return (
         <div className = "settings_container">
@@ -36,65 +104,111 @@ function Settings(props) {
             <table>
                 <tbody>
                     <tr>
-                        <td>ML Algorithm: </td>
-                        <td>
-                            <div className={classes.root}>
-                                <Select name = "algorithmSpeed" id = "algorithmSpeed" displayEmpty >
-                                    <MenuItem ></MenuItem>
-                                    <MenuItem value = "qLearning">Q-Learning</MenuItem>
-                                    <MenuItem value = "valueIteration">Value Iteration</MenuItem>
-                                    <MenuItem value = "DRL">Deep Reinforcement Learning</MenuItem>
-                                </Select>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
                         <td>Training Epochs: </td>
                         <td>
-                            <div className={classes.root}>
-                                <Select name = "algorithmSpeed" id = "algorithmSpeed" displayEmpty >
-                                    <MenuItem ></MenuItem>
-                                </Select>
-                            </div>
+                        <div className={classes.slider}>
+                            <ThemeProvider theme={muiTheme}>
+                                <Slider
+                                        defaultValue={5}
+                                        aria-labelledby="discrete-slider"
+                                        valueLabelDisplay="auto"
+                                        step={1}
+                                        marks
+                                        min={1}
+                                        max={5}
+                                    />
+                            </ThemeProvider>
+                        </div>
                         </td>
                     </tr>
                     <tr>
                         <td>Start Position: </td>
                         <td>
-                            <div className={classes.root}>
-                                <Select name = "algorithmSpeed" id = "algorithmSpeed" displayEmpty >
-                                    <MenuItem ></MenuItem>
-                                </Select>
+                            <div className={classes.startRow}>
+                            <ThemeProvider theme={textBoxTheme}>
+                                <TextField
+                                    className={classes.margin}
+                                    id="mui-theme-provider-outlined-input"
+                                    label="Row"
+                                    variant="outlined"
+                                    />
+                            </ThemeProvider>
                             </div>
+                        </td>
+                        <td>
+                            <div className={classes.startCol}>
+                            <ThemeProvider theme={textBoxTheme}>
+                                <TextField
+                                    className={classes.margin}
+                                    id="mui-theme-provider-outlined-input"
+                                    label="Col"
+                                    variant="outlined"
+                                />
+                            </ThemeProvider>
+                            </div>
+                            
                         </td>
                     </tr>
                     <tr>
                         <td>Target Position: </td>
                         <td>
-                            <div className={classes.root}>
-                                <Select name = "algorithmSpeed" id = "algorithmSpeed" displayEmpty >
-                                    <MenuItem ></MenuItem>
-                                </Select>
+                            <div className={classes.finishRow}>
+                            <ThemeProvider theme={textBoxTheme}>
+                                <TextField
+                                    className={classes.margin}
+                                    id="mui-theme-provider-outlined-input"
+                                    label="Row"
+                                    variant="outlined"
+                                />
+                            </ThemeProvider>
+                            </div>
+                        </td>
+                        <td>
+                            <div className={classes.finishCol} >
+                            <ThemeProvider theme={textBoxTheme}>
+                                <TextField
+                                    className={classes.margin}
+                                    id="mui-theme-provider-outlined-input"
+                                    label="Col"
+                                    variant="outlined"
+                                />
+                            </ThemeProvider>
                             </div>
                         </td>
                     </tr>
                     <tr>
                         <td>Learning Rate: </td>
                         <td>
-                            <div className={classes.root}>
-                                <Select name = "algorithmSpeed" id = "algorithmSpeed" displayEmpty >
-                                    <MenuItem ></MenuItem>
-                                </Select>
-                            </div>
+                            <div className={classes.slider}>
+                                <ThemeProvider theme={muiTheme}>
+                                    <Slider
+                                        defaultValue={0.4}
+                                        aria-labelledby="discrete-slider"
+                                        valueLabelDisplay="auto"
+                                        step={0.05}
+                                        marks
+                                        min={0}
+                                        max={1}
+                                    /> 
+                                </ThemeProvider> 
+                            </div>      
                         </td>
                     </tr>
                     <tr>
                         <td>Agent Curiosity: </td>
                         <td>
-                            <div className={classes.root}>
-                                <Select name = "algorithmSpeed" id = "algorithmSpeed" displayEmpty >
-                                    <MenuItem ></MenuItem>
-                                </Select>
+                            <div className={classes.slider}>
+                                <ThemeProvider theme={muiTheme}>
+                                    <Slider
+                                        defaultValue={0.4}
+                                        aria-labelledby="discrete-slider"
+                                        valueLabelDisplay="on"
+                                        step={0.1}
+                                        marks
+                                        min={0}
+                                        max={1}
+                                    />
+                                </ThemeProvider>
                             </div>
                         </td>
                     </tr>
@@ -102,12 +216,22 @@ function Settings(props) {
                         <td></td>
                         <td>
                             <div className = "settings-button" id = "settings_button">
-                                <AwesomeButton
-                                    type="secondary"
-                                    size = "big"
+                                <AwesomeButtonProgress 
+                                    type = "secondary"
+                                    size = "medium"
+                                    disabled = {false}
+                                    loadingLabel = "Training agent"
+                                    resultLabel = "Done :-)"
+                                    ripple = {true}
+                                    action={(element, next) => {
+                                        setTimeout(() => {
+                                            next(true, '');
+                                            //setClearPath(true)
+                                        }, 150);
+                                    }}
                                 >
-                                    Apply Settings
-                                </AwesomeButton>
+                                    ApplySettings
+                                </AwesomeButtonProgress>
                             </div>
                         </td>
                     </tr>

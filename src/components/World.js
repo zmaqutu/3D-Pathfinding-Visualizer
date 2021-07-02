@@ -116,11 +116,14 @@ function World(props) {
             <div className={classes.root}>
                 <Select name = "algorithms" id = "algorithms" displayEmpty onChange={e => handleOnChange(e)}>
                     <MenuItem>Select Algorithm</MenuItem>
+                    <MenuItem value = "qLearning">Q-Learning</MenuItem>
+                    <MenuItem value = "valueIteration">Value Iteration</MenuItem>
+                    <MenuItem value = "DRL">Deep Reinforcement Learning</MenuItem>
                     <MenuItem value = "Dijkstra">Dijkstra's Algorithm</MenuItem>
                     <MenuItem value = "aStar">A* Search</MenuItem>
                     <MenuItem value = "BFS">Breadth First Search</MenuItem>
                     <MenuItem value = "DFS">Depth First Search</MenuItem>
-                    <MenuItem value = "Q-Learning">Q-Learning</MenuItem>
+                    
 
                 </Select>
             </div>
