@@ -3,7 +3,7 @@ import {  AwesomeButton, AwesomeButtonSocial } from 'react-awesome-button';
 import "react-awesome-button/dist/styles.css";
 import { Button, Select, MenuItem } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
-import { ReactComponent as InfoLogo } from '../assets/info.svg';
+import { ReactComponent as SettingsLogo } from '../assets/settings.svg';
 
 function Settings(props) {
     //function color_to_RGB_string(color){
@@ -31,8 +31,8 @@ function Settings(props) {
 
     return (
         <div className = "settings_container">
-            <h1 id = "info_title">Visualizer Settings</h1>
-            <p1>Select a Machine Learning Algorithm To Train Your Agent</p1>
+            <h1 id = "settings_title">Visualizer Settings</h1>
+            <div id="divider"></div>
             <table>
                 <tbody>
                     <tr>
@@ -99,7 +99,7 @@ function Settings(props) {
                         </td>
                     </tr>
                     <tr>
-                        <td>Apply settings</td>
+                        <td></td>
                         <td>
                             <div className = "settings-button" id = "settings_button">
                                 <AwesomeButton
@@ -109,6 +109,12 @@ function Settings(props) {
                                     Apply Settings
                                 </AwesomeButton>
                             </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <SettingsLogo id = "settings_icon"/>  
                         </td>
                     </tr>
                 </tbody>
