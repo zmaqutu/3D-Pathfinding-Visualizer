@@ -30,6 +30,7 @@ function World(props) {
    const [agentTrained, setAgentTrained] = useState(false);
    const [clearPath, setClearPath] = useState(false);
    const [trainAgent, setTrainAgent] = useState(false);
+   const [agentKnowledge, setAgentKnowledge] = useState("");
    const cameraPosition = useRef([0,375,0]);
    const [selectedMazeAlgorithm, setSelectedMazeAlgorithm] = useState("");
    const [algorithmSpeed, setAlgorithmSpeed] = useState("15");
@@ -71,6 +72,12 @@ function World(props) {
    }
    function stopTraining(){
        setTrainAgent(false);
+   }
+   function resetAgentKnowledge(){
+       setAgentKnowledge("clearMemory")
+   }
+   function agentResetDone(){
+       setAgentKnowledge("");
    }
    function handleOnChange(event){
        if(event.target.value !== undefined){
@@ -221,6 +228,18 @@ function World(props) {
             <MenuItem value = "80">Slow</MenuItem>
         </Select>
         </div>
+        <div className = "header_items">
+        <AwesomeButton 
+            type = "secondary"
+            size = "medium"
+            ripple = {true}
+            action={(element, next) => {
+               resetAgentKnowledge(); 
+            }}
+            >
+            Reset Agent
+        </AwesomeButton>
+        </div>
         </div>
         <Tutorial />
         <Settings  
@@ -261,7 +280,9 @@ function World(props) {
             stopClearWalls = {stopClearWalls}
             stopMazeSelection = {stopMazeSelection}
             stopTraining = {stopTraining}
+            agentResetDone = {agentResetDone}
             resetStatus = {resetCamera}
+            agentKnowledge = {agentKnowledge}
             selectedAlgorithm = {selectedAlgorithm}
             selectedMazeAlgorithm = {selectedMazeAlgorithm}
             algorithmSpeed = {algorithmSpeed} 

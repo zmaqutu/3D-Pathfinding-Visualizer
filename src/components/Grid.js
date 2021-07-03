@@ -36,6 +36,7 @@ function Grid(props) {
   const clearTheWalls = props.worldProperties.clearWalls; //rename this variable
   const clearThePath = props.worldProperties.clearPath; // rename this variable too
   const algorithmSpeed = props.algorithmSpeed;
+  const agentKnowledge = props.agentKnowledge;
 
   //groundGeometry.rotateX(-Math.PI / 2)
 
@@ -48,6 +49,12 @@ function Grid(props) {
 
 
   useEffect(() => {
+    if(props.agentKnowledge == "clearMemory"){
+      terrain.records = [];
+      terrain.q_table = Array(props.worldProperties.rows).fill().map(() => Array(props.worldProperties.cols).fill(0));
+      //clearPath();
+      props.agentResetDone();
+    }
     if(props.worldProperties.runState === true){
       if(props.selectedAlgorithm.type === "machine-learning"){
         animateQlearning()
@@ -90,7 +97,7 @@ function Grid(props) {
     }
     //const algorithmSpeed = props.algorithmSpeed;
     //console.log(algorithmSpeed);
-  }, [runState, clearTheWalls, clearThePath, selectedMazeAlgorithm, trainTheAgent ]);
+  }, [runState, clearTheWalls, clearThePath, selectedMazeAlgorithm, trainTheAgent,agentKnowledge]);
 
 
   const loader = useMemo(() => new THREE.TextureLoader().load(img,

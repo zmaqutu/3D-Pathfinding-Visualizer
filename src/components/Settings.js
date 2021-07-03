@@ -40,13 +40,13 @@ function Settings(props) {
         slider: {
             marginTop: '15px',
             marginBottom: '10px',
-            width: '225px',
+            width: '150px',
             
         },
         startRow:{
             width:'75px',
             marginTop:'-15px',
-            marginLeft: '85px',
+            marginLeft: '-5px',
             marginBottom:'5px',
 
 
@@ -55,22 +55,22 @@ function Settings(props) {
         startCol:{
             width:'75px',
             marginTop:'-15px',
-            marginLeft: '-62.5px',
+            marginLeft: '-75px',
             marginBottom:'5px',
             
 
         },
         finishRow:{
             width:'75px',
-            marginBottom:'20px',
-            marginLeft: '85px',
+            marginBottom:'25px',
+            marginLeft: '-5px',
 
 
         },
         finishCol:{
             width:'75px',
-            marginBottom:'20px',
-            marginLeft: '-62.5px',
+            marginBottom:'25px',
+            marginLeft: '-75px',
             
         },
       }));
@@ -219,7 +219,26 @@ function Settings(props) {
                         </td>
                     </tr>
                     <tr>
-                        <td></td>
+                        <td>
+                        <div className = "settings-button" id = "settings_button">
+                                <AwesomeButtonProgress 
+                                    type = "secondary"
+                                    size = "medium"
+                                    disabled = {false}
+                                    loadingLabel = "Training agent"
+                                    resultLabel = "Done :-)"
+                                    ripple = {true}
+                                    action={(element, next) => {
+                                        setTimeout(() => {
+                                            next(true, '');
+                                            props.startTraining()
+                                        }, 150);
+                                    }}
+                                >
+                                    Apply &amp; Train
+                                </AwesomeButtonProgress>
+                            </div>
+                        </td>
                         <td>
                             <div className = "settings-button" id = "settings_button">
                                 <AwesomeButtonProgress 
@@ -236,7 +255,7 @@ function Settings(props) {
                                         }, 150);
                                     }}
                                 >
-                                    Apply &amp; Train
+                                    Visualize Optimal Policy
                                 </AwesomeButtonProgress>
                             </div>
                         </td>
