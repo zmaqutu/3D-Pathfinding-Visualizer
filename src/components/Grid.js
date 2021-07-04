@@ -37,6 +37,8 @@ function Grid(props) {
   const clearThePath = props.worldProperties.clearPath; // rename this variable too
   const algorithmSpeed = props.algorithmSpeed;
   const agentKnowledge = props.agentKnowledge;
+  const applyingSettings = props.applyingSettings;
+  //const settingsConfig = props.settingsConfig;
 
   //groundGeometry.rotateX(-Math.PI / 2)
 
@@ -44,12 +46,19 @@ function Grid(props) {
     camera,
   } = useThree();
 
-  
+  useEffect(() => {
+    if(props.applyingSettings){
+      resetTerrainConfig();
+    }
+  },[applyingSettings]);
 
 
 
   useEffect(() => {
-    if(props.agentKnowledge == "clearMemory"){
+    /*if( props.applyingSettings=== true){
+      resetTerrainConfig();
+    }*/
+    if(props.agentKnowledge ==="clearMemory"){
       terrain.records = [];
       terrain.q_table = Array(props.worldProperties.rows).fill().map(() => Array(props.worldProperties.cols).fill(0));
       //clearPath();
@@ -68,7 +77,6 @@ function Grid(props) {
     }
     else if(props.worldProperties.clearPath === true){
       clearPath();
-      //qLearning();
     }
     else if(props.worldProperties.trainAgent === true){
       qLearning();
@@ -97,7 +105,7 @@ function Grid(props) {
     }
     //const algorithmSpeed = props.algorithmSpeed;
     //console.log(algorithmSpeed);
-  }, [runState, clearTheWalls, clearThePath, selectedMazeAlgorithm, trainTheAgent,agentKnowledge]);
+  }, [runState, clearTheWalls, clearThePath, selectedMazeAlgorithm, trainTheAgent,agentKnowledge,]);
 
 
   const loader = useMemo(() => new THREE.TextureLoader().load(img,
@@ -135,8 +143,8 @@ function Grid(props) {
       //visits: Array(props.worldProperties.rows).fill().map(() => Array(props.worldProperties.cols).fill(0)),
       gamma: 0.8,
       alpha: 0.1,
-      start : [props.worldProperties.start.row,props.worldProperties.start.col],
-      finish: [props.worldProperties.finish.row,props.worldProperties.finish.col]
+      start: [props.settingsConfig.startRow,props.settingsConfig.startCol],
+      finish: [props.settingsConfig.finishRow,props.settingsConfig.finishCol]
     });
 
   function initializeGrid(){
@@ -412,7 +420,8 @@ function Grid(props) {
       let record = terrain.records[i]
       for(let row = 0; row < 30; row++){
         for(let col = 0; col < 30; col++){ 
-          if(record[row][col] === 0 ){continue;}
+          const node = terrain.grid[row][col];
+          if(record[row][col] === 0 || node.status === "wall" || node.status === 'start' || node.status === 'finish'){continue;}
           let ratio = 2 * (record[row][col]-minimum) / (maximum - minimum)
           let blue = Number(Math.max(0, 255*(1 - ratio)))
           let red = Number(Math.max(0, 255*(ratio - 1)))
@@ -423,10 +432,9 @@ function Grid(props) {
           blue /= 255;
           
           setTimeout(() => {
-            const node = terrain.grid[row][col];
-            if (node.status === 'start' || node.status == 'finish') return;
+            //if (node.status === 'start' || node.status === 'finish' ) return;
             tweenToColor(node, groundGeometry, [{r: red, g: green, b: blue}], 30,{position: false});
-            if (row === 30 - 1) {}
+            //if (row === 30 - 1) {}
           }, 1000);
         }
       }
@@ -435,35 +443,35 @@ function Grid(props) {
   }
   function qLearning(){
     //reset records
+
+    
     terrain.records = [];
     let i = 0;
-    var epochs = 500000
-    while(i < epochs){
-      if(i > 0.55*epochs){
-        var currentState = terrain.start;
+    while(i < props.settingsConfig.epochs){
+      if(i > 0.55*props.epochs){
+        let y = props.settingsConfig.startRow;
+        let x = props.settingsConfig.startCol;
+        var currentState = [y,x];
       }
       else{
         var currentState = terrain.states[Math.floor(Math.random() * terrain.states.length)]
       }
-      while(!(currentState[0] === terrain.finish[0] && currentState[1] === terrain.finish[1])
+      while(!(currentState[0] === props.settingsConfig.finishRow && currentState[1] === props.settingsConfig.finishCol)
         && terrain.grid[currentState[0]][currentState[1]].status !== "wall"){
-          
+        
           //setTimeout(() => {
            //tweenToColor(terrain.grid[14][14],groundGeometry,[{ r: 1, g: 0.64, b: 0.0}]);
           //}, props.algorithmSpeed);
           
           let action = chooseAction(currentState)
-          //console.log(action)
           let action_dy = terrain.actions[action][0]
 				  let action_dx = terrain.actions[action][1]
 				  let nextState = [action_dy + currentState[0], action_dx + currentState[1]]
-          //console.log(nextState)
 
 
           let currentQValue = terrain.q_table[currentState[0]][currentState[1]]
 				  //let maximum_action = chooseAction(currentState)
 				
-          //console.log("max action = " + maximum_action)
           //action_dy = terrain.actions[maximum_action][0]
 				  //action_dx = terrain.actions[maximum_action][1]
 
@@ -473,8 +481,7 @@ function Grid(props) {
           let temporal_difference = terrain.grid[nextState[0]][nextState[1]] .reward + (terrain.gamma * ( maxQValue - currentQValue)) 
 				  let learning_rate = terrain.alpha / (1 + terrain.grid[currentState[0]][currentState[1]].visits)
 
-          //console.log(learning_rate)
-          let q_value = currentQValue + (0.4* temporal_difference)
+          let q_value = currentQValue + (props.settingsConfig.learningRate * temporal_difference)
 				  terrain.q_table[currentState[0]][currentState[1]] = parseFloat(q_value.toFixed(2))
 
           terrain.grid[currentState[0]][currentState[1]].visits+=1;
@@ -483,7 +490,6 @@ function Grid(props) {
 
         }
         terrain.records.push(getRecord())
-      //console.log(terrain.records)
     }
     props.stopTraining();
     console.log(terrain.records)
@@ -526,8 +532,9 @@ function Grid(props) {
         }
       }
       //let maxState = max(policy_candidates, key=policy_candidates.get)
-      let maxQValue = Object.keys(policyCandidates).reduce((a, v) => Math.max(a, policyCandidates[v]), -Infinity);
+      let maxQValue = Number(Object.keys(policyCandidates).reduce((a, v) => Math.max(a, policyCandidates[v]), -Infinity));
       let maxState = Object.keys(policyCandidates).filter(v => policyCandidates[v] === maxQValue);
+
 			//let maxQValue = policy_candidates[maxState]
 			let listOfMax = [];
       for(let maxCandidate in policyCandidates){
@@ -551,8 +558,9 @@ function Grid(props) {
 
   }
   function isValidState(nextState){
+    //console.log(nextState)
     if (nextState[0] < 0 || nextState[0] >= props.worldProperties.rows || 
-        nextState[1] < 0 || nextState[1] >= props.worldProperties.cols){ return false;}
+        nextState[1] < 0 || nextState[1] >= props.worldProperties.cols){return false;}
 		return true
   }
   function getRecord(){
@@ -563,6 +571,30 @@ function Grid(props) {
     }
     //console.log(record)
     return record
+  }
+  function resetTerrainConfig(){
+    for(let row = 0; row < 30; row++){
+      for(let col = 0; col < 30; col++){
+        if(terrain.grid[row][col].status === "wall"){
+          continue;
+        }
+        if(row === props.settingsConfig.startRow && col  === props.settingsConfig.startCol){
+          terrain.grid[row][col].status = "start";
+        }
+        else if(row === props.settingsConfig.finishRow && col === props.settingsConfig.finishCol){
+          terrain.grid[row][col].status = "finish";
+          terrain.grid[row][col].reward = 100;
+
+        }
+        else{
+          terrain.grid[row][col].status = "default";
+          terrain.grid[row][col].reward = 0;
+          tweenToColor(terrain.grid[row][col], groundGeometry, [props.worldProperties.colors.default]);
+
+        }
+      }
+    }
+    props.finishApplyingSettings();
   }
 
   function clearWalls(){

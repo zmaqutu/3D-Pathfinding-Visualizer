@@ -19,6 +19,15 @@ function Settings(props) {
     /*useEffect(() => {
         if(props.trainAgent == true)
       }, [trainTheAgent ]);*/
+    
+    const [epochs, setEpochs] = useState(500000);
+    const [startRow, setStartRow] = useState(5);
+    const [startCol, setStartCol] = useState(5);
+    const [finishRow, setFinishRow] = useState(25);
+    const [finishCol, setFinishCol] = useState(25);
+    const [finishPosition, setFinishPosition] = useState({});
+    const [learningRate, setLearningRate] = useState(0.4);
+    const [agentCuriosity,setAgentCuriosity] = useState(0.4);
 
     const useStyles = makeStyles((theme) => ({
         root: {
@@ -73,7 +82,7 @@ function Settings(props) {
             marginLeft: '-75px',
             
         },
-      }));
+    }));
     const classes = useStyles();
 
     const muiTheme = createMuiTheme({
@@ -95,14 +104,48 @@ function Settings(props) {
 
       }
     });
-      //console.log(muiTheme)
 
-      const textBoxTheme = createMuiTheme({
+    const textBoxTheme = createMuiTheme({
         palette: {
           primary: green,
         },
-      });
+    });
+    function handleStartRowChange(e){
+        e.target.value = Math.abs(e.target.value % 30);
+        setStartRow(Number(e.target.value))
 
+    }
+    function handleStartColChange(e){
+        e.target.value = Math.abs(e.target.value % 30);
+        setStartCol(Number(e.target.value))
+    }
+    function handleFinishRowChange(e){
+        e.target.value = Math.abs(e.target.value % 30);
+        setFinishRow(Number(e.target.value))
+    }
+    function handleFinishColChange(e){
+        e.target.value = Math.abs(e.target.value % 30);
+        setFinishCol(Number(e.target.value))
+    }
+    function handleEpochChange(e,value){
+        setEpochs(1000 * Number(value))
+    }
+    function handleLRChange(e,value){
+        setLearningRate(Number(value))
+    }
+    function handleCuriosityChange(e,value){
+        setAgentCuriosity(Number(value))
+    }
+    function applySettings(){
+        props.configureSettings(epochs,startRow,startCol,finishRow,finishCol,learningRate,agentCuriosity);
+    }
+    function pressTrainingButton(){
+        props.configureSettings(epochs,startRow,startCol,finishRow,finishCol,learningRate,agentCuriosity);
+        props.startTraining()
+    }
+    function pressPolicyButton(){
+        applySettings();
+    }
     return (
         <div className = "settings_container">
             <h1 id = "settings_title">Visualizer Settings</h1>
@@ -110,7 +153,7 @@ function Settings(props) {
             <table>
                 <tbody>
                     <tr>
-                        <td>Training Epochs: </td>
+                        <td>Training Epochs:(Thousands) </td>
                         <td>
                         <div className={classes.slider}>
                             <ThemeProvider theme={muiTheme}>
@@ -122,6 +165,7 @@ function Settings(props) {
                                         marks
                                         min={50}
                                         max={700}
+                                        onChangeCommitted={(e,value) => handleEpochChange(e, value)}
                                     />
                             </ThemeProvider>
                         </div>
@@ -137,6 +181,8 @@ function Settings(props) {
                                     id="mui-theme-provider-outlined-input"
                                     label="Row"
                                     variant="outlined"
+                                    type = "number"
+                                    onChange={e => handleStartRowChange(e)}
                                     />
                             </ThemeProvider>
                             </div>
@@ -149,6 +195,8 @@ function Settings(props) {
                                     id="mui-theme-provider-outlined-input"
                                     label="Col"
                                     variant="outlined"
+                                    type = "number"
+                                    onChange={e => handleStartColChange(e)}
                                 />
                             </ThemeProvider>
                             </div>
@@ -165,6 +213,9 @@ function Settings(props) {
                                     id="mui-theme-provider-outlined-input"
                                     label="Row"
                                     variant="outlined"
+                                    type = "number"
+                                    onChange={e => handleFinishRowChange(e)}
+
                                 />
                             </ThemeProvider>
                             </div>
@@ -177,6 +228,9 @@ function Settings(props) {
                                     id="mui-theme-provider-outlined-input"
                                     label="Col"
                                     variant="outlined"
+                                    type = "number"
+                                    onChange={e => handleFinishColChange(e)}
+
                                 />
                             </ThemeProvider>
                             </div>
@@ -195,6 +249,7 @@ function Settings(props) {
                                         marks
                                         min={0}
                                         max={1}
+                                        onChangeCommitted={(e,value) => handleLRChange(e, value)}
                                     /> 
                                 </ThemeProvider> 
                             </div>      
@@ -213,6 +268,7 @@ function Settings(props) {
                                         marks
                                         min={0}
                                         max={1}
+                                        onChangeCommitted={(e,value) => handleCuriosityChange(e, value)}
                                     />
                                 </ThemeProvider>
                             </div>
@@ -231,7 +287,7 @@ function Settings(props) {
                                     action={(element, next) => {
                                         setTimeout(() => {
                                             next(true, '');
-                                            props.startTraining()
+                                            pressTrainingButton();
                                         }, 150);
                                     }}
                                 >
@@ -251,7 +307,7 @@ function Settings(props) {
                                     action={(element, next) => {
                                         setTimeout(() => {
                                             next(true, '');
-                                            props.startTraining()
+                                            pressPolicyButton();
                                         }, 150);
                                     }}
                                 >

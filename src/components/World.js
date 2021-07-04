@@ -34,7 +34,25 @@ function World(props) {
    const cameraPosition = useRef([0,375,0]);
    const [selectedMazeAlgorithm, setSelectedMazeAlgorithm] = useState("");
    const [algorithmSpeed, setAlgorithmSpeed] = useState("15");
-   const [selected_algo_is_undefined, setAlgo] = useState(true)
+   const [selected_algo_is_undefined, setAlgo] = useState(true);
+   
+   const [epochs, setEpochs] = useState(500000);
+   const [startRow, setStartRow] = useState(5);
+   const [startCol, setStartCol] = useState(5);
+   const [finishRow, setFinishRow] = useState(25);
+   const [finishCol, setFinishCol] = useState(25);
+   const [learningRate, setLearningRate] = useState(0.4);
+   const [agentCuriosity,setAgentCuriosity] = useState(0.4);
+   const [applyingSettings, setApplyingSettings] = useState(false);
+   const [settingsConfig, setConfig] = useState({
+       epochs: 500000,
+       startRow: 5,
+       startCol: 5,
+       finishRow: 25,
+       finishCol: 25,
+       learningRate: 0.4,
+       agentCuriosity: 0.4,   
+   })
    
    const useStyles = makeStyles((theme) => ({
     root: {
@@ -78,6 +96,30 @@ function World(props) {
    }
    function agentResetDone(){
        setAgentKnowledge("");
+   }
+   function configureSettings(userEpochs,userStartRow,userStartCol,userFinishRow,userFinishCol,userLearningRate,userAgentCuriosity){
+       /*setEpochs(userEpochs);
+       setStartRow(userStartRow);
+       setStartCol(userStartCol);
+       setFinishRow(userFinishRow);
+       setFinishCol(userFinishCol);
+       setLearningRate(userLearningRate)
+       setAgentCuriosity(userAgentCuriosity)*/
+       setConfig({
+           epochs: Number(userEpochs),
+           startRow: Number(userStartRow),
+           startCol: Number(userStartCol),
+           finishRow: Number(userFinishRow),
+           finishCol: Number(userFinishCol),
+           learningRate: Number(userLearningRate),
+           agentCuriosity: Number(userAgentCuriosity),
+
+       });
+       setApplyingSettings(true)
+       
+   }
+   function finishApplyingSettings(){
+       setApplyingSettings(false);
    }
    function handleOnChange(event){
        if(event.target.value !== undefined){
@@ -244,6 +286,7 @@ function World(props) {
         <Tutorial />
         <Settings  
             startTraining = {startTraining}
+            configureSettings = {configureSettings}
         />
         <Canvas colorManagement 
         camera={
@@ -281,11 +324,17 @@ function World(props) {
             stopMazeSelection = {stopMazeSelection}
             stopTraining = {stopTraining}
             agentResetDone = {agentResetDone}
+            finishApplyingSettings = {finishApplyingSettings}
             resetStatus = {resetCamera}
             agentKnowledge = {agentKnowledge}
             selectedAlgorithm = {selectedAlgorithm}
             selectedMazeAlgorithm = {selectedMazeAlgorithm}
             algorithmSpeed = {algorithmSpeed} 
+            //epochs = {settingsConfig.epochs}
+            //learningRate = {settingsConfig.learningRate}
+            //agentCuriosity = {settingsConfig.agentCuriosity}
+            applyingSettings = {applyingSettings}
+            settingsConfig = {settingsConfig}
             worldProperties = {
             {
                 rows: 30,
@@ -295,12 +344,12 @@ function World(props) {
                 clearWalls: clearWalls,
                 trainAgent: trainAgent,
                 start: {
-                    row: 5,
-                    col: 5,
+                    row: settingsConfig.startRow,
+                    col: settingsConfig.startCol,
                 },
                 finish: {
-                    row: 25,
-                    col: 25,
+                    row: settingsConfig.finishRow,
+                    col: settingsConfig.finishCol,
                 },
                 colors: {
                     start: {r: 0, g: 1, b: 0 },
