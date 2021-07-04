@@ -464,11 +464,11 @@ function Grid(props) {
 
 
       setTimeout(() => {
-        if (node.status === 'start' || node.status === 'finish' ) return;
+        if (node.status === 'finish' ) return;
         //terrain.grid[row][col].status = visited;
         setTimeout(() => {
         tweenToColor(prevNode, groundGeometry, [props.worldProperties.colors.path], undefined,{position: false});
-        }, 0.35*i*props.algorithmSpeed);
+        }, 0.25*i*props.algorithmSpeed);
         tweenToColor(node, groundGeometry, [{r: 0, g: 0, b: 0}], undefined,{position: false});
 
 
@@ -527,7 +527,7 @@ function Grid(props) {
         terrain.records.push(getRecord())
     }
     props.stopTraining();
-    console.log(terrain.records)
+    //console.log(terrain.records)
     //console.log(terrain.grid)
   }
   function chooseAction(currentState,e_greedy = props.settingsConfig.agentCuriosity){
@@ -633,7 +633,7 @@ function Grid(props) {
         }
       }
     }
-    console.log(terrain.records)
+    //console.log(terrain.records)
     props.finishApplyingSettings();
   }
 
