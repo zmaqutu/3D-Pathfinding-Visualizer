@@ -38,6 +38,8 @@ function Grid(props) {
   const algorithmSpeed = props.algorithmSpeed;
   const agentKnowledge = props.agentKnowledge;
   const applyingSettings = props.applyingSettings;
+
+  const visualizeThePolicy = props.visualizeOptimalPolicy;
   //const settingsConfig = props.settingsConfig;
 
   //groundGeometry.rotateX(-Math.PI / 2)
@@ -50,7 +52,12 @@ function Grid(props) {
     if(props.applyingSettings){
       resetTerrainConfig();
     }
-  },[applyingSettings]);
+    if(props.visualizeOptimalPolicy){
+      calculateOptimalPolicy();
+      animateOptimalPolicy();
+      props.finishedOptimalPolicy();
+    }
+  },[applyingSettings, visualizeThePolicy]);
 
 
 
@@ -139,6 +146,7 @@ function Grid(props) {
       states: initStates(),
       q_table: Array(props.worldProperties.rows).fill().map(() => Array(props.worldProperties.cols).fill(0)),
       records: [],
+      optimalPolicy: [],
       actions : { "left":[0,-1], "down":[1,0],"right":[0,1], "up":[-1,0]},
       //visits: Array(props.worldProperties.rows).fill().map(() => Array(props.worldProperties.cols).fill(0)),
       gamma: 0.8,
@@ -219,14 +227,17 @@ function Grid(props) {
         qValue: 0,
         reward: 0,
         visits: 0,
+        onceSpecial: false,
         previousNode: null,
     };
     if(status === "start"){
+      node.onceSpecial = true;
       tweenToColor(node, groundGeometry, [props.worldProperties.colors.start]);
       
     }
     else if(status === "finish"){
       node.reward = 100;
+      node.onceSpecial = true;
       tweenToColor(node, groundGeometry, [props.worldProperties.colors.finish]);
     }
     return node;
@@ -421,7 +432,7 @@ function Grid(props) {
       for(let row = 0; row < 30; row++){
         for(let col = 0; col < 30; col++){ 
           const node = terrain.grid[row][col];
-          if(record[row][col] === 0 || node.status === "wall" || node.status === 'start' || node.status === 'finish'){continue;}
+          if(record[row][col] === 0 || node.status === "wall" || node.status === "start" || node.status === "finish"){continue;}
           let ratio = 2 * (record[row][col]-minimum) / (maximum - minimum)
           let blue = Number(Math.max(0, 255*(1 - ratio)))
           let red = Number(Math.max(0, 255*(ratio - 1)))
@@ -432,7 +443,6 @@ function Grid(props) {
           blue /= 255;
           
           setTimeout(() => {
-            //if (node.status === 'start' || node.status === 'finish' ) return;
             tweenToColor(node, groundGeometry, [{r: red, g: green, b: blue}], 30,{position: false});
             //if (row === 30 - 1) {}
           }, 1000);
@@ -440,6 +450,28 @@ function Grid(props) {
       }
     }
     props.updateRunState(false);
+  }
+  function animateOptimalPolicy(){
+    for(let i = 2; i < terrain.optimalPolicy.length;i++){
+      let row = terrain.optimalPolicy[i][0];
+      let col = terrain.optimalPolicy[i][1];
+      let prevRow = terrain.optimalPolicy[i-1][0];
+      let prevCol = terrain.optimalPolicy[i-1][1];
+
+      const node = terrain.grid[row][col];
+      const prevNode = terrain.grid[prevRow][prevCol];
+
+      setTimeout(() => {
+        if (node.status === 'start' || node.status === 'finish' ) return;
+        setTimeout(() => {
+        tweenToColor(prevNode, groundGeometry, [props.worldProperties.colors.path], undefined,{position: false});
+        }, i*props.algorithmSpeed);
+        tweenToColor(node, groundGeometry, [{r: 0, g: 0, b: 0}], undefined,{position: false});
+
+
+      }, 2*i*props.algorithmSpeed);
+
+    }
   }
   function qLearning(){
     //reset records
@@ -495,7 +527,7 @@ function Grid(props) {
     console.log(terrain.records)
     //console.log(terrain.grid)
   }
-  function chooseAction(currentState,e_greedy = 0.7){
+  function chooseAction(currentState,e_greedy = props.settingsConfig.agentCuriosity){
     var rwc = require("random-weighted-choice");
     let actionOptions = [
       {weight: e_greedy * 10, id: "true"},
@@ -570,7 +602,7 @@ function Grid(props) {
 			record[state[0]][state[1]] = terrain.q_table[state[0]][state[1]]
     }
     //console.log(record)
-    return record
+    return record;
   }
   function resetTerrainConfig(){
     for(let row = 0; row < 30; row++){
@@ -580,21 +612,48 @@ function Grid(props) {
         }
         if(row === props.settingsConfig.startRow && col  === props.settingsConfig.startCol){
           terrain.grid[row][col].status = "start";
+          terrain.grid[row][col].onceSpecial = true;
         }
         else if(row === props.settingsConfig.finishRow && col === props.settingsConfig.finishCol){
           terrain.grid[row][col].status = "finish";
           terrain.grid[row][col].reward = 100;
+          terrain.grid[row][col].onceSpecial = true;
 
         }
         else{
           terrain.grid[row][col].status = "default";
           terrain.grid[row][col].reward = 0;
+          if(terrain.grid[row][col].onceSpecial){
           tweenToColor(terrain.grid[row][col], groundGeometry, [props.worldProperties.colors.default]);
+          }
 
         }
       }
     }
+    console.log(terrain.records)
     props.finishApplyingSettings();
+  }
+
+  function calculateOptimalPolicy(){
+    let currentState = [props.settingsConfig.startRow, props.settingsConfig.startCol];
+    let policyList = [];
+    policyList.push(currentState);
+    
+    while(!(currentState[0] === props.settingsConfig.finishRow && currentState[1] === props.settingsConfig.finishCol)
+    && terrain.grid[currentState[0]][currentState[1]].status !== "wall"){
+      let maxAction = chooseAction(currentState,props.settingsConfig.agentCuriosity);
+      let action_dy = terrain.actions[maxAction][0];
+      let action_dx = terrain.actions[maxAction][1];
+
+      let nextState = [action_dy + currentState[0], action_dx + currentState[1]];
+      policyList.push(nextState);
+      currentState = nextState;
+      //console.log(maxAction);
+      //console.log(action_dy);
+    }
+    terrain.optimalPolicy = policyList;
+
+    
   }
 
   function clearWalls(){

@@ -144,7 +144,8 @@ function Settings(props) {
         props.startTraining()
     }
     function pressPolicyButton(){
-        applySettings();
+        //applySettings();
+        props.visualizePolicy();
     }
     return (
         <div className = "settings_container">
@@ -261,7 +262,7 @@ function Settings(props) {
                             <div className={classes.slider}>
                                 <ThemeProvider theme={muiTheme}>
                                     <Slider
-                                        defaultValue={0.4}
+                                        defaultValue={0.7}
                                         aria-labelledby="discrete-slider"
                                         valueLabelDisplay="on"
                                         step={0.1}

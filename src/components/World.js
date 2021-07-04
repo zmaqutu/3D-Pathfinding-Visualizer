@@ -53,6 +53,8 @@ function World(props) {
        learningRate: 0.4,
        agentCuriosity: 0.4,   
    })
+
+   const [visualizeOptimalPolicy, setVisualizeOptimalPolicy] = useState(false)
    
    const useStyles = makeStyles((theme) => ({
     root: {
@@ -121,6 +123,12 @@ function World(props) {
    function finishApplyingSettings(){
        setApplyingSettings(false);
    }
+   function visualizePolicy(){
+    setVisualizeOptimalPolicy(true);
+}
+function finishedOptimalPolicy(){
+    setVisualizeOptimalPolicy(false);
+}
    function handleOnChange(event){
        if(event.target.value !== undefined){
            setAlgo(false);
@@ -173,6 +181,7 @@ function World(props) {
    function stopMazeSelection(){
        setSelectedMazeAlgorithm("");
    }
+
 
     return (
         <>
@@ -287,6 +296,7 @@ function World(props) {
         <Settings  
             startTraining = {startTraining}
             configureSettings = {configureSettings}
+            visualizePolicy = {visualizePolicy}
         />
         <Canvas colorManagement 
         camera={
@@ -325,6 +335,8 @@ function World(props) {
             stopTraining = {stopTraining}
             agentResetDone = {agentResetDone}
             finishApplyingSettings = {finishApplyingSettings}
+            visualizeOptimalPolicy = {visualizeOptimalPolicy}
+            finishedOptimalPolicy = {finishedOptimalPolicy}
             resetStatus = {resetCamera}
             agentKnowledge = {agentKnowledge}
             selectedAlgorithm = {selectedAlgorithm}
