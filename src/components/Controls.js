@@ -18,7 +18,6 @@ function Controls(props) {
         if(props.resetStatus === true){
             resetCamera();
         }
-       
     }, [resetStatus]);
 
     function resetCamera() {

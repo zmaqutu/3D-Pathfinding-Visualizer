@@ -428,12 +428,12 @@ function Grid(props) {
     let minimum = -10;
     let maximum = 100;
     for(let i = 0; i < terrain.records.length;i++){
-      let record = terrain.records[i]
+      //let record = terrain.records[i]
       for(let row = 0; row < 30; row++){
         for(let col = 0; col < 30; col++){ 
           const node = terrain.grid[row][col];
-          if(record[row][col] === 0 || node.status === "wall" || node.status === "start" || node.status === "finish"){continue;}
-          let ratio = 2 * (record[row][col]-minimum) / (maximum - minimum)
+          if(terrain.records[i][row][col] === 0 || node.status === "wall" || node.status === "start" || node.status === "finish"){continue;}
+          let ratio = 2 * (terrain.records[i][row][col]-minimum) / (maximum - minimum)
           let blue = Number(Math.max(0, 255*(1 - ratio)))
           let red = Number(Math.max(0, 255*(ratio - 1)))
           let green = 255 - blue - red
@@ -445,32 +445,39 @@ function Grid(props) {
           setTimeout(() => {
             tweenToColor(node, groundGeometry, [{r: red, g: green, b: blue}], 30,{position: false});
             //if (row === 30 - 1) {}
-          }, 1000);
+          }, 6000);
         }
       }
     }
     props.updateRunState(false);
   }
   function animateOptimalPolicy(){
-    for(let i = 2; i < terrain.optimalPolicy.length;i++){
-      let row = terrain.optimalPolicy[i][0];
-      let col = terrain.optimalPolicy[i][1];
-      let prevRow = terrain.optimalPolicy[i-1][0];
-      let prevCol = terrain.optimalPolicy[i-1][1];
+    for(let i = 3; i < terrain.optimalPolicy.length;i++){
+      let headRow = terrain.optimalPolicy[i][0];
+      let headCol = terrain.optimalPolicy[i][1];
+      //let torsoRow = terrain.optimalPolicy[i-1][0];
+      //let torsoCol = terrain.optimalPolicy[i-1][1];
+      let tailRow = terrain.optimalPolicy[i-1][0];
+      let tailCol = terrain.optimalPolicy[i-1][1];
 
-      const node = terrain.grid[row][col];
-      const prevNode = terrain.grid[prevRow][prevCol];
-      if (node.status === 'start'){continue;}
+      const head = terrain.grid[headRow][headCol];
+      //const torso = terrain.grid[torsoRow][torsoCol];
+      const tail = terrain.grid[tailRow][tailCol];
+      if (head.status === 'start'|| tail.status == 'start'){continue;}
 
 
       setTimeout(() => {
-        if (node.status === 'finish' ) return;
+        if (head.status === 'finish' ) return;
         //terrain.grid[row][col].status = visited;
+        
         setTimeout(() => {
-        tweenToColor(prevNode, groundGeometry, [props.worldProperties.colors.path], undefined,{position: false});
-        }, 0.25*i*props.algorithmSpeed);
-        tweenToColor(node, groundGeometry, [{r: 0, g: 0, b: 0}], undefined,{position: false});
+        tweenToColor(tail, groundGeometry, [props.worldProperties.colors.path], undefined,{position: false});
+        }, i*props.algorithmSpeed);
 
+
+        tweenToColor(tail, groundGeometry, [props.worldProperties.colors.path], undefined,{position: false});
+        tweenToColor(head, groundGeometry, [{r: 0, g: 0, b: 0}], undefined,{position: false});
+        //tweenToColor(torso, groundGeometry, [{r: 0, g: 0, b: 0}], undefined,{position: false});
 
       }, 2*i*props.algorithmSpeed);
 

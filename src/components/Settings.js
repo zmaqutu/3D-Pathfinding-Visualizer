@@ -159,13 +159,13 @@ function Settings(props) {
                         <div className={classes.slider}>
                             <ThemeProvider theme={muiTheme}>
                                 <Slider
-                                        defaultValue={500}
+                                        defaultValue={250}
                                         aria-labelledby="discrete-slider"
                                         valueLabelDisplay="on"
                                         step={50}
                                         marks
                                         min={0}
-                                        max={500}
+                                        max={350}
                                         onChangeCommitted={(e,value) => handleEpochChange(e, value)}
                                     />
                             </ThemeProvider>
