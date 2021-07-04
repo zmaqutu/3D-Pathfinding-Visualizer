@@ -429,6 +429,7 @@ function Grid(props) {
     let maximum = 100;
     for(let i = 0; i < terrain.records.length;i++){
       //let record = terrain.records[i]
+      if(i > 1200){return;}
       for(let row = 0; row < 30; row++){
         for(let col = 0; col < 30; col++){ 
           const node = terrain.grid[row][col];
@@ -490,6 +491,7 @@ function Grid(props) {
     }
     let i = 0;
     while(i < props.settingsConfig.epochs){
+      if(terrain.records.length > 1200){break;}
       if(i > 0.55*props.epochs){
         let y = props.settingsConfig.startRow;
         let x = props.settingsConfig.startCol;
@@ -534,7 +536,7 @@ function Grid(props) {
         terrain.records.push(getRecord())
     }
     props.stopTraining();
-    //console.log(terrain.records)
+    console.log(terrain.records)
     //console.log(terrain.grid)
   }
   function chooseAction(currentState,e_greedy = props.settingsConfig.agentCuriosity){

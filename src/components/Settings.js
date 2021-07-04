@@ -159,7 +159,7 @@ function Settings(props) {
                         <div className={classes.slider}>
                             <ThemeProvider theme={muiTheme}>
                                 <Slider
-                                        defaultValue={250}
+                                        defaultValue={150}
                                         aria-labelledby="discrete-slider"
                                         valueLabelDisplay="on"
                                         step={50}
