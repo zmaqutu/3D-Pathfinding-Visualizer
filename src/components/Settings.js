@@ -144,7 +144,7 @@ function Settings(props) {
         props.startTraining()
     }
     function pressPolicyButton(){
-        //applySettings();
+        props.configureSettings(epochs,startRow,startCol,finishRow,finishCol,learningRate,agentCuriosity);
         props.visualizePolicy();
     }
     return (
@@ -164,8 +164,8 @@ function Settings(props) {
                                         valueLabelDisplay="on"
                                         step={50}
                                         marks
-                                        min={50}
-                                        max={700}
+                                        min={0}
+                                        max={500}
                                         onChangeCommitted={(e,value) => handleEpochChange(e, value)}
                                     />
                             </ThemeProvider>
@@ -267,7 +267,7 @@ function Settings(props) {
                                         valueLabelDisplay="on"
                                         step={0.1}
                                         marks
-                                        min={0}
+                                        min={0.1}
                                         max={1}
                                         onChangeCommitted={(e,value) => handleCuriosityChange(e, value)}
                                     />

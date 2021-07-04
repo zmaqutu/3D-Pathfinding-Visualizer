@@ -100,13 +100,6 @@ function World(props) {
        setAgentKnowledge("");
    }
    function configureSettings(userEpochs,userStartRow,userStartCol,userFinishRow,userFinishCol,userLearningRate,userAgentCuriosity){
-       /*setEpochs(userEpochs);
-       setStartRow(userStartRow);
-       setStartCol(userStartCol);
-       setFinishRow(userFinishRow);
-       setFinishCol(userFinishCol);
-       setLearningRate(userLearningRate)
-       setAgentCuriosity(userAgentCuriosity)*/
        setConfig({
            epochs: Number(userEpochs),
            startRow: Number(userStartRow),

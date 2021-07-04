@@ -460,12 +460,15 @@ function Grid(props) {
 
       const node = terrain.grid[row][col];
       const prevNode = terrain.grid[prevRow][prevCol];
+      if (node.status === 'start'){continue;}
+
 
       setTimeout(() => {
         if (node.status === 'start' || node.status === 'finish' ) return;
+        //terrain.grid[row][col].status = visited;
         setTimeout(() => {
         tweenToColor(prevNode, groundGeometry, [props.worldProperties.colors.path], undefined,{position: false});
-        }, i*props.algorithmSpeed);
+        }, 0.35*i*props.algorithmSpeed);
         tweenToColor(node, groundGeometry, [{r: 0, g: 0, b: 0}], undefined,{position: false});
 
 
@@ -475,9 +478,9 @@ function Grid(props) {
   }
   function qLearning(){
     //reset records
-
-    
-    terrain.records = [];
+    if(props.settingsConfig.epochs > 0){
+      terrain.records = [];
+    }
     let i = 0;
     while(i < props.settingsConfig.epochs){
       if(i > 0.55*props.epochs){
