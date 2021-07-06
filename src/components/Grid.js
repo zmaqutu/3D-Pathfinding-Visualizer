@@ -543,7 +543,7 @@ function Grid(props) {
         terrain.records.push(getRecord())
     }
     props.stopTraining();
-    console.log(props.settingsConfig.epochs);
+    //console.log(props.settingsConfig.epochs);
     console.log(terrain.records)
     //console.log(terrain.grid)
   }

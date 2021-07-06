@@ -303,7 +303,7 @@ function Settings(props) {
                                     type = "secondary"
                                     size = "medium"
                                     disabled = {false}
-                                    loadingLabel = "Training agent"
+                                    loadingLabel = "Calculating Optimal Policy"
                                     resultLabel = "Done :-)"
                                     ripple = {true}
                                     action={(element, next) => {
