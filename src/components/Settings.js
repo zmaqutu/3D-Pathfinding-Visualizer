@@ -20,14 +20,14 @@ function Settings(props) {
         if(props.trainAgent == true)
       }, [trainTheAgent ]);*/
     
-    const [epochs, setEpochs] = useState(500000);
+    const [epochs, setEpochs] = useState(350000);
     const [startRow, setStartRow] = useState(5);
     const [startCol, setStartCol] = useState(5);
     const [finishRow, setFinishRow] = useState(25);
     const [finishCol, setFinishCol] = useState(25);
     const [finishPosition, setFinishPosition] = useState({});
-    const [learningRate, setLearningRate] = useState(0.4);
-    const [agentCuriosity,setAgentCuriosity] = useState(0.4);
+    const [learningRate, setLearningRate] = useState(0.2);
+    const [agentCuriosity,setAgentCuriosity] = useState(0.8);
 
     const useStyles = makeStyles((theme) => ({
         root: {
@@ -144,7 +144,8 @@ function Settings(props) {
         props.startTraining()
     }
     function pressPolicyButton(){
-        props.configureSettings(epochs,startRow,startCol,finishRow,finishCol,learningRate,agentCuriosity);
+        //props.configureSettings(epochs,startRow,startCol,finishRow,finishCol,learningRate,agentCuriosity);
+        props.updateAgentCuriosity(agentCuriosity);
         props.visualizePolicy();
     }
     return (
@@ -159,13 +160,13 @@ function Settings(props) {
                         <div className={classes.slider}>
                             <ThemeProvider theme={muiTheme}>
                                 <Slider
-                                        defaultValue={150}
+                                        defaultValue={350}
                                         aria-labelledby="discrete-slider"
                                         valueLabelDisplay="on"
                                         step={50}
                                         marks
                                         min={0}
-                                        max={350}
+                                        max={500}
                                         onChangeCommitted={(e,value) => handleEpochChange(e, value)}
                                     />
                             </ThemeProvider>
@@ -243,7 +244,7 @@ function Settings(props) {
                             <div className={classes.slider}>
                                 <ThemeProvider theme={muiTheme}>
                                     <Slider
-                                        defaultValue={0.4}
+                                        defaultValue={0.2}
                                         aria-labelledby="discrete-slider"
                                         valueLabelDisplay="on"
                                         step={0.05}
@@ -262,7 +263,7 @@ function Settings(props) {
                             <div className={classes.slider}>
                                 <ThemeProvider theme={muiTheme}>
                                     <Slider
-                                        defaultValue={0.7}
+                                        defaultValue={0.8}
                                         aria-labelledby="discrete-slider"
                                         valueLabelDisplay="on"
                                         step={0.1}

@@ -149,7 +149,7 @@ function Grid(props) {
       optimalPolicy: [],
       actions : { "left":[0,-1], "down":[1,0],"right":[0,1], "up":[-1,0]},
       //visits: Array(props.worldProperties.rows).fill().map(() => Array(props.worldProperties.cols).fill(0)),
-      gamma: 0.8,
+      discountFactor: 0.8,
       alpha: 0.1,
       start: [props.settingsConfig.startRow,props.settingsConfig.startCol],
       finish: [props.settingsConfig.finishRow,props.settingsConfig.finishCol]
@@ -429,7 +429,7 @@ function Grid(props) {
     let maximum = 100;
     for(let i = 0; i < terrain.records.length;i++){
       //let record = terrain.records[i]
-      if(i > 1200){return;}
+      if(i > 1300){return;}
       for(let row = 0; row < 30; row++){
         for(let col = 0; col < 30; col++){ 
           const node = terrain.grid[row][col];
@@ -446,14 +446,14 @@ function Grid(props) {
           setTimeout(() => {
             tweenToColor(node, groundGeometry, [{r: red, g: green, b: blue}], 30,{position: false});
             //if (row === 30 - 1) {}
-          }, 6000);
+          }, 1000);
         }
       }
     }
     props.updateRunState(false);
   }
   function animateOptimalPolicy(){
-    for(let i = 3; i < terrain.optimalPolicy.length;i++){
+    for(let i = 2; i < terrain.optimalPolicy.length;i++){
       let headRow = terrain.optimalPolicy[i][0];
       let headCol = terrain.optimalPolicy[i][1];
       //let torsoRow = terrain.optimalPolicy[i-1][0];
@@ -471,16 +471,16 @@ function Grid(props) {
         if (head.status === 'finish' ) return;
         //terrain.grid[row][col].status = visited;
         
-        setTimeout(() => {
-        tweenToColor(tail, groundGeometry, [props.worldProperties.colors.path], undefined,{position: false});
-        }, i*props.algorithmSpeed);
+        //setTimeout(() => {
+        //tweenToColor(tail, groundGeometry, [props.worldProperties.colors.path], undefined,{position: false});
+        //}, i*props.algorithmSpeed);
 
 
         tweenToColor(tail, groundGeometry, [props.worldProperties.colors.path], undefined,{position: false});
         tweenToColor(head, groundGeometry, [{r: 0, g: 0, b: 0}], undefined,{position: false});
         //tweenToColor(torso, groundGeometry, [{r: 0, g: 0, b: 0}], undefined,{position: false});
 
-      }, 2*i*props.algorithmSpeed);
+      }, 5*i*props.algorithmSpeed);
 
     }
   }
@@ -491,14 +491,15 @@ function Grid(props) {
     }
     let i = 0;
     while(i < props.settingsConfig.epochs){
-      if(terrain.records.length > 1200){break;}
-      if(i > 0.55*props.epochs){
+     if(terrain.records.length > 1300){break;}
+      if(i > 0.6*props.settingsConfig.epochs){
         let y = props.settingsConfig.startRow;
         let x = props.settingsConfig.startCol;
-        var currentState = [y,x];
+        var currentState = [y,x]; 
       }
       else{
         var currentState = terrain.states[Math.floor(Math.random() * terrain.states.length)]
+
       }
       while(!(currentState[0] === props.settingsConfig.finishRow && currentState[1] === props.settingsConfig.finishCol)
         && terrain.grid[currentState[0]][currentState[1]].status !== "wall"){
@@ -507,26 +508,32 @@ function Grid(props) {
            //tweenToColor(terrain.grid[14][14],groundGeometry,[{ r: 1, g: 0.64, b: 0.0}]);
           //}, props.algorithmSpeed);
           
-          let action = chooseAction(currentState)
+          
+          //let action = chooseAction(currentState, Math.abs(1- (i/props.settingsConfig.epochs)))
+          let action = chooseAction(currentState, props.settingsConfig.agentCuriosity)
+          if(i > 0.9*props.settingsConfig.epochs){
+             action = chooseAction(currentState, 0.4) 
+          }
           let action_dy = terrain.actions[action][0]
 				  let action_dx = terrain.actions[action][1]
 				  let nextState = [action_dy + currentState[0], action_dx + currentState[1]]
 
 
           let currentQValue = terrain.q_table[currentState[0]][currentState[1]]
-				  //let maximum_action = chooseAction(currentState)
+				  //let maximum_action = chooseAction(currentState, 0)//might need to be nextstate
 				
           //action_dy = terrain.actions[maximum_action][0]
 				  //action_dx = terrain.actions[maximum_action][1]
 
-				  let maxState = [action_dy + currentState[0], action_dx + currentState[1]]
+				  let maxState = [action_dy + currentState[0], action_dx + currentState[1]];
 				  let maxQValue = terrain.q_table[maxState[0]][maxState[1]]
 
-          let temporal_difference = terrain.grid[nextState[0]][nextState[1]] .reward + (terrain.gamma * ( maxQValue - currentQValue)) 
-				  let learning_rate = terrain.alpha / (1 + terrain.grid[currentState[0]][currentState[1]].visits)
+          let temporal_difference = (terrain.grid[nextState[0]][nextState[1]].reward + terrain.discountFactor *(maxQValue - currentQValue)  ); 
+				  
+          //let learning_rate = 1 / (1 + terrain.grid[currentState[0]][currentState[1]].visits)
 
-          let q_value = currentQValue + (props.settingsConfig.learningRate * temporal_difference)
-				  terrain.q_table[currentState[0]][currentState[1]] = parseFloat(q_value.toFixed(2))
+          let q_value = currentQValue + (props.settingsConfig.learningRate * (temporal_difference));
+				  terrain.q_table[currentState[0]][currentState[1]] = parseFloat(q_value.toFixed(2));
 
           terrain.grid[currentState[0]][currentState[1]].visits+=1;
           currentState = nextState;
@@ -536,10 +543,11 @@ function Grid(props) {
         terrain.records.push(getRecord())
     }
     props.stopTraining();
+    console.log(props.settingsConfig.epochs);
     console.log(terrain.records)
     //console.log(terrain.grid)
   }
-  function chooseAction(currentState,e_greedy = props.settingsConfig.agentCuriosity){
+  function chooseAction(currentState,e_greedy){
     var rwc = require("random-weighted-choice");
     let actionOptions = [
       {weight: e_greedy * 10, id: "true"},
@@ -589,6 +597,7 @@ function Grid(props) {
       }
       let randomIndex = Math.floor(Math.random() * listOfMax.length);
 			maxState = listOfMax[randomIndex];
+      //console.log(listOfMax)
       //Now we can use the max_state(state with the maximum q value to find the actioned perfomed to get there)
 			let action_dy = maxState[0] - currentState[0];
 			let action_dx = maxState[1] - currentState[1];
@@ -608,7 +617,7 @@ function Grid(props) {
 		return true
   }
   function getRecord(){
-    var record =  Array(props.worldProperties.rows).fill().map(() => Array(props.worldProperties.cols).fill(0))
+    let record =  Array(props.worldProperties.rows).fill().map(() => Array(props.worldProperties.cols).fill(0))
     for(let i = 0; i < terrain.states.length; i++){
       let state = terrain.states[i]
 			record[state[0]][state[1]] = terrain.q_table[state[0]][state[1]]
@@ -653,7 +662,7 @@ function Grid(props) {
     
     while(!(currentState[0] === props.settingsConfig.finishRow && currentState[1] === props.settingsConfig.finishCol)
     && terrain.grid[currentState[0]][currentState[1]].status !== "wall"){
-      let maxAction = chooseAction(currentState,props.settingsConfig.agentCuriosity);
+      let maxAction = chooseAction(currentState,props.policyCuriosity);
       let action_dy = terrain.actions[maxAction][0];
       let action_dx = terrain.actions[maxAction][1];
 

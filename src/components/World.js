@@ -35,23 +35,19 @@ function World(props) {
    const [selectedMazeAlgorithm, setSelectedMazeAlgorithm] = useState("");
    const [algorithmSpeed, setAlgorithmSpeed] = useState("15");
    const [selected_algo_is_undefined, setAlgo] = useState(true);
+
+   const [policyCuriosity , setPolicyCuriosity] = useState(0.8);
    
-   const [epochs, setEpochs] = useState(500000);
-   const [startRow, setStartRow] = useState(5);
-   const [startCol, setStartCol] = useState(5);
-   const [finishRow, setFinishRow] = useState(25);
-   const [finishCol, setFinishCol] = useState(25);
-   const [learningRate, setLearningRate] = useState(0.4);
-   const [agentCuriosity,setAgentCuriosity] = useState(0.4);
+   
    const [applyingSettings, setApplyingSettings] = useState(false);
    const [settingsConfig, setConfig] = useState({
-       epochs: 500000,
+       epochs: 350000,
        startRow: 5,
        startCol: 5,
        finishRow: 25,
        finishCol: 25,
-       learningRate: 0.4,
-       agentCuriosity: 0.4,   
+       learningRate: 0.2,
+       agentCuriosity: 0.8,   
    })
 
    const [visualizeOptimalPolicy, setVisualizeOptimalPolicy] = useState(false)
@@ -118,6 +114,9 @@ function World(props) {
    }
    function visualizePolicy(){
     setVisualizeOptimalPolicy(true);
+}
+function updateAgentCuriosity(agentQ){
+    setPolicyCuriosity(agentQ)
 }
 function finishedOptimalPolicy(){
     setVisualizeOptimalPolicy(false);
@@ -289,6 +288,7 @@ function finishedOptimalPolicy(){
         <Settings  
             startTraining = {startTraining}
             configureSettings = {configureSettings}
+            updateAgentCuriosity = {updateAgentCuriosity}
             visualizePolicy = {visualizePolicy}
         />
         <Canvas colorManagement 
@@ -329,6 +329,7 @@ function finishedOptimalPolicy(){
             agentResetDone = {agentResetDone}
             finishApplyingSettings = {finishApplyingSettings}
             visualizeOptimalPolicy = {visualizeOptimalPolicy}
+            policyCuriosity = {policyCuriosity}
             finishedOptimalPolicy = {finishedOptimalPolicy}
             resetStatus = {resetCamera}
             agentKnowledge = {agentKnowledge}
