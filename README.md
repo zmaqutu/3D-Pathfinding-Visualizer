@@ -7,29 +7,28 @@
   <img src="https://img.shields.io/badge/WebStorm-20232a?style=for-the-badge&logo=webstorm&labelColor=517a8a" />
   <img src="https://img.shields.io/badge/React JS-20232a?style=for-the-badge&logo=react&labelColor=2e2f38" />
 </div>
-<img src="./readme_assets/readmeLogo.png" width="20%">
+<img src="./readme_assets/readmeLogo.jpg" width="20%">
 
 *A Visualizer for some common pathfinding and machine learning algorithms in 3D.*
 ## Live Demo
 A live interactive demo can be found [here](https://zmaqutu.github.io/3D-Pathfinding-Visualizer/).
 <div align="center" >
-  <img src="./readmeAssets/MLWorldSetup.gif" width="50%">
-  <img src="./readmeAssets/WorldSetup.gif" width="50%">
+  <img src="./readmeAssets/MLWorldSetup.gif" width="49%"> <img src="./readmeAssets/WorldSetup.gif" width="50%">
 </div>
 
 ## Features
 ### Machine Learning algorithms
 * **Q-Learning** <br>
 This is classical reinforcement learning algorithm. We initialize an agent to a random location on the map and have it learn about its environment through a series of explorative(random) and exploitative(most rewarding) actions. In this algorithm the aim is to train an agent (in this case a robot delivering packages) to find an optimal path from start to finish, while avoiding "walls" or "ditches" at all costs. An example of a trained agent (with a curiosity of 0.3) is shown below. 
-<img src="./readmeAssets/OptimalPolicy.gif" width="100%">
+<img src="./readmeAssets/OptimalPolicy1.gif" width="100%">
 
 Notice how the agent has learned to completely avoid the area south of its starting position because of a cluster of walls. You can change the agent's behaviour for both training and optimal policy visualization by changing the setting in the panel shown below.
-<img src="./readmeAssets/SettingsPanel.JPG" width="100%">
+<img src="./readmeAssets/SettingsPanel.JPG" >
 
 ### Weighted and unweighted algorithms
 * **Dijkstra’s algorithm** (weighted) <br>
 The father of pathfinding algorithms, it creates a tree of shortest paths from the starting vertex, the source, to all other points in the graph. As shown in the image below this algorithm does not care to avoid the area around the walls. <b>Guarantees</b> the shortest path!
-<img src="./readmeAssets/DijkstraIgnoresWalls.gif" width="50%">
+<img src="./readmeAssets/DijkstraIgnoresWalls.gif" width="100%">
 
 
 * **A\* Search algorithm** (weighted) <br>
