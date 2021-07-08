@@ -150,7 +150,7 @@ function Settings(props) {
     }
     return (
         <div className = "settings_container">
-            <h1 id = "settings_title">Visualizer Settings</h1>
+            <h1 id = "settings_title">Visualizer ML Settings</h1>
             <div id="divider"></div>
             <table>
                 <tbody>

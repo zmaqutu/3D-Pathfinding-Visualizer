@@ -1,22 +1,36 @@
-<h1 align="center">3D Pathfinding Algorithm Visualizer </h1>
+<h1 align="center">3D Machine Learning and Pathfinding Algorithm Visualizer </h1>
 
 <div align="center" >
-  <img src="https://img.shields.io/badge/made%20by-Zongo%20Maqutu-blue" />
-  <img src="https://img.shields.io/badge/React%20Js-v17.0.1-61dafb" />
-  <img src="https://img.shields.io/badge/Javascript-94%25-fffe6a" />
-  <img src="https://img.shields.io/badge/HTML-94%25-e34c26" />
-  <img src="https://img.shields.io/badge/pull%20requests-welcome-green" />
+  <img src="https://img.shields.io/badge/made%20by-Zongo%20Maqutu-blue?style=for-the-badge&labelColor=20232a" />
+  <img src="https://img.shields.io/badge/Javascript-20232a?style=for-the-badge&logo=javascript&labelColor=2e2f38" />
+  <img src="https://img.shields.io/badge/Tensorflow Js-20232a?style=for-the-badge&logo=tensorflow&labelColor=162e16" />
+  <img src="https://img.shields.io/badge/WebStorm-20232a?style=for-the-badge&logo=webstorm&labelColor=517a8a" />
+  <img src="https://img.shields.io/badge/React JS-20232a?style=for-the-badge&logo=react&labelColor=2e2f38" />
 </div>
+<img src="./readme_assets/readmeLogo.png" width="20%">
 
-*A Visualizer for some common pathfinding algorithms in 3D.*
+*A Visualizer for some common pathfinding and machine learning algorithms in 3D.*
 ## Live Demo
 A live interactive demo can be found [here](https://zmaqutu.github.io/3D-Pathfinding-Visualizer/).
-<img src="./readmeAssets/WorldSetup.gif" width="100%">
+<div align="center" >
+  <img src="./readmeAssets/MLWorldSetup.gif" width="50%">
+  <img src="./readmeAssets/WorldSetup.gif" width="50%">
+</div>
 
 ## Features
+### Machine Learning algorithms
+* **Q-Learning** <br>
+This is classical reinforcement learning algorithm. We initialize an agent to a random location on the map and have it learn about its environment through a series of explorative(random) and exploitative(most rewarding) actions. In this algorithm the aim is to train an agent (in this case a robot delivering packages) to find an optimal path from start to finish, while avoiding "walls" or "ditches" at all costs. An example of a trained agent (with a curiosity of 0.3) is shown below. 
+<img src="./readmeAssets/OptimalPolicy.gif" width="100%">
+
+Notice how the agent has learned to completely avoid the area south of its starting position because of a cluster of walls. You can change the agent's behaviour for both training and optimal policy visualization by changing the setting in the panel shown below.
+<img src="./readmeAssets/SettingsPanel.JPG" width="100%">
+
 ### Weighted and unweighted algorithms
 * **Dijkstra’s algorithm** (weighted) <br>
-The father of pathfinding algorithms, it creates a tree of shortest paths from the starting vertex, the source, to all other points in the graph. <b>Guarantees</b> the shortest path!
+The father of pathfinding algorithms, it creates a tree of shortest paths from the starting vertex, the source, to all other points in the graph. As shown in the image below this algorithm does not care to avoid the area around the walls. <b>Guarantees</b> the shortest path!
+<img src="./readmeAssets/DijkstraIgnoresWalls.gif" width="50%">
+
 
 * **A\* Search algorithm** (weighted) <br>
 One of the best and a popular technique used in path-finding and graph traversals with heuristic. <b>Guarantees</b> the shortest path!
@@ -36,6 +50,7 @@ Two methods to generate a maze:
 * Three.js
 * react-three-fiber
 * Tween.js
+* Tensorflow JS
 
 ## Contributing
 Contributions are welcome. Please feel free to make a PR.
@@ -50,10 +65,8 @@ Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ## Future Scope
-* Add trees and buildings as wall objects
+* Add model of the martian surface and a package delivery robot for visualization
 * Add button to toggle node information as text on each node in shortest path
-* Add funcitonality to move start and finish nodes by dragging
-* Add control panel to edit world setup more 
 * Add more algorithms to visualize
 
-<p align="center">Made with ❤️ in React.js</p>
+<p align="center">Made with ❤️ in React JS</p>
