@@ -7,7 +7,7 @@
   <img src="https://img.shields.io/badge/WebStorm-20232a?style=for-the-badge&logo=webstorm&labelColor=517a8a" />
   <img src="https://img.shields.io/badge/React JS-20232a?style=for-the-badge&logo=react&labelColor=2e2f38" />
 </div>
-<img src="./readme_assets/readmeLogo.jpg" width="20%">
+<img src="./readmeAssets/readmeLogo.png" width="20%">
 
 *A Visualizer for some common pathfinding and machine learning algorithms in 3D.*
 ## Live Demo
@@ -23,7 +23,8 @@ This is classical reinforcement learning algorithm. We initialize an agent to a 
 <img src="./readmeAssets/OptimalPolicy1.gif" width="100%">
 
 Notice how the agent has learned to completely avoid the area south of its starting position because of a cluster of walls. You can change the agent's behaviour for both training and optimal policy visualization by changing the setting in the panel shown below.
-<img src="./readmeAssets/SettingsPanel.JPG" >
+
+<img src="./readmeAssets/SettingsPanel.JPG" width="20%" >
 
 ### Weighted and unweighted algorithms
 * **Dijkstra’s algorithm** (weighted) <br>
