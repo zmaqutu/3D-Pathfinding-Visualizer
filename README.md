@@ -1,11 +1,12 @@
-<h1 align="center">3D Machine Learning & Pathfinding Algorithm Visualizer </h1>
+<h1 align="center">3D Pathfinding Algorithm Visualizer </h1>
 
-
+<div align="center" >
   <img src="https://img.shields.io/badge/made%20by-Zongo%20Maqutu-blue?style=for-the-badge&labelColor=20232a" />
   <img src="https://img.shields.io/badge/Javascript-20232a?style=for-the-badge&logo=javascript&labelColor=2e2f38" />
   <img src="https://img.shields.io/badge/Tensorflow Js-20232a?style=for-the-badge&logo=tensorflow&labelColor=162e16" />
   <img src="https://img.shields.io/badge/WebStorm-20232a?style=for-the-badge&logo=webstorm&labelColor=517a8a" />
   <img src="https://img.shields.io/badge/React JS-20232a?style=for-the-badge&logo=react&labelColor=2e2f38" />
+</div>
 
 
 <img src="./readmeAssets/readmeLogo.png" width="20%">
