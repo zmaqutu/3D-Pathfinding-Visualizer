@@ -489,9 +489,9 @@ function Grid(props) {
     if(props.settingsConfig.epochs > 0){
       terrain.records = [];
     }
-    let i = 0;
+    //let i = 0;
     while(i < props.settingsConfig.epochs){
-     if(terrain.records.length > 1300){break;}
+      if(terrain.records.length > 1300){break;}
       if(i > 0.6*props.settingsConfig.epochs){
         let y = props.settingsConfig.startRow;
         let x = props.settingsConfig.startCol;
@@ -537,9 +537,10 @@ function Grid(props) {
 
           terrain.grid[currentState[0]][currentState[1]].visits+=1;
           currentState = nextState;
-          i++;
+         
 
         }
+        i++;
         terrain.records.push(getRecord())
     }
     props.stopTraining();
@@ -672,9 +673,7 @@ function Grid(props) {
       //console.log(maxAction);
       //console.log(action_dy);
     }
-    terrain.optimalPolicy = policyList;
-
-    
+    terrain.optimalPolicy = policyList; 
   }
 
   function clearWalls(){
