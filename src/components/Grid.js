@@ -444,7 +444,7 @@ function Grid(props) {
           blue /= 255;
           
           setTimeout(() => {
-            tweenToColor(node, groundGeometry, [{r: red, g: green, b: blue}], 30,{position: false});
+            tweenToColor(node, groundGeometry, [{r: red, g: green, b: blue}], 5,{position: false});
             //if (row === 30 - 1) {}
           }, 1000);
         }
@@ -490,9 +490,10 @@ function Grid(props) {
       terrain.records = [];
     }
     //let i = 0;
-    while(i < props.settingsConfig.epochs){
-      if(terrain.records.length > 1300){break;}
-      if(i > 0.6*props.settingsConfig.epochs){
+    //while(terrain.records.length < 1000){
+    for(let i = 0; i < 1000; i++){
+      //if(terrain.records.length > 1300){break;}
+      if(terrain.records.length > 0.6*1000){
         let y = props.settingsConfig.startRow;
         let x = props.settingsConfig.startCol;
         var currentState = [y,x]; 
@@ -501,8 +502,9 @@ function Grid(props) {
         var currentState = terrain.states[Math.floor(Math.random() * terrain.states.length)]
 
       }
+      var steps = 0;
       while(!(currentState[0] === props.settingsConfig.finishRow && currentState[1] === props.settingsConfig.finishCol)
-        && terrain.grid[currentState[0]][currentState[1]].status !== "wall"){
+        && terrain.grid[currentState[0]][currentState[1]].status !== "wall" && steps < 1000){
         
           //setTimeout(() => {
            //tweenToColor(terrain.grid[14][14],groundGeometry,[{ r: 1, g: 0.64, b: 0.0}]);
@@ -511,7 +513,7 @@ function Grid(props) {
           
           //let action = chooseAction(currentState, Math.abs(1- (i/props.settingsConfig.epochs)))
           let action = chooseAction(currentState, props.settingsConfig.agentCuriosity)
-          if(i > 0.9*props.settingsConfig.epochs){
+          if(terrain.records.length > 0.9*1000){
              action = chooseAction(currentState, 0.4) 
           }
           let action_dy = terrain.actions[action][0]
@@ -537,10 +539,11 @@ function Grid(props) {
 
           terrain.grid[currentState[0]][currentState[1]].visits+=1;
           currentState = nextState;
+          steps++;
          
 
         }
-        i++;
+        //i++;
         terrain.records.push(getRecord())
     }
     props.stopTraining();
@@ -550,6 +553,7 @@ function Grid(props) {
   }
   function chooseAction(currentState,e_greedy){
     var rwc = require("random-weighted-choice");
+    
     let actionOptions = [
       {weight: e_greedy * 10, id: "true"},
       {weight: 10*(1 - e_greedy), id: "false"}
