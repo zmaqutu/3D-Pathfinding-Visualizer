@@ -23,12 +23,9 @@ function Grid(props) {
   let currentHoverNodeId;
 
   let mouseIsUp = true;
-
-  //const [mouseIsUp, setMouseIsUp] = useState(true);
   
   const [groundGeometry, setGroundGeometry] = useState(new THREE.PlaneGeometry(300,300,30,30));
   
-  //const [runState, setRunState] = useState(props.worldProperties.runState);
   const selectedAlgorithm = props.selectedAlgorithm;
   const selectedMazeAlgorithm = props.selectedMazeAlgorithm;
   const runState = props.worldProperties.runState;
@@ -40,10 +37,7 @@ function Grid(props) {
   const applyingSettings = props.applyingSettings;
 
   const visualizeThePolicy = props.visualizeOptimalPolicy;
-  //const settingsConfig = props.settingsConfig;
-
-  //groundGeometry.rotateX(-Math.PI / 2)
-
+  
   const {
     camera,
   } = useThree();
@@ -62,9 +56,6 @@ function Grid(props) {
 
 
   useEffect(() => {
-    /*if( props.applyingSettings=== true){
-      resetTerrainConfig();
-    }*/
     if(props.agentKnowledge ==="clearMemory"){
       terrain.records = [];
       terrain.q_table = Array(props.worldProperties.rows).fill().map(() => Array(props.worldProperties.cols).fill(0));
@@ -110,8 +101,6 @@ function Grid(props) {
 
          animateMaze(nodesToAnimate, "wall", 30)
     }
-    //const algorithmSpeed = props.algorithmSpeed;
-    //console.log(algorithmSpeed);
   }, [runState, clearTheWalls, clearThePath, selectedMazeAlgorithm, trainTheAgent,agentKnowledge,]);
 
 
@@ -199,7 +188,6 @@ function Grid(props) {
     let faces = {};
 
     let faceIndex = row * 2 * props.worldProperties.cols + col * 2 ;
-    //console.log(groundGeometry)
   
     faces[1] = groundGeometry.faces[faceIndex];
 
@@ -429,7 +417,7 @@ function Grid(props) {
     let maximum = 100;
     for(let i = 0; i < terrain.records.length;i++){
       //let record = terrain.records[i]
-      if(i > 1300){return;}
+      //if(i > 1300){return;}
       for(let row = 0; row < 30; row++){
         for(let col = 0; col < 30; col++){ 
           const node = terrain.grid[row][col];
@@ -491,9 +479,9 @@ function Grid(props) {
     }
     //let i = 0;
     //while(terrain.records.length < 1000){
-    for(let i = 0; i < 1000; i++){
+    for(let i = 0; i < props.settingsConfig.epochs; i++){
       //if(terrain.records.length > 1300){break;}
-      if(terrain.records.length > 0.6*1000){
+      if(i > 0.75*props.settingsConfig.epochs){
         let y = props.settingsConfig.startRow;
         let x = props.settingsConfig.startCol;
         var currentState = [y,x]; 
@@ -512,10 +500,11 @@ function Grid(props) {
           
           
           //let action = chooseAction(currentState, Math.abs(1- (i/props.settingsConfig.epochs)))
-          let action = chooseAction(currentState, props.settingsConfig.agentCuriosity)
-          if(terrain.records.length > 0.9*1000){
-             action = chooseAction(currentState, 0.4) 
+          var curiosity = props.settingsConfig.agentCuriosity;
+          if(i > 0.75*props.settingsConfig.epochs){
+            curiosity = 0.4;
           }
+          let action = chooseAction(currentState, curiosity)
           let action_dy = terrain.actions[action][0]
 				  let action_dx = terrain.actions[action][1]
 				  let nextState = [action_dy + currentState[0], action_dx + currentState[1]]
@@ -542,7 +531,7 @@ function Grid(props) {
           steps++;
          
 
-        }
+      }
         //i++;
         terrain.records.push(getRecord())
     }
@@ -683,7 +672,7 @@ function Grid(props) {
   function clearWalls(){
     for(let i = 0; i < props.worldProperties.rows; i++){
       for(let j = 0; j < props.worldProperties.cols; j++){
-        if(terrain.grid[i][j].status === "wall"){
+        if(terrain.grid[i][j].status === "wall" || terrain.q_table[i][j] < 0){
           terrain.grid[i][j].status = "default";
           terrain.grid[i][j].reward = 0;
           tweenToColor(terrain.grid[i][j], groundGeometry, [props.worldProperties.colors.default])
@@ -704,7 +693,7 @@ function Grid(props) {
           terrain.grid[i][j].status = "finish"; 
         }
         
-        if(terrain.grid[i][j].status === "visited" || terrain.grid[i][j].visits > 0){
+        if(terrain.grid[i][j].status === "visited" || terrain.grid[i][j].visits > 0 ){
           terrain.grid[i][j].status = "default";
           tweenToColor(terrain.grid[i][j], groundGeometry, [props.worldProperties.colors.default]);
         }

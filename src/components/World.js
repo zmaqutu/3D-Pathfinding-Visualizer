@@ -41,7 +41,7 @@ function World(props) {
    
    const [applyingSettings, setApplyingSettings] = useState(false);
    const [settingsConfig, setConfig] = useState({
-       epochs: 350000,
+       epochs: 1000,
        startRow: 5,
        startCol: 5,
        finishRow: 25,
@@ -182,6 +182,8 @@ function finishedOptimalPolicy(){
                 <Select name = "algorithms" id = "algorithms" displayEmpty onChange={e => handleOnChange(e)}>
                     <MenuItem>Select Algorithm</MenuItem>
                     <MenuItem value = "qLearning">Q-Learning</MenuItem>
+                    {/* <MenuItem value = "valueIteration">Value Iteration</MenuItem>
+                    <MenuItem value = "floyd">Floyd's Algorithm</MenuItem> */}
                     <MenuItem value = "Dijkstra">Dijkstra's Algorithm</MenuItem>
                     <MenuItem value = "aStar">A* Search</MenuItem>
                     <MenuItem value = "BFS">Breadth First Search</MenuItem>

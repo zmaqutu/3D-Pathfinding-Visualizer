@@ -2,213 +2,226 @@
     box-sizing: border-box;
 }
 
-html, 
-body, 
+html,
+body,
 #root {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-  background-color: #f1f4f8;
-  position: fixed;
+    background-color: #f1f4f8;
+    position: fixed;
 }
 
 .MuiButton-root {
-  padding-left: 100px;
+    padding-left: 100px;
 }
 
-.header{
-  position:absolute;
-  top: 5px;;
-  left:0;
-  width:100%;
-  display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  z-index:1;
+.header {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    z-index: 1;
 }
-.header_items{
-  padding-left: 10px;
+.header_items {
+    padding-left: 10px;
 }
-.info_container{
-  position:absolute;
-  right:15px;
-  bottom:15px;
-  width:350px;
-  max-height:100%;
-  max-width:90%;
-  display:flex;
-  flex-direction:column;
-  font-size:.9em;
-  padding:25px;
-  border-radius:5px;
-  background:linear-gradient(0,#1E88E5,#000 240%);
-  color:#fff;box-shadow:2px 10px 30px rgba(0,0,0,.4);
-  opacity:.4;
-  z-index:10000;
-  -webkit-clip-path:circle(30px at calc(100% - 30px) calc(100% - 30px));
-  clip-path:circle(30px at calc(100% - 30px) calc(100% - 30px));
-  transition:all .4s ease-in-out
+.info_container {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    width: 350px;
+    max-height: 100%;
+    max-width: 90%;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9em;
+    padding: 25px;
+    border-radius: 5px;
+    background: linear-gradient(0, #1e88e5, #000 240%);
+    color: #fff;
+    box-shadow: 2px 10px 30px rgba(0, 0, 0, 0.4);
+    opacity: 0.4;
+    z-index: 10000;
+    -webkit-clip-path: circle(30px at calc(100% - 30px) calc(100% - 30px));
+    clip-path: circle(30px at calc(100% - 30px) calc(100% - 30px));
+    transition: all 0.4s ease-in-out;
 }
-.info_container:hover{
-  bottom:20px
+.info_container:hover {
+    bottom: 20px;
 }
-.info_container.centered,.info_container:hover{
-  -webkit-clip-path:circle(200% at calc(100% - 30px) calc(100% - 30px));
-  clip-path:circle(200% at calc(100% - 30px) calc(100% - 30px));
-  opacity:1
+.info_container.centered,
+.info_container:hover {
+    -webkit-clip-path: circle(200% at calc(100% - 30px) calc(100% - 30px));
+    clip-path: circle(200% at calc(100% - 30px) calc(100% - 30px));
+    opacity: 1;
 }
-.info-container.centered{
-  max-height:90%;
-  min-height:50%;
-  width:600px;max-width:95%;
-  font-size:1em;
-  text-align:center;
-  right:50%;
-  bottom:50%;
-  transform:translate(50%,50%)
+.info-container.centered {
+    max-height: 90%;
+    min-height: 50%;
+    width: 600px;
+    max-width: 95%;
+    font-size: 1em;
+    text-align: center;
+    right: 50%;
+    bottom: 50%;
+    transform: translate(50%, 50%);
 }
-.info-container.alert{
-  -webkit-animation:alert 1s ease-in-out;
-  animation:alert 1s ease-in-out; 
+.info-container.alert {
+    -webkit-animation: alert 1s ease-in-out;
+    animation: alert 1s ease-in-out;
 }
-.settings_container{
-  position:absolute;
-  right:10px;
-  top:50px; //controls where the circle is
-  width:350px;
-  max-height:100%;
-  max-width:90%;
-  display:flex;
-  flex-direction:column;
-  font-size:.9em;
-  padding:25px;
-  border-radius:5px;
-  background:linear-gradient(0,#1E88E5,#000 240%);
-  color:#fff;box-shadow:2px 10px 30px rgba(0,0,0,.4);
-  z-index:100;
-  -webkit-clip-path:circle(30px at 90% 5%);
-  clip-path:circle(30px at 90% 7%);
-  transition:all .4s ease-in-out
-}
-
-.settings_container:hover{
-  top: 55px;
-  position:absolute;
-}
-
-.settings_container.centered,.settings_container:hover{
-  -webkit-clip-path:circle(200% at 0% 0%);
-  
-  clip-path:circle(200% at 0% 0%);
-}
-.settings-container.centered{
-  max-height:90%;
-  min-height:50%;
-  width:600px;max-width:95%;
-  font-size:1em;
-  text-align:center;
-  right:50%;
-  bottom:50%;
-  transform:translate(50%,50%)
+.settings_container {
+    position: absolute;
+    right: 10px;
+    top: 50px; //controls where the circle is
+    width: 350px;
+    max-height: 100%;
+    max-width: 90%;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9em;
+    padding: 25px;
+    border-radius: 5px;
+    background: linear-gradient(0, #1e88e5, #000 240%);
+    color: #fff;
+    box-shadow: 2px 10px 30px rgba(0, 0, 0, 0.4);
+    z-index: 100;
+    -webkit-clip-path: circle(30px at 90% 5%);
+    clip-path: circle(30px at 90% 7%);
+    transition: all 0.4s ease-in-out;
 }
 
-.settings-container.alert{
-  -webkit-animation:alert 1s ease-in-out;
-  animation:alert 1s ease-in-out; 
-}
-.start_square{
-  background-color: rgb(0, 255, 0);
-  width:30px;height:30px;margin:0 auto;
-}
-.finish_square{
-  background-color: rgb(255,0, 0);
-  width:30px;height:30px;margin:0 auto;
-}
-.visited_square{
-  background-color: rgb(83.895, 68.85, 246.84);
-  width:30px;height:30px;margin:0 auto;
-}
-.path_square{
-  background-color: rgb(255, 255, 0);
-  width:30px;height:30px;margin:0 auto;
-}
-.legend_table{
-  padding-left: 0px;
+.settings_container:hover {
+    top: 55px;
+    position: absolute;
 }
 
-#info_title{
-  font-size: 18px;
-  padding-bottom:30px
+.settings_container.centered,
+.settings_container:hover {
+    -webkit-clip-path: circle(200% at 0% 0%);
+
+    clip-path: circle(200% at 0% 0%);
 }
-#settings_title{
-  font-size: 18px;
-  padding-bottom:5px
+.settings-container.centered {
+    max-height: 90%;
+    min-height: 50%;
+    width: 600px;
+    max-width: 95%;
+    font-size: 1em;
+    text-align: center;
+    right: 50%;
+    bottom: 50%;
+    transform: translate(50%, 50%);
 }
 
-.info_buttons{
-  left:0;
-  width:100%;
-  display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  z-index:1;
-  //padding-bottom: 50px;
+.settings-container.alert {
+    -webkit-animation: alert 1s ease-in-out;
+    animation: alert 1s ease-in-out;
 }
-.info_socials{
-  margin-top: 40px;
+.start_square {
+    background-color: rgb(0, 255, 0);
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+}
+.finish_square {
+    background-color: rgb(255, 0, 0);
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+}
+.visited_square {
+    background-color: rgb(83.895, 68.85, 246.84);
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+}
+.path_square {
+    background-color: rgb(255, 255, 0);
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+}
+.legend_table {
+    padding-left: 0px;
+}
+
+#info_title {
+    font-size: 18px;
+    padding-bottom: 30px;
+}
+#settings_title {
+    font-size: 18px;
+    padding-bottom: 5px;
+}
+
+.info_buttons {
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    z-index: 1;
+    //padding-bottom: 50px;
+}
+.info_socials {
+    margin-top: 40px;
 }
 /*#tutorial_button{
   //padding-bottom: 50px;
 }*/
-#settings_button{
-  position: relative;
-  left: 15%;
-  padding-top: 5%;
-  margin-bottom: 10px;
+#settings_button {
+    position: relative;
+    left: 15%;
+    padding-top: 5%;
+    margin-bottom: 10px;
 }
 
 #linkedin {
-  padding-left: 15px;
-  //padding-bottom: 50px;
+    padding-left: 15px;
+    //padding-bottom: 50px;
 }
 #gh_button {
-  padding-left: 15px;
-  //padding-bottom: 50px;
+    padding-left: 15px;
+    //padding-bottom: 50px;
 }
-#info_icon{
-  position:absolute;
-  right:5px;
-  bottom:10px;
-  height:40px
+#info_icon {
+    position: absolute;
+    right: 5px;
+    bottom: 10px;
+    height: 40px;
 }
-#settings_icon{
-  position:absolute;
-  right:15px;
-  top:15px;
-  height:40px
+#settings_icon {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    height: 40px;
 }
 
+#divider {
+    position: relative;
+    background-color: #bbb;
+    height: 1px;
+    width: 105%;
+    top: -10px;
+    right: 5px;
+    margin-bottom: 10px;
+}
+#mlAlgorithm:hover > #menu_item {
+    z-index: 10000;
+    -webkit-clip-path: circle(200% at 0% 0%);
 
-#divider{
-  position:relative;
-  background-color: #bbb;; 
-  height: 1px; 
-  width:105%;
-  top: -10px;
-  right: 5px;
-  margin-bottom: 10px
+    clip-path: circle(200% at 0% 0%);
+    transition: all 0.4s ease-in-out;
 }
-#mlAlgorithm:hover > #menu_item{
-  z-index: 10000;
-  -webkit-clip-path:circle(200% at 0% 0%);
-  
-  clip-path:circle(200% at 0% 0%);
-  transition:all .4s ease-in-out
-}
-#trainingEpochs{
-  bottom: 120px;
+#trainingEpochs {
+    bottom: 120px;
 }

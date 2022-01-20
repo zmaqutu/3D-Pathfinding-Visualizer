@@ -20,7 +20,7 @@ function Settings(props) {
         if(props.trainAgent == true)
       }, [trainTheAgent ]);*/
     
-    const [epochs, setEpochs] = useState(350000);
+    const [epochs, setEpochs] = useState(1000);
     const [startRow, setStartRow] = useState(5);
     const [startCol, setStartCol] = useState(5);
     const [finishRow, setFinishRow] = useState(25);
@@ -128,7 +128,7 @@ function Settings(props) {
         setFinishCol(Number(e.target.value))
     }
     function handleEpochChange(e,value){
-        setEpochs(1000 * Number(value))
+        setEpochs(Number(value))
     }
     function handleLRChange(e,value){
         setLearningRate(Number(value))
@@ -155,18 +155,18 @@ function Settings(props) {
             <table>
                 <tbody>
                     <tr>
-                        <td>Training Epochs:(Thousands) </td>
+                        <td>Training Epochs: </td>
                         <td>
                         <div className={classes.slider}>
                             <ThemeProvider theme={muiTheme}>
                                 <Slider
-                                        defaultValue={350}
+                                        defaultValue={1000}
                                         aria-labelledby="discrete-slider"
                                         valueLabelDisplay="on"
-                                        step={50}
+                                        step={100}
                                         marks
-                                        min={0}
-                                        max={500}
+                                        min={100}
+                                        max={1500}
                                         onChangeCommitted={(e,value) => handleEpochChange(e, value)}
                                     />
                             </ThemeProvider>
