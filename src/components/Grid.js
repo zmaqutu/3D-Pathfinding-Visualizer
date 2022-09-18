@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react'
 import * as THREE from 'three'
 import img from './floor_texture.jpg';
+// import img from './FloorDemo.png';
 import { tweenToColor, getNodesInShortestPathOrder } from './algorithms/helpers'
 import TWEEN from '@tweenjs/tween.js';
 import { weightedSearchAlgorithm } from "./algorithms/weightedSearchAlgorithm.js";
@@ -9,6 +10,8 @@ import { randomMaze, recursiveDivisionMaze } from './algorithms/mazeAlgorithms';
 import { useThree } from 'react-three-fiber';
 import * as tf from '@tensorflow/tfjs';
 import { math } from '@tensorflow/tfjs';
+import  { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter";
+
 
 
 
@@ -35,12 +38,16 @@ function Grid(props) {
   const algorithmSpeed = props.algorithmSpeed;
   const agentKnowledge = props.agentKnowledge;
   const applyingSettings = props.applyingSettings;
+  const exportScene = props.downloadScene;
 
   const visualizeThePolicy = props.visualizeOptimalPolicy;
   
   const {
     camera,
+    scene,
   } = useThree();
+  const link = document.createElement('a');
+  document.body.appendChild(link);
 
   useEffect(() => {
     if(props.applyingSettings){
@@ -54,6 +61,13 @@ function Grid(props) {
   },[applyingSettings, visualizeThePolicy]);
 
 
+
+  useEffect( () => {
+    if(props.downloadScene){
+      downloadScene();
+      props.finishedDownloading();
+    }
+  }, [exportScene])
 
   useEffect(() => {
     if(props.agentKnowledge ==="clearMemory"){
@@ -722,10 +736,35 @@ function Grid(props) {
       props.stopMazeSelection();
     }
   }
+
+  function downloadScene(){
+    const exporter = new GLTFExporter();
+    exporter.parse(
+        scene,
+        (result) => {
+            saveArrayBuffer(result, 'ML_NFT.glb');
+        },
+        {
+             binary: true,
+        },
+    )
+  }
+  
+  function saveArrayBuffer(buffer, fileName) {
+    const blob = new Blob([buffer], { type: 'application/octet-stream' });
+    save(new Blob([buffer], { type: 'application/octet-stream' }),fileName)
+   }
+   function save(blob,filename){
+       link.href = URL.createObjectURL(blob);
+       link.download = filename; 
+       link.click();
+   }
+
+
  
   return (
     <mesh ref = {mesh} position = {[0,0,0]}>
-      <gridHelper args = {[300, props.gridDimensions, 0x5c78bd, 0x5c78bd] }/>
+      {/* <gridHelper args = {[300, props.gridDimensions, 0x5c78bd, 0x5c78bd] }/> */}
       <mesh rotation={[-Math.PI /2, 0, 0]} 
         position={[0,-0.1,0]} 
         receiveShadow = {true}
@@ -749,8 +788,8 @@ function Grid(props) {
         }
       }}
       >
-      <primitive attach = 'geometry' object = {groundGeometry}  />  
-      <primitive attach = 'material' object = {groundMaterial}  />   
+        <primitive attach = 'geometry' object = {groundGeometry}  />  
+        <primitive attach = 'material' object = {groundMaterial}  />   
       </mesh>
       <axesHelper />
     </mesh>

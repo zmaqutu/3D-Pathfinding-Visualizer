@@ -16,6 +16,7 @@ import { AwesomeButton, AwesomeButtonProgress } from 'react-awesome-button';
 import "react-awesome-button/dist/styles.css";
 
 
+
 //<OrbitControls enabled = {!worldSetup} />
 function World(props) {
    let width = window.innerWidth;
@@ -51,6 +52,7 @@ function World(props) {
    })
 
    const [visualizeOptimalPolicy, setVisualizeOptimalPolicy] = useState(false)
+   const [downloadScene, setDownloadScene] = useState(false)
    
    const useStyles = makeStyles((theme) => ({
     root: {
@@ -173,8 +175,10 @@ function finishedOptimalPolicy(){
    function stopMazeSelection(){
        setSelectedMazeAlgorithm("");
    }
-
-
+   function finishedDownloading(){
+       setDownloadScene(false);
+   }
+   
     return (
         <>
         <div className = "header" align = "center" >
@@ -284,6 +288,16 @@ function finishedOptimalPolicy(){
             >
             Reset Agent
         </AwesomeButton>
+        <AwesomeButton 
+            type = "secondary"
+            size = "medium"
+            ripple = {true}
+            action={(element, next) => {
+               setDownloadScene(true); 
+            }}
+            >
+            Export Scene
+        </AwesomeButton>
         </div>
         </div>
         <Tutorial />
@@ -343,6 +357,8 @@ function finishedOptimalPolicy(){
             //agentCuriosity = {settingsConfig.agentCuriosity}
             applyingSettings = {applyingSettings}
             settingsConfig = {settingsConfig}
+            downloadScene = {downloadScene}
+            finishedDownloading = {finishedDownloading}
             worldProperties = {
             {
                 rows: 30,
