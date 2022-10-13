@@ -321,7 +321,7 @@ function finishedOptimalPolicy(){
         <ambientLight 
             intensity = {1} 
             color = {0xBBC2D0}/>
-        {/*<fog attach = "fog" args = {[0xFFFFFF , 0, 750]}/>*/}
+        {/* <fog attach = "fog" args = {[0x000000 , 0, 750]}/> */}
         <hemisphereLight 
             color = {"hsl(0.6, 1, 0.6)"} 
             groundColor = {0x87775d} 
