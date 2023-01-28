@@ -28,6 +28,7 @@ function Grid(props) {
   let mouseIsUp = true;
   
   const [groundGeometry, setGroundGeometry] = useState(new THREE.PlaneGeometry(300,300,30,30));
+  const [max_min, setMaxMin] = useState([-10, 100])
   
   const selectedAlgorithm = props.selectedAlgorithm;
   const selectedMazeAlgorithm = props.selectedMazeAlgorithm;
@@ -429,6 +430,7 @@ function Grid(props) {
     clearPath();
     let minimum = -10;
     let maximum = 50;
+    setMaxMin([0,120])
     for(let i = 0; i < terrain.records.length;i++){
       //let record = terrain.records[i]
       //if(i > 1300){return;}
@@ -764,7 +766,7 @@ function Grid(props) {
  
   return (
     <mesh ref = {mesh} position = {[0,0,0]}>
-      <gridHelper args = {[300, props.gridDimensions, 0x5c78bd, 0x5c78bd] }/>
+      {/* <gridHelper args = {[300, props.gridDimensions, 0x5c78bd, 0x5c78bd] }/> */}
       <mesh rotation={[-Math.PI /2, 0, 0]} 
         position={[0,-0.1,0]} 
         receiveShadow = {true}
@@ -791,7 +793,7 @@ function Grid(props) {
         <primitive attach = 'geometry' object = {groundGeometry}  />  
         <primitive attach = 'material' object = {groundMaterial}  />   
       </mesh>
-      <axesHelper />
+      {/* <axesHelper /> */}
     </mesh>
     )
 }
