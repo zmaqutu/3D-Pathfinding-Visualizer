@@ -428,7 +428,7 @@ function Grid(props) {
   function animateQlearning(){
     clearPath();
     let minimum = -10;
-    let maximum = 100;
+    let maximum = 50;
     for(let i = 0; i < terrain.records.length;i++){
       //let record = terrain.records[i]
       //if(i > 1300){return;}
@@ -764,7 +764,7 @@ function Grid(props) {
  
   return (
     <mesh ref = {mesh} position = {[0,0,0]}>
-      {/* <gridHelper args = {[300, props.gridDimensions, 0x5c78bd, 0x5c78bd] }/> */}
+      <gridHelper args = {[300, props.gridDimensions, 0x5c78bd, 0x5c78bd] }/>
       <mesh rotation={[-Math.PI /2, 0, 0]} 
         position={[0,-0.1,0]} 
         receiveShadow = {true}

@@ -277,6 +277,28 @@ function Settings(props) {
                         </td>
                     </tr>
                     <tr>
+                    </tr>
+                    <tr>
+                        <td>Random Coloration: </td>
+                        <td>
+                            <div className={classes.slider}>
+                                <ThemeProvider theme={muiTheme}>
+                                    <Slider
+                                        defaultValue={0.8}
+                                        aria-labelledby="discrete-slider"
+                                        valueLabelDisplay="on"
+                                        step={0.1}
+                                        marks
+                                        min={0.1}
+                                        max={1}
+                                        onChangeCommitted={(e,value) => handleCuriosityChange(e, value)}
+                                    />
+                                </ThemeProvider>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        
                         <td>
                         <div className = "settings-button" id = "settings_button">
                                 <AwesomeButtonProgress 

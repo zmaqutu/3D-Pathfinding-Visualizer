@@ -307,7 +307,7 @@ function finishedOptimalPolicy(){
             updateAgentCuriosity = {updateAgentCuriosity}
             visualizePolicy = {visualizePolicy}
         />
-        <Canvas colorManagement 
+        <Canvas colorManagement
         camera={
             {
                 position: cameraPosition.current,
@@ -389,7 +389,7 @@ function finishedOptimalPolicy(){
                 },
             }
         }/>
-        <Floor/>
+        {/* <Floor/> */}
         <Controls 
             resetStatus = {resetCamera}
             updateResetStatus = {updateResetStatus}
