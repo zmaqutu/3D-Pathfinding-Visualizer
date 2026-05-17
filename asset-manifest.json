@@ -1,28 +1,19 @@
 {
   "files": {
-    "main.css": "/3D-Pathfinding-Visualizer/static/css/main.d4d546f5.chunk.css",
-    "main.js": "/3D-Pathfinding-Visualizer/static/js/main.6f5e5e78.chunk.js",
-    "main.js.map": "/3D-Pathfinding-Visualizer/static/js/main.6f5e5e78.chunk.js.map",
-    "runtime-main.js": "/3D-Pathfinding-Visualizer/static/js/runtime-main.8d571b58.js",
-    "runtime-main.js.map": "/3D-Pathfinding-Visualizer/static/js/runtime-main.8d571b58.js.map",
-    "static/css/2.b6e60341.chunk.css": "/3D-Pathfinding-Visualizer/static/css/2.b6e60341.chunk.css",
-    "static/js/2.33af80be.chunk.js": "/3D-Pathfinding-Visualizer/static/js/2.33af80be.chunk.js",
-    "static/js/2.33af80be.chunk.js.map": "/3D-Pathfinding-Visualizer/static/js/2.33af80be.chunk.js.map",
-    "static/js/3.7a1f4504.chunk.js": "/3D-Pathfinding-Visualizer/static/js/3.7a1f4504.chunk.js",
-    "static/js/3.7a1f4504.chunk.js.map": "/3D-Pathfinding-Visualizer/static/js/3.7a1f4504.chunk.js.map",
+    "main.css": "/3D-Pathfinding-Visualizer/static/css/main.33b3616e.css",
+    "main.js": "/3D-Pathfinding-Visualizer/static/js/main.51da07c7.js",
+    "static/js/488.fe3403b1.chunk.js": "/3D-Pathfinding-Visualizer/static/js/488.fe3403b1.chunk.js",
+    "static/media/building_texture.jpg": "/3D-Pathfinding-Visualizer/static/media/building_texture.bf3453035b4532a91b56.jpg",
+    "static/media/floor_texture.jpg": "/3D-Pathfinding-Visualizer/static/media/floor_texture.9dabdb90496a90e904cc.jpg",
+    "static/media/settings.svg": "/3D-Pathfinding-Visualizer/static/media/settings.3bc50b5579fd547926d267dea0a2d8b0.svg",
     "index.html": "/3D-Pathfinding-Visualizer/index.html",
-    "static/css/2.b6e60341.chunk.css.map": "/3D-Pathfinding-Visualizer/static/css/2.b6e60341.chunk.css.map",
-    "static/css/main.d4d546f5.chunk.css.map": "/3D-Pathfinding-Visualizer/static/css/main.d4d546f5.chunk.css.map",
-    "static/js/2.33af80be.chunk.js.LICENSE.txt": "/3D-Pathfinding-Visualizer/static/js/2.33af80be.chunk.js.LICENSE.txt",
-    "static/media/floor_texture.9dabdb90.jpg": "/3D-Pathfinding-Visualizer/static/media/floor_texture.9dabdb90.jpg",
-    "static/media/info.d2873f8e.svg": "/3D-Pathfinding-Visualizer/static/media/info.d2873f8e.svg",
-    "static/media/settings.3bc50b55.svg": "/3D-Pathfinding-Visualizer/static/media/settings.3bc50b55.svg"
+    "static/media/info.svg": "/3D-Pathfinding-Visualizer/static/media/info.d2873f8e96f2924cbdb38ec885450093.svg",
+    "main.33b3616e.css.map": "/3D-Pathfinding-Visualizer/static/css/main.33b3616e.css.map",
+    "main.51da07c7.js.map": "/3D-Pathfinding-Visualizer/static/js/main.51da07c7.js.map",
+    "488.fe3403b1.chunk.js.map": "/3D-Pathfinding-Visualizer/static/js/488.fe3403b1.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.8d571b58.js",
-    "static/css/2.b6e60341.chunk.css",
-    "static/js/2.33af80be.chunk.js",
-    "static/css/main.d4d546f5.chunk.css",
-    "static/js/main.6f5e5e78.chunk.js"
+    "static/css/main.33b3616e.css",
+    "static/js/main.51da07c7.js"
   ]
 }
