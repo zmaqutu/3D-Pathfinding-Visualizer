@@ -1,41 +1,35 @@
-import { OrbitControls } from 'drei';
-import React, {useEffect, useRef } from 'react';
-import { useThree } from 'react-three-fiber';
-import TWEEN from '@tweenjs/tween.js';
-
+import React, { useEffect, useRef } from 'react';
+import { OrbitControls } from '@react-three/drei';
+import { useThree, useFrame } from '@react-three/fiber';
+import * as TWEEN from '@tweenjs/tween.js';
+import { tweenGroup } from './algorithms/helpers';
 
 function Controls(props) {
     const resetStatus = props.resetStatus;
-    const {
-        camera,
-    } = useThree();
-
+    const { camera } = useThree();
     const controls = useRef();
 
-
+    useFrame(() => {
+        tweenGroup.update();
+    });
 
     useEffect(() => {
-        if(props.resetStatus === true){
-            resetCamera();
+        if (resetStatus === true) {
+            tweenGroup.removeAll();
+            new TWEEN.Tween(camera.position, tweenGroup)
+                .to({ x: 0, y: 385, z: 0 }, 2000)
+                .easing(TWEEN.Easing.Exponential.Out)
+                .onComplete(() => {
+                    if (controls.current) controls.current.update();
+                })
+                .start();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resetStatus]);
 
-    function resetCamera() {
-
-            TWEEN.removeAll();
-			new TWEEN.Tween(camera.position)
-				.to({ x: 0, y: 385, z: 0 }, 2000)
-				.easing(TWEEN.Easing.Exponential.Out)
-				.onComplete(() => {
-                    controls.current.update();
-				})
-				.start();
-                
-    } 
-
     return (
-        <OrbitControls ref = {controls} enableRotate = {!props.resetStatus}/>
-    )
+        <OrbitControls ref={controls} enableRotate={!resetStatus} />
+    );
 }
 
-export default Controls
+export default Controls;

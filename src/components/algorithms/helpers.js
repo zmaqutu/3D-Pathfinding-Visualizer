@@ -1,4 +1,10 @@
-import TWEEN from "@tweenjs/tween.js";
+import * as TWEEN from "@tweenjs/tween.js";
+
+// tween.js v25 removed automatic registration with the global default group:
+// `new Tween(obj)` is now a "headless" tween that no one ticks unless you pass
+// it an explicit Group. We share this single Group across the app and tick it
+// from r3f's render loop.
+export const tweenGroup = new TWEEN.Group();
 
 export function getAllNodes(grid) {
 	const nodes = [];
@@ -9,77 +15,76 @@ export function getAllNodes(grid) {
 }
 
 // Backtracks from the finishNode to find the shortest path.
-// Only works when called *after* the dijkstra method above.
 export function getNodesInShortestPathOrder(finishNode) {
 	const nodesInShortestPathOrder = [];
 	let currentNode = finishNode;
-	//Excluding finish node
-	if(currentNode.previousNode !== null) {
+	if (currentNode.previousNode !== null) {
 		currentNode = currentNode.previousNode;
 	}
 	while (currentNode !== null) {
-		// Excluding start node
-		if(currentNode.previousNode === null) {
+		if (currentNode.previousNode === null) {
 			break;
 		}
 		nodesInShortestPathOrder.unshift(currentNode);
 		currentNode = currentNode.previousNode;
 	}
-
 	return nodesInShortestPathOrder;
 }
 
-export async function tweenToColor(node, geometry, colors, duration = 300, options) {
-	for(let i=0; i<colors.length; i++) {
-		//console.log(node);
-		new TWEEN.Tween(node.faces[1].color)
-			.to(colors[i], duration)
+// Writes an RGB triple into all 6 vertices of a cell in the color BufferAttribute.
+function writeCellColor(geometry, node, color) {
+	const colorAttr = geometry.getAttribute('color');
+	if (!colorAttr) return;
+	const offsets = node.vertexOffsets;
+	for (let i = 0; i < offsets.length; i++) {
+		const idx = offsets[i] * 3;
+		colorAttr.array[idx]     = color.r;
+		colorAttr.array[idx + 1] = color.g;
+		colorAttr.array[idx + 2] = color.b;
+	}
+	colorAttr.needsUpdate = true;
+}
+
+// Animates the cell's color through one or more keyframes.
+export function tweenToColor(node, geometry, colors, duration = 300, options) {
+	for (let i = 0; i < colors.length; i++) {
+		const start = { r: node.color.r, g: node.color.g, b: node.color.b };
+		const end = colors[i];
+		new TWEEN.Tween(start, tweenGroup)
+			.to({ r: end.r, g: end.g, b: end.b }, duration)
+			.delay(i * 200)
 			.onUpdate(() => {
-				geometry.colorsNeedUpdate = true;
+				node.color.r = start.r;
+				node.color.g = start.g;
+				node.color.b = start.b;
+				writeCellColor(geometry, node, start);
 			})
-			.delay(i*200)
-			.start();
-		new TWEEN.Tween(node.faces[2].color)
-			.to(colors[i], duration)
-			.onUpdate(() => {
-				geometry.colorsNeedUpdate = true;
-			})
-			.delay(i*200)
 			.start();
 	}
-	if (options) {
-		if (options.position) {
-			var facesIndices = ["a", "b", "c"];
-			facesIndices.forEach(function (indices) {
-				new TWEEN.Tween(geometry.vertices[node.faces[1][indices]])
-					.to({ y: 0.5 }, duration)
-					.onUpdate(() => {
-						geometry.verticesNeedUpdate = true;
-					})
-					.start();
-				new TWEEN.Tween(geometry.vertices[node.faces[2][indices]])
-					.to({ y: 0.5 }, duration)
-					.onUpdate(() => {
-						geometry.verticesNeedUpdate = true;
-					})
-					.start();
-			});
-			facesIndices.forEach(function (indices) {
-				new TWEEN.Tween(geometry.vertices[node.faces[1][indices]])
+
+	if (options && options.position) {
+		const positionAttr = geometry.getAttribute('position');
+		if (!positionAttr) return;
+		const offsets = node.vertexOffsets;
+		new TWEEN.Tween({ y: 0 }, tweenGroup)
+			.to({ y: 0.5 }, duration)
+			.onUpdate(({ y }) => {
+				for (let i = 0; i < offsets.length; i++) {
+					positionAttr.array[offsets[i] * 3 + 2] = y;
+				}
+				positionAttr.needsUpdate = true;
+			})
+			.chain(
+				new TWEEN.Tween({ y: 0.5 }, tweenGroup)
 					.to({ y: 0 }, duration)
-					.onUpdate(() => {
-						geometry.verticesNeedUpdate = true;
-					})
 					.delay(100)
-					.start();
-				new TWEEN.Tween(geometry.vertices[node.faces[2][indices]])
-					.to({ y: 0 }, duration)
-					.onUpdate(() => {
-						geometry.verticesNeedUpdate = true;
+					.onUpdate(({ y }) => {
+						for (let i = 0; i < offsets.length; i++) {
+							positionAttr.array[offsets[i] * 3 + 2] = y;
+						}
+						positionAttr.needsUpdate = true;
 					})
-					.delay(100)
-					.start();
-			});
-		}
+			)
+			.start();
 	}
 }

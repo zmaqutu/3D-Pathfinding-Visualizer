@@ -1,18 +1,13 @@
-import {React, useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { useLoader } from 'react-three-fiber';
 
 function Mars() {
-    //const gltf = useLoader('/scene.gltf', true);
-    const [marsModel,setMarsModel] = useState();
+    const [marsModel, setMarsModel] = useState(null);
     useEffect(() => {
-        new GLTFLoader().load('/models/scene.gltf',setMarsModel);
-        return null;
-    })
-    console.log(marsModel)
-    return (
-       <mesh></mesh>
-    )
+        new GLTFLoader().load('/models/scene.gltf', setMarsModel);
+    }, []);
+    if (!marsModel) return null;
+    return <primitive object={marsModel.scene} />;
 }
 
-export default Mars
+export default Mars;
