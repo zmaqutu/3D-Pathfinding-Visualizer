@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useMemo } from 'react';
+import React, { useRef, useEffect, useMemo, useState } from 'react';
 import * as THREE from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
 import rwc from 'random-weighted-choice';
@@ -9,6 +9,7 @@ import { tweenToColor, getNodesInShortestPathOrder, tweenGroup } from './algorit
 import { weightedSearchAlgorithm } from './algorithms/weightedSearchAlgorithm.js';
 import { unweightedSearchAlgorithm } from './algorithms/unweightedSearchAlgorithm.js';
 import { randomMaze, recursiveDivisionMaze } from './algorithms/mazeAlgorithms';
+import WallObjects from './Walls';
 
 const GRID_SIZE = 300;
 const ROWS = 30;
@@ -76,6 +77,24 @@ function Grid(props) {
       terrainRef.current = initialTerrain();
    }
 
+   // Walls are 3D meshes layered on top of the floor. Keyed by `row*COLS+col`
+   // for O(1) add/remove.
+   const [walls, setWalls] = useState({});
+
+   function addWall(row, col, type) {
+      const id = row * COLS + col;
+      setWalls((prev) => ({ ...prev, [id]: { row, col, type } }));
+   }
+   function removeWall(row, col) {
+      const id = row * COLS + col;
+      setWalls((prev) => {
+         if (!(id in prev)) return prev;
+         const next = { ...prev };
+         delete next[id];
+         return next;
+      });
+   }
+
    function initialTerrain() {
       const grid = [];
       for (let row = 0; row < ROWS; row++) {
@@ -113,6 +132,7 @@ function Grid(props) {
          vertexOffsets: vertexOffsetsFor(row, col),
          color: { r: 1, g: 1, b: 1 },
          status,
+         wallType: null,
          distance: Infinity,
          totalDistance: Infinity,
          heuristicDistance: null,
@@ -165,6 +185,44 @@ function Grid(props) {
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [applyingSettings, visualizeThePolicy]);
+
+   // Scatter a mix of buildings and trees on first mount so the grid doesn't
+   // start empty. Cells are chosen up-front, then dropped in over time so the
+   // city assembles itself (matches the maze-generation cadence).
+   useEffect(() => {
+      const terrain = terrainRef.current;
+      const start = props.worldProperties.start;
+      const finish = props.worldProperties.finish;
+      const placements = [];
+      const seen = new Set();
+      const target = 80;
+      let tries = 0;
+      while (placements.length < target && tries < target * 6) {
+         tries++;
+         const row = Math.floor(Math.random() * ROWS);
+         const col = Math.floor(Math.random() * COLS);
+         const id = row * COLS + col;
+         if (seen.has(id)) continue;
+         seen.add(id);
+         if ((row === start.row && col === start.col) ||
+             (row === finish.row && col === finish.col)) continue;
+         placements.push({ row, col, type: Math.random() < 0.55 ? 'building' : 'tree' });
+      }
+      const stepMs = 25;
+      const timers = placements.map((p, i) =>
+         setTimeout(() => {
+            const node = terrain.grid[p.row][p.col];
+            node.status = 'wall';
+            node.wallType = p.type;
+            node.reward = -100;
+            node.visits = -1;
+            tweenToColor(node, groundGeometry, [props.worldProperties.colors.wall]);
+            addWall(p.row, p.col, p.type);
+         }, i * stepMs)
+      );
+      return () => timers.forEach(clearTimeout);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, []);
 
    useEffect(() => {
       const terrain = terrainRef.current;
@@ -220,14 +278,19 @@ function Grid(props) {
       const node = terrain.grid[row][col];
       if (node.status === 'wall') {
          node.status = 'default';
+         node.wallType = null;
          node.reward = 0;
          node.visits = 0;
          tweenToColor(node, groundGeometry, [props.worldProperties.colors.default]);
+         removeWall(row, col);
       } else {
+         const type = props.selectedWallType || 'building';
          node.status = 'wall';
+         node.wallType = type;
          node.visits = -1;
          node.reward = -100;
          tweenToColor(node, groundGeometry, [props.worldProperties.colors.wall]);
+         addWall(row, col, type);
       }
    }
 
@@ -517,11 +580,13 @@ function Grid(props) {
          for (let j = 0; j < COLS; j++) {
             if (terrain.grid[i][j].status === 'wall' || terrain.q_table[i][j] < 0) {
                terrain.grid[i][j].status = 'default';
+               terrain.grid[i][j].wallType = null;
                terrain.grid[i][j].reward = 0;
                tweenToColor(terrain.grid[i][j], groundGeometry, [props.worldProperties.colors.default]);
             }
          }
       }
+      setWalls({});
       props.stopClearWalls();
    }
 
@@ -554,14 +619,17 @@ function Grid(props) {
    function animateMaze(nodesToAnimate, type, timerDelay) {
       const terrain = terrainRef.current;
       clearWalls();
+      const wallType = props.selectedWallType || 'building';
       for (let i = 0; i < nodesToAnimate.length; i++) {
          const nodeRow = nodesToAnimate[i].row;
          const nodeCol = nodesToAnimate[i].col;
          setTimeout(() => {
             terrain.grid[nodeRow][nodeCol].status = 'wall';
+            terrain.grid[nodeRow][nodeCol].wallType = wallType;
             terrain.grid[nodeRow][nodeCol].reward = -100;
             terrain.grid[nodeRow][nodeCol].visits = -1;
             tweenToColor(terrain.grid[nodeRow][nodeCol], groundGeometry, [props.worldProperties.colors.wall]);
+            addWall(nodeRow, nodeCol, wallType);
          }, timerDelay * i);
       }
       props.stopMazeSelection();
@@ -590,6 +658,7 @@ function Grid(props) {
             onPointerOut={() => { dragRef.current.mouseIsUp = true; }}
             onPointerMove={onPointerMove}
          />
+         <WallObjects walls={walls} />
          <axesHelper />
       </mesh>
    );

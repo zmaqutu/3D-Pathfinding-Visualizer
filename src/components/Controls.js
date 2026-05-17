@@ -17,7 +17,7 @@ function Controls(props) {
         if (resetStatus === true) {
             tweenGroup.removeAll();
             new TWEEN.Tween(camera.position, tweenGroup)
-                .to({ x: 0, y: 385, z: 0 }, 2000)
+                .to({ x: 200, y: 250, z: 250 }, 2000)
                 .easing(TWEEN.Easing.Exponential.Out)
                 .onComplete(() => {
                     if (controls.current) controls.current.update();

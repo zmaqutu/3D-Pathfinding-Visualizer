@@ -35,12 +35,13 @@ function World() {
    const [clearPath, setClearPath] = useState(false);
    const [trainAgent, setTrainAgent] = useState(false);
    const [agentKnowledge, setAgentKnowledge] = useState("");
-   const cameraPosition = useRef([0, 375, 0]);
+   const cameraPosition = useRef([200, 250, 250]);
    const [selectedMazeAlgorithm, setSelectedMazeAlgorithm] = useState("");
    const [algorithmSpeed, setAlgorithmSpeed] = useState("15");
    const [selected_algo_is_undefined, setAlgo] = useState(true);
 
    const [policyCuriosity, setPolicyCuriosity] = useState(0.8);
+   const [selectedWallType, setSelectedWallType] = useState("building");
 
    const [applyingSettings, setApplyingSettings] = useState(false);
    const [settingsConfig, setConfig] = useState({
@@ -116,6 +117,12 @@ function World() {
                   <MenuItem value="">Select Maze</MenuItem>
                   <MenuItem value="randomMaze">Random Maze</MenuItem>
                   <MenuItem value="recursiveDivision">Recursive Division</MenuItem>
+               </Select>
+            </Box>
+            <Box className="header_items" sx={headerControlSx}>
+               <Select name="wallType" id="wallType" value={selectedWallType} onChange={(e) => setSelectedWallType(e.target.value)}>
+                  <MenuItem value="building">Buildings</MenuItem>
+                  <MenuItem value="tree">Trees</MenuItem>
                </Select>
             </Box>
             <div className="header_items">
@@ -249,6 +256,7 @@ function World() {
                algorithmSpeed={algorithmSpeed}
                applyingSettings={applyingSettings}
                settingsConfig={settingsConfig}
+               selectedWallType={selectedWallType}
                worldProperties={{
                   rows: 30,
                   cols: 30,
