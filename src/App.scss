@@ -225,3 +225,20 @@ body {
 #trainingEpochs {
     bottom: 120px;
 }
+
+/* Authorship stays visible while exploring; the portfolio opens without ending the run. */
+.project-credit { display:flex; align-items:center; gap:12px; color:#dfeee6; text-decoration:none; border:1px solid #526b63; border-radius:6px; padding:10px 12px; background:#10221ddd; font:12px/1.4 Arial,sans-serif; }
+.project-credit:hover { border-color:#9bd8c4; background:#18312a; }
+.project-credit:focus-visible { outline:2px solid #9bd8c4; outline-offset:4px; }
+.project-credit-mark { flex-shrink:0; font:italic 18px Georgia,serif; color:#9bd8c4; white-space:nowrap; }
+.project-credit-author { flex:1; min-width:0; font-size:10px; color:#a6c1b6; }
+.project-credit-author strong { display:block; font-size:13px; font-weight:600; color:#edf5ef; }
+.project-credit-return { flex-shrink:0; font-size:12px; white-space:nowrap; }
+
+.project-credit { position:fixed; bottom:max(16px,env(safe-area-inset-bottom)); left:16px; width:320px; max-width:calc(100vw - 100px); z-index:11000; color:#33472f; background:#f1f4f8f2; border-color:#8eaa87; box-shadow:0 6px 18px #23391e22; }
+.project-credit:hover { background:#e4eddf; border-color:#4f7144; }
+.project-credit:focus-visible { outline-color:#4f7144; }
+.project-credit-mark { color:#42623b; }
+.project-credit-author { color:#62705d; }
+.project-credit-author strong { color:#253a20; }
+@media(max-width:380px) { .project-credit { left:12px; gap:8px; padding:10px; max-width:calc(100vw - 96px); } .project-credit-mark { display:none; } }
