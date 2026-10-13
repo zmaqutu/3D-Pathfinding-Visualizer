@@ -4,7 +4,7 @@ import "react-awesome-button/dist/styles.css";
 import { Slider, TextField } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { green } from '@mui/material/colors';
-import { ReactComponent as SettingsLogo } from '../assets/settings.svg';
+import SettingsLogo from '../assets/settings.svg?react';
 
 const sliderBoxSx = {
    marginTop: '15px',

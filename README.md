@@ -58,13 +58,21 @@ Two methods to generate a maze:
 Contributions are welcome. Please feel free to make a PR.
 
 ## Project setup
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The project uses [Vite](https://vite.dev/) for development and production builds.
+Use Node.js 24 LTS (24.15 or newer), or Node.js 22.22.2 or newer in the 22 LTS series.
 ```
-npm install
+npm ci
 npm start
 ```
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+`npm test` runs the Vitest tests; `npm run test:watch` runs them in watch mode.
+`npm run build` produces the site in `build/`, and `npm run preview` serves it locally.
+The app is served under `/3D-Pathfinding-Visualizer/` to match GitHub Pages.
+`npm run deploy` builds and publishes that directory with gh-pages.
+
+Run `npm audit` to check all dependencies, including development tools.
 
 ## Future Scope
 * Add model of the martian surface and a package delivery robot for visualization

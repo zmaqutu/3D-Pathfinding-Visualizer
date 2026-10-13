@@ -4,7 +4,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 function Mars() {
     const [marsModel, setMarsModel] = useState(null);
     useEffect(() => {
-        new GLTFLoader().load('/models/scene.gltf', setMarsModel);
+        new GLTFLoader().load(`${import.meta.env.BASE_URL}models/scene.gltf`, setMarsModel);
     }, []);
     if (!marsModel) return null;
     return <primitive object={marsModel.scene} />;

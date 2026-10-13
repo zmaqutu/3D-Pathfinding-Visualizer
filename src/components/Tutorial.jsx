@@ -1,7 +1,7 @@
 import React from 'react'
 import {  AwesomeButton, AwesomeButtonSocial } from 'react-awesome-button';
 import "react-awesome-button/dist/styles.css";
-import { ReactComponent as InfoLogo } from '../assets/info.svg';
+import InfoLogo from '../assets/info.svg?react';
 
 function Tutorial(props) {
     //function color_to_RGB_string(color){
